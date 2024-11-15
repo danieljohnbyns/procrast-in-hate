@@ -10,17 +10,19 @@ const Navbar = (props) => {
 			<Logo />
 
 			<nav>
-				{props.children}
-			</nav>
+				<menu>
+					{props.children}
+				</menu>
 
-			<nav>
-				<Anchor href='/signIn'>
-					Sign In
-				</Anchor>
-				<Button
-					label='Sign Up'
-					href='/signUp'
-				/>
+				<menu>
+					<Anchor href='/signIn'>
+						Sign In
+					</Anchor>
+					<Button
+						label='Sign Up'
+						href='/signUp'
+					/>
+				</menu>
 			</nav>
 		</header>
 	);
