@@ -70,3 +70,15 @@
 	height: 100%;
 	object-fit: cover;
 }
+
+
+
+#features {
+	padding: 4rem 8rem;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 4rem;
+}

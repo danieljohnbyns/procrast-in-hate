@@ -63,6 +63,16 @@ export default class Home extends React.Component {
 						<img src={BannerPerson} alt='Banner Person' />
 					</div>
 				</main>
+
+				<section
+					id='features'
+				>
+					<h2>Why choose us?</h2>
+
+					<div>
+						
+					</div>
+				</section>
 			</>
 		);
 	};
