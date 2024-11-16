@@ -8,6 +8,7 @@ import React from 'react';
  * 		head: '6' | '5' | '4' | '3' | '2' | '1',
  * 		href?: String,
  * 		className: String,
+ * 		theme: 'light' | 'dark'
  * }) => JSX.Element}
  */
 const Button = ({
@@ -22,7 +23,7 @@ const Button = ({
 		return (
 			<a
 				href={props.href}
-				className={`button ${className}`}
+				className={`button ${className} ${props.theme === 'light' ? 'light' : 'dark'}`}
 			>
 				{
 					head === '6' ? <h6>{children ? children : label}</h6> :
@@ -38,7 +39,7 @@ const Button = ({
 	};
 	return (
 		<button
-			className={`button ${className}`}
+			className={`button ${className} ${props.theme === 'light' ? 'light' : 'dark'}`}
 		>
 			{
 				head === '6' ? <h6>{children ? children : label}</h6> :

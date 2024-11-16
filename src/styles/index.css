@@ -3,7 +3,7 @@
 	--color-primary: #260351;
 	--color-secondary: #705BD3;
 	
-	--gradient-primary: linear-gradient(45deg, #9885F0 0%, #AC9BFA 75%, #CDC1FF 100%);
+	--gradient-primary: linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%);
 
 	--color-white: #FFFFFF;
 	--color-black: #000000;
@@ -39,6 +39,13 @@ h1 { font-size: calc(2rem * 2.5); }
 p { font-family: 'Montserrat', sans-serif;}
 a { text-decoration: none; color: inherit; }
 
+#root {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
 
 
 #navbar {
@@ -49,6 +56,7 @@ a { text-decoration: none; color: inherit; }
 	z-index: 1000;
 	padding: 1rem 4rem;
 	box-shadow: 0 0 1rem rgba(0, 0, 0, 0.25);
+	backdrop-filter: blur(4rem);
 
 	display: flex;
 	flex-direction: row;
@@ -79,16 +87,19 @@ a { text-decoration: none; color: inherit; }
 }
 
 .logo {
-	width: 20rem;
 	display: inline-flex;
 	flex-direction: row;
 	justify-content: flex-start;
 	align-items: center;
 	gap: 1rem;
+	color: var(--color-primary);
 }
-.logo > svg {
-	width: 8rem;
-}
+.logo[head='6'] > svg { width: calc((2rem * 2 + 2rem) * 1); 	height: calc((2rem * 2 + 2rem) * 1); }
+.logo[head='5'] > svg { width: calc((2rem * 2 + 2rem) * 1.25); 	height: calc((2rem * 2 + 2rem) * 1.25); }
+.logo[head='4'] > svg { width: calc((2rem * 2 + 2rem) * 1.5); 	height: calc((2rem * 2 + 2rem) * 1.5); }
+.logo[head='3'] > svg { width: calc((2rem * 2 + 2rem) * 1.75); 	height: calc((2rem * 2 + 2rem) * 1.75); }
+.logo[head='2'] > svg { width: calc((2rem * 2 + 2rem) * 2); 	height: calc((2rem * 2 + 2rem) * 2); }
+.logo[head='1'] > svg { width: calc((2rem * 2 + 2rem) * 2.5); 	height: calc((2rem * 2 + 2rem) * 2.5); }
 
 .anchor {
 	position: relative;
@@ -116,15 +127,25 @@ a { text-decoration: none; color: inherit; }
 
 .button {
 	padding: 1rem 2rem;
-	border: 0.25rem solid var(--color-primary);
 	border-radius: 8rem;
-	color: var(--color-primary);
 
 	text-wrap: nowrap;
 
 	transition: background-color var(--transition), color var(--transition);
 }
-.button:hover {
+.button.dark {
+	border: 0.25rem solid var(--color-primary);
+	color: var(--color-primary);
+}
+.button.dark:hover {
 	background-color: var(--color-primary);
 	color: var(--color-white);
+}
+.button.light {
+	border: 0.25rem solid var(--color-white);
+	color: var(--color-white);
+}
+.button.light:hover {
+	background-color: var(--color-white);
+	color: var(--color-primary);
 }

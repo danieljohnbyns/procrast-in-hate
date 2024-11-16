@@ -1,4 +1,9 @@
 
+main, section {
+	width: 100%;
+	max-width: 200rem;
+}
+
 #banner  {
 	min-height: 60rem;
 	padding: 4rem 8rem;
@@ -60,7 +65,7 @@
 	align-items: center;
 	gap: 2rem;
 }
-#banner > div > div > div > h1 {
+#banner > div > div > h1 {
 	font-size: 8rem;
 	font-weight: 700;
 	color: var(--color-primary);
@@ -77,8 +82,46 @@
 	padding: 4rem 8rem;
 
 	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	gap: 4rem;
+}
+#features > h2 {
+	position: relative;
+	height: 100%;
+	padding-left: 2rem;
+}
+#features > h2::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 1rem;
+	height: calc(100% + 8rem);
+	background: var(--color-secondary);
+	transform: translateY(-50%);
+}
+#features > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: stretch;
+	gap: 4rem;
+}
+#features > div > div {
+	padding: 4rem 8rem;
+
+	display: inline-flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	gap: 4rem;
+
+	border-radius: 4rem;
+	border: 0.25rem solid var(--color-primary);
+}
+#features > div > div > img {
+	width: 16rem;
+	height: 16rem;
+	object-fit: cover;
 }

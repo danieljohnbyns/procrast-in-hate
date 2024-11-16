@@ -7,7 +7,7 @@ import Anchor from './Anchor';
 const Navbar = (props) => {
 	return (
 		<header id='navbar'>
-			<Logo />
+			<Logo head='5' />
 
 			<nav>
 				<menu>
