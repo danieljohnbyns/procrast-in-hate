@@ -25,13 +25,13 @@ const Logo = ({
 
 			<div>
 				{
-					head === '6' ? <><h6>Tempo</h6><h6>Task</h6></> :
-						head === '5' ? <><h5>Tempo</h5><h5>Task</h5></> :
-							head === '4' ? <><h4>Tempo</h4><h4>Task</h4></> :
-								head === '3' ? <><h3>Tempo</h3><h3>Task</h3></> :
-									head === '2' ? <><h2>Tempo</h2><h2>Task</h2></> :
-										head === '1' ? <><h1>Tempo</h1><h1>Task</h1></> :
-											<><h5>Tempo</h5><h5>Task</h5></>
+					head === '6' ? <><h6>Procrast</h6><h6>In Hate</h6></> :
+						head === '5' ? <><h5>Procrast</h5><h5>In Hate</h5></> :
+							head === '4' ? <><h4>Procrast</h4><h4>In Hate</h4></> :
+								head === '3' ? <><h3>Procrast</h3><h3>In Hate</h3></> :
+									head === '2' ? <><h2>Procrast</h2><h2>In Hate</h2></> :
+										head === '1' ? <><h1>Procrast</h1><h1>In Hate</h1></> :
+											<><h5>Procrast</h5><h5>In Hate</h5></>
 				}
 			</div>
 		</div>
