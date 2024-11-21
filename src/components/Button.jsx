@@ -9,6 +9,7 @@ import React from 'react';
  * 		href?: String,
  * 		className: String,
  * 		theme: 'light' | 'dark'
+ * 		filled: Boolean
  * }) => JSX.Element}
  */
 const Button = ({
@@ -17,13 +18,15 @@ const Button = ({
 	type,
 	head = '6',
 	className,
+	theme,
+	filled,
 	...props
 }) => {
 	if (props.href || type === 'link') {
 		return (
 			<a
 				href={props.href}
-				className={`button ${className} ${props.theme === 'light' ? 'light' : 'dark'}`}
+				className={`button ${className} ${theme === 'light' ? 'light' : 'dark'} ${filled ? 'filled' : ''}`}
 			>
 				{
 					head === '6' ? <h6>{children ? children : label}</h6> :

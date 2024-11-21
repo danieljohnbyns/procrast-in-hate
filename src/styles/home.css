@@ -19,6 +19,8 @@ main, section {
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
+
+	overflow: hidden;
 }
 #banner > div::before {
 	content: '';
@@ -49,7 +51,7 @@ main, section {
 #banner > div > div {
 	width: 50%;
 	height: 100%;
-	
+
 	padding: 4rem 8rem;
 	
 	display: flex;
@@ -73,7 +75,42 @@ main, section {
 #banner > div > img {
 	width: 50%;
 	height: 100%;
-	object-fit: cover;
+	object-fit: contain;
+}
+@media screen and (max-width: 60rem) {
+	#banner {
+		padding: 2rem 2rem;
+	}
+	#banner > div {
+		min-height: 60rem;
+		padding: 2rem 2rem;
+		flex-direction: column-reverse;
+		text-align: center;
+		gap: 4rem;
+		z-index: 1;
+	}
+	#banner > div > div {
+		width: 100%;
+	}
+	#banner > div > div:last-child {
+		flex-direction: row;
+	}
+	#banner > div > img {
+		width: 100%;
+		height: 20rem;
+	}
+	#banner > div > div::before {
+		content: '';
+		position: absolute;
+		top: -37.5rem;
+		left: 0;
+		width: 100%;
+		height: 75rem;
+		border-radius: 100rem;
+		background-color: var(--color-white);
+		box-shadow: 0.5rem 0.5rem 5rem rgba(0, 0, 0, 0.25);
+		z-index: -10;
+	}
 }
 
 
@@ -123,5 +160,30 @@ main, section {
 #features > div > div > img {
 	width: 16rem;
 	height: 16rem;
-	object-fit: cover;
+	object-fit: contain;
+}
+@media screen and (max-width: 60rem) {
+	#features {
+		padding: 2rem 2rem;
+		flex-direction: column;
+		text-align: center;
+		gap: 4rem;
+	}
+	#features > h2 {
+		padding-left: 0;
+	}
+	#features > h2::before {
+		display: none;
+	}
+	#features > div {
+		flex-direction: column;
+		gap: 4rem;
+	}
+	#features > div > div {
+		padding: 2rem 2rem;
+	}
+	#features > div > div > img {
+		width: 100%;
+		height: 20rem;
+	}
 }

@@ -13,16 +13,36 @@ import RealTimeSyncronozation from '../images/Real-Time Synchronozation.png';
 import PomodoroTimer from '../images/Pomodoro TImer.png';
 
 export default class Home extends React.Component {
-	componentDidMount() {
+	constructor(props) {
+		super(props);
 
+		this.state = {
+			mobile: false
+		};
+	};
+	componentDidMount() {
 		const navbar = document.getElementById('navbar');
 		const banner = document.getElementById('banner');
 
 		const bannerHeightChange = () => {
-			banner.style.height = `${window.innerHeight - navbar.offsetHeight}px`;
+			if (!matchMedia('screen and (max-width: 60rem)').matches)
+				banner.style.height = `${window.innerHeight - navbar.offsetHeight}px`;
+			else
+				banner.style.height = 'auto';
 		};
 		window.addEventListener('resize', bannerHeightChange);
 		bannerHeightChange();
+
+
+
+		const setMobile = () => {
+			this.setState({
+				mobile: matchMedia('screen and (max-width: 60rem)').matches
+			});
+		};
+
+		window.addEventListener('resize', setMobile);
+		setMobile();
 	};
 	render() {
 		return (
@@ -38,24 +58,42 @@ export default class Home extends React.Component {
 				>
 					<div>
 						<div>
-							<h4>Stay on top of your tasks with</h4>
+							{
+								this.state.mobile ? null : <h4>Stay on top of your tasks with</h4>
+							}
 
-							<Logo head='1' />
+							{
+								this.state.mobile ? null : <Logo head='1' />
+							}
 
-							<h5>
-								<p>Integrated task management, Pomdoro timer, and time tracking—All in one Web Application!</p>
-							</h5>
+							<p>Integrated task management, Pomdoro timer, and time tracking—All in one Web Application!</p>
 
-							<Button
-								label='Get Started'
-								href='/signUp'
-								type='CallToAction'
-								head='1'
-								theme='dark'
-							/>
+							<div>
+								<Button
+									label='Get Started'
+									href='/signUp'
+									type='CallToAction'
+									head='6'
+									filled={true}
+									theme='dark'
+								/>
+								<Button
+									label='Contact Us'
+									href='/contact'
+									type='CallToAction'
+									head='6'
+									theme='dark'
+								/>
+							</div>
 						</div>
 
 						<img src={BannerPerson} alt='Banner Person' />
+
+						{
+							this.state.mobile ? (
+								<h4>Stay on top of your tasks!</h4>
+							) : null
+						}
 					</div>
 				</main>
 
