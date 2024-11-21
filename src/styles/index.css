@@ -72,6 +72,58 @@ a { text-decoration: none; color: inherit; }
 	align-items: center;
 	gap: 2rem;
 }
+#navbar > label,
+#navbar > input[type='checkbox'] {
+	display: none;
+}
+#navbar > label {
+	position: relative;
+	height: 8rem;
+	width: 8rem;
+	display: none;
+	justify-content: center;
+	align-items: center;
+}
+#navbar > label > div {
+	position: absolute;
+	height: 0.5rem;
+	width: calc(100% - 2rem);
+	top: 50%;
+	left: 50%;
+	background-color: var(--color-primary);
+	border-radius: 1rem;
+	transform: translate(-50%, -50%);
+	transition: width var(--transition);
+}
+#navbar > label::before,
+#navbar > label::after {
+	content: '';
+	position: absolute;
+	height: 0.5rem;
+	width: calc(100% - 2rem);
+	left: 50%;
+	border-radius: 1rem;
+	background-color: var(--color-primary);
+	transform: translate(-50%, -50%) rotate(0deg);
+	transition: var(--transition);
+}
+#navbar > label::before {
+	top: 25%;
+}
+#navbar > label::after {
+	top: 75%;
+}
+#navbar > input[type='checkbox']:checked ~ label > div {
+	width: 0;
+}
+#navbar > input[type='checkbox']:checked ~ label::before {
+	top: 50%;
+	transform: translate(-50%, -50%) rotate(45deg);
+}
+#navbar > input[type='checkbox']:checked ~ label::after {
+	top: 50%;
+	transform: translate(-50%, -50%) rotate(-45deg);
+}
 #navbar > nav > menu {
 	width: 100%;
 	display: flex;
@@ -84,6 +136,51 @@ a { text-decoration: none; color: inherit; }
 }
 #navbar > nav > menu:last-child {
 	justify-content: flex-end;
+}
+@media screen and (max-width: 60rem) {
+	#navbar {
+		height: 12rem;
+		padding: 1rem 2rem;
+		background-color: var(--color-white);
+		backdrop-filter: unset;
+	}
+	#navbar::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 2 !important;
+	}
+	#navbar > * {
+		z-index: 3;
+	}
+	#navbar > nav {
+		position: absolute;
+		height: calc(100vh - 12rem);
+		width: 100%;
+		top: -100vh;
+		left: 0;
+		padding: 12rem;
+		backdrop-filter: blur(4rem);
+		box-shadow: 0 0 1rem rgba(0, 0, 0, 0.25) inset;
+		flex-direction: column;
+		gap: 2rem;
+		z-index: 1;
+		transition: top var(--transition);
+	}
+	#navbar > label {
+		display: flex;
+	}
+	#navbar > input[type='checkbox']:checked ~ nav {
+		top: 12rem;
+	}
+	#navbar > nav > menu {
+		height: 100%;
+		flex-direction: column;
+		gap: 2rem;
+	}
 }
 
 .logo {

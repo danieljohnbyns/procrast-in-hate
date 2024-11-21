@@ -9,6 +9,11 @@ const Navbar = (props) => {
 		<header id='navbar'>
 			<Logo head='5' />
 
+			<input id='navbarToggle' type='checkbox' />
+			<label htmlFor='navbarToggle'>
+				<div />
+			</label>
+
 			<nav>
 				<menu>
 					{props.children}
