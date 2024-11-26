@@ -171,8 +171,37 @@ export default class Home extends React.Component {
 						<h1>Powerful</h1>
 						<p>Take control of your tasks with our web application, designed to be powerful and feature-rich for enhanced task management.</p>
 
+						<div>
+							<div>
+								<img src='#/' />
+								<h3>Work Efficiently</h3>
+								<p>Our web application is designed to help you work efficiently, so you can manage your tasks with ease.</p>
+							</div>
+							<div>
+								<img src='#/' />
+								<h3>Easily Collaborate</h3>
+								<p>Collaborate with your team seamlessly using our web application, designed for real-time synchronization.</p>
+							</div>
+						</div>
+
+						<div></div>
+						<div></div>
+
 						<h1>& Secure</h1>
 						<p>Designed with security in mind, so you can manage your tasks with confidence.</p>
+
+						<div>
+							<div>
+								<img src='#/' />
+								<h3>Secure Data</h3>
+								<p>Your data is secure with our web application, so you can manage your tasks with confidence.</p>
+							</div>
+							<div>
+								<img src='#/' />
+								<h3>Enhanced Privacy</h3>
+								<p>Protect your privacy with our web application, designed to keep your data safe and secure.</p>
+							</div>
+						</div>
 					</article>
 					<img src={FeaturePowerfulAndSecure} alt='Powerful And Secure' />
 				</section>
