@@ -12,6 +12,10 @@ import TimeTracking from '../images/Time Tracking.png';
 import RealTimeSyncronozation from '../images/Real-Time Synchronozation.png';
 import PomodoroTimer from '../images/Pomodoro TImer.png';
 
+import FeatureFast from '../images/Feature Fast.png';
+import FeatureLight from '../images/Feature Light.png';
+import FeaturePowerfulAndSecure from '../images/Feature Powerful And Secure.png';
+
 export default class Home extends React.Component {
 	constructor(props) {
 		super(props);
@@ -137,7 +141,7 @@ export default class Home extends React.Component {
 							</div>
 						</div>
 					</article>
-					<img src='#/' />
+					<img src={FeatureFast} alt='Fast' />
 				</section>
 
 				<section className='capabilities'>
@@ -159,7 +163,7 @@ export default class Home extends React.Component {
 							</div>
 						</div>
 					</article>
-					<img src='#/' />
+					<img src={FeatureLight} alt='Light' />
 				</section>
 
 				<section className='capabilities'>
@@ -170,7 +174,7 @@ export default class Home extends React.Component {
 						<h1>& Secure</h1>
 						<p>Designed with security in mind, so you can manage your tasks with confidence.</p>
 					</article>
-					<img src='#/' />
+					<img src={FeaturePowerfulAndSecure} alt='Powerful And Secure' />
 				</section>
 
 				<section id='callToAction'>
