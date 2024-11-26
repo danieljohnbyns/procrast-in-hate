@@ -29,7 +29,7 @@ body {
 	font-size: 2rem;
 }
 
-h6, h5, h4, h3, h2, h1 { font-family: 'Lemon Milk', sans-serif; line-height: 1; vertical-align: middle;}
+h6, h5, h4, h3, h2, h1 { font-family: 'Lemon Milk', sans-serif; line-height: 1; vertical-align: middle; color: var(--color-primary); }
 h6 { font-size: calc(2rem * 1); }
 h5 { font-size: calc(2rem * 1.25); }
 h4 { font-size: calc(2rem * 1.5); }
@@ -192,6 +192,7 @@ a { text-decoration: none; color: inherit; }
 	gap: 1rem;
 	color: var(--color-primary);
 }
+.logo.light > div > * { color: var(--color-white); }
 .logo[head='6'] > svg { width: calc((2rem * 2 + 2rem) * 1); 	height: calc((2rem * 2 + 2rem) * 1); }
 .logo[head='5'] > svg { width: calc((2rem * 2 + 2rem) * 1.25); 	height: calc((2rem * 2 + 2rem) * 1.25); }
 .logo[head='4'] > svg { width: calc((2rem * 2 + 2rem) * 1.5); 	height: calc((2rem * 2 + 2rem) * 1.5); }
@@ -204,9 +205,6 @@ a { text-decoration: none; color: inherit; }
 	display: inline-block;
 
 	padding: 0.5rem 1rem;
-}
-.anchor:hover {
-	color: var(--color-primary);
 }
 .anchor::before {
 	content: '';
@@ -222,6 +220,16 @@ a { text-decoration: none; color: inherit; }
 	width: 100%;
 	left: 0;
 }
+.anchor.active::before {
+	width: 100%;
+	left: 0;
+}
+.anchor.light {
+	color: var(--color-white);
+}
+.anchor.light::before {
+	background-color: var(--color-white);
+}
 
 .button {
 	padding: 1rem 2rem;
@@ -231,6 +239,7 @@ a { text-decoration: none; color: inherit; }
 
 	transition: background-color var(--transition), color var(--transition);
 }
+.button > * { color: unset; }
 .button.dark {
 	border: 0.25rem solid var(--color-primary);
 	color: var(--color-primary);
