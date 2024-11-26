@@ -234,6 +234,7 @@ main, section {
 	width: 50%;
 	height: auto;
 	min-height: 80rem;
+	object-fit: contain;
 }
 
 #callToAction {
