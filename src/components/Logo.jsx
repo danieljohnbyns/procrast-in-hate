@@ -3,17 +3,19 @@ import React from 'react';
 /**
  * @type {(props: {
  * 		head: '6' | '5' | '4' | '3' | '2' | '1',
- * 		theme: 'dark' | 'light'
+ * 		theme: 'dark' | 'light',
+ * 		strip: Boolean
  * }) => JSX.Element}
  */
 const Logo = ({
 	head = '5',
-	theme
+	theme,
+	strip = false
 }) => {
 	console.log(theme);
 	return (
 		<div
-			className={`logo ${theme === 'light' ? 'light' : 'dark'}`}
+			className={`logo ${theme === 'light' ? 'light' : 'dark'} ${strip ? 'strip' : ''}`}
 			head={head}
 		>
 			<svg viewBox='0 0 120 120'>
@@ -40,13 +42,21 @@ const Logo = ({
 
 			<div>
 				{
+					!strip ?
 					head === '6' ? <><h6>Procrast</h6><h6>In Hate</h6></> :
 						head === '5' ? <><h5>Procrast</h5><h5>In Hate</h5></> :
 							head === '4' ? <><h4>Procrast</h4><h4>In Hate</h4></> :
 								head === '3' ? <><h3>Procrast</h3><h3>In Hate</h3></> :
 									head === '2' ? <><h2>Procrast</h2><h2>In Hate</h2></> :
 										head === '1' ? <><h1>Procrast</h1><h1>In Hate</h1></> :
-											<><h5>Procrast</h5><h5>In Hate</h5></>
+												<><h5>Procrast</h5><h5>In Hate</h5></> :
+						head === '6' ? <h6>Procrast In Hate</h6> :
+							head === '5' ? <h5>Procrast In Hate</h5> :
+								head === '4' ? <h4>Procrast In Hate</h4> :
+									head === '3' ? <h3>Procrast In Hate</h3> :
+										head === '2' ? <h2>Procrast In Hate</h2> :
+											head === '1' ? <h1>Procrast In Hate</h1> :
+												<h5>Procrast In Hate</h5>
 				}
 			</div>
 		</div>

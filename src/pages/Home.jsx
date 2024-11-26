@@ -227,8 +227,9 @@ export default class Home extends React.Component {
 						<span>© 2024<br />All rights reserved.</span>
 
 						<Logo
-							head='6'
+							head='4'
 							theme='light'
+							strip={true}
 						/>
 
 						<div>
