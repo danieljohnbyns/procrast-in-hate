@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
 	BrowserRouter,
-	HashRouter,
 	Routes,
 	Route,
 } from 'react-router-dom';
@@ -18,18 +17,18 @@ import Home from './pages/dashboard/Home';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-	<BrowserRouter>
-		<Routes>
-			<Route path='/' element={<LandingPage />} />
+	<>
+		<BrowserRouter>
+			<Routes>
+				<Route path='/' element={<LandingPage />} />
 
-			<Route path='/signUp' element={<SignUp />} />
-			<Route path='/signIn' element={<SignIn />} />
+				<Route path='/signUp' element={<SignUp />} />
+				<Route path='/signIn' element={<SignIn />} />
 
-			<Route path='/dashboard/*' element={
-				<Routes>
-					<Route path='/' element={<Home />} />
-				</Routes>
-			} />
-		</Routes>
-	</BrowserRouter>
+				<Route path='/dashboard' element={<Home />}>
+					<Route path='home' element={<Home />} />
+				</Route>
+			</Routes>
+		</BrowserRouter>
+	</>
 );
