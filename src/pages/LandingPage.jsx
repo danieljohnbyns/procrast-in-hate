@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '../styles/home.css';
+import '../styles/landingPage.css';
 
 import Navbar from '../components/Navbar';
 import Button from '../components/Button';
@@ -16,7 +16,7 @@ import FeatureFast from '../images/Feature Fast.png';
 import FeatureLight from '../images/Feature Light.png';
 import FeaturePowerfulAndSecure from '../images/Feature Powerful And Secure.png';
 
-export default class Home extends React.Component {
+export default class LandingPage extends React.Component {
 	constructor(props) {
 		super(props);
 
