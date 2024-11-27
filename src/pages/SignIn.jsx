@@ -5,12 +5,18 @@ import '../styles/signIn.css';
 import Input from '../components/Input';
 import Button from '../components/Button';
 
+import globals from '../utils/globals';
+
 export default class SignIn extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			mobile: false
+			mobile: false,
+			form: {
+				email: '',
+				password: ''
+			}
 		};
 	};
 	componentDidMount() {
@@ -37,12 +43,16 @@ export default class SignIn extends React.Component {
 							type='email'
 							className='email'
 							required
+
+							onChange={e => this.setState({ form: { ...this.state.form, email: e.target.value } })}
 						/>
 						<Input
 							placeholder='Password'
 							type='password'
 							className='password'
 							required
+
+							onChange={e => this.setState({ form: { ...this.state.form, password: e.target.value } })}
 						/>
 						<div>
 							<Button
@@ -51,6 +61,32 @@ export default class SignIn extends React.Component {
 								head='6'
 								filled={true}
 								theme='dark'
+
+								onClick={async (e) => {
+									e.preventDefault();
+									if (!this.state.form.email || !this.state.form.password) {
+										alert('Please fill in all fields');
+										return;
+									};
+
+									const response = await fetch(`${globals.API_URL}/users`, {
+										method: 'POST',
+										headers: {
+											'Content-Type': 'application/json'
+										},
+										body: JSON.stringify(this.state.form)
+									});
+
+									if (response.status === 200) {
+										const data = await response.json();
+										const authentication = data.authentication;
+										
+										localStorage.setItem('authentication', JSON.stringify(authentication));
+										window.location.href = '/';
+									} else {
+										alert('Invalid email or password');
+									};
+								}}
 							/>
 							<p><a href='/forgotPassword'>Forgot your password?</a></p>
 						</div>

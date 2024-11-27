@@ -9,7 +9,8 @@ import React from 'react';
  * 		href?: String,
  * 		className: String,
  * 		theme: 'light' | 'dark'
- * 		filled: Boolean
+ * 		filled: Boolean,
+ * 		onClick?: Function,
  * }) => JSX.Element}
  */
 const Button = ({
@@ -20,6 +21,7 @@ const Button = ({
 	className,
 	theme,
 	filled,
+	onClick,
 	...props
 }) => {
 	if (props.href || type === 'link') {
@@ -27,6 +29,7 @@ const Button = ({
 			<a
 				href={props.href}
 				className={`button ${className} ${theme === 'light' ? 'light' : 'dark'} ${filled ? 'filled' : ''}`}
+				onClick={onClick}
 			>
 				{
 					head === '6' ? <h6>{children ? children : label}</h6> :
@@ -43,6 +46,7 @@ const Button = ({
 	return (
 		<button
 			className={`button ${className} ${props.theme === 'light' ? 'light' : 'dark'} ${filled ? 'filled' : ''}`}
+			onClick={onClick}
 		>
 			{
 				head === '6' ? <h6>{children ? children : label}</h6> :

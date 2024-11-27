@@ -5,12 +5,20 @@ import '../styles/signUp.css';
 import Input from '../components/Input';
 import Button from '../components/Button';
 
+import globals from '../utils/globals';
+
 export default class SignUp extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			mobile: false
+			mobile: false,
+			form: {
+				name: '',
+				email: '',
+				password: '',
+				confirmPassword: ''
+			}
 		};
 	};
 	componentDidMount() {
@@ -36,24 +44,28 @@ export default class SignUp extends React.Component {
 							placeholder='Name'
 							type='text'
 							className='name'
+							onChange={e => this.setState({ form: { ...this.state.form, name: e.target.value } })}
 							required
 						/>
 						<Input
 							placeholder='Email'
 							type='email'
 							className='email'
+							onChange={e => this.setState({ form: { ...this.state.form, email: e.target.value } })}
 							required
 						/>
 						<Input
 							placeholder='Password'
 							type='password'
 							className='password'
+							onChange={e => this.setState({ form: { ...this.state.form, password: e.target.value } })}
 							required
 						/>
 						<Input
 							placeholder='Confirm password'
 							type='password'
 							className='confirmPassword'
+							onChange={e => this.setState({ form: { ...this.state.form, confirmPassword: e.target.value } })}
 							required
 						/>
 						<Button
@@ -62,6 +74,37 @@ export default class SignUp extends React.Component {
 							head='6'
 							filled={true}
 							theme='dark'
+
+							onClick={async (e) => {
+								e.preventDefault();
+								if (!this.state.form.name || !this.state.form.email || !this.state.form.password || !this.state.form.confirmPassword) {
+									alert('Please fill in all fields');
+									return;
+								};
+								if (this.state.form.password !== this.state.form.confirmPassword) {
+									alert('Passwords do not match');
+								};
+
+								const response = await fetch(`${globals.API_URL}/users`, {
+									method: 'PUT',
+									headers: {
+										'Content-Type': 'application/json'
+									},
+									body: JSON.stringify({
+										name: this.state.form.name,
+										email: this.state.form.email,
+										password: this.state.form.password
+									})
+								});
+
+								if (response.status !== 200) {
+									const data = await response.json();
+									alert(data.message);
+									return;
+								} else {
+									window.location.href = '/signIn';
+								};
+							}}
 						/>
 
 						<p>Already have an account? <b><a href='/signIn'>Sign In</a></b></p>
