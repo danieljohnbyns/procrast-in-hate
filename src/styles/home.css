@@ -230,6 +230,10 @@ main, section {
 	border: 0.25rem solid var(--color-primary);
 	border-radius: 4rem;
 }
+.capabilities > article > div > div > svg {
+	width: 8rem;
+	height: 8rem;
+}
 .capabilities > img {
 	width: 50%;
 	height: auto;
