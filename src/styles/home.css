@@ -240,6 +240,34 @@ main, section {
 	min-height: 80rem;
 	object-fit: contain;
 }
+@media screen and (max-width: 60rem) {
+	.capabilities {
+		padding: 2rem 2rem;
+		flex-direction: column-reverse;
+		gap: 4rem;
+	}
+	.capabilities:nth-child(odd) {
+		flex-direction: column-reverse;
+	}
+	.capabilities > article {
+		width: 100%;
+	}
+	.capabilities > article > *:not(div) {
+		padding: 0 2rem;
+	}
+	.capabilities > article > div {
+		flex-direction: column;
+		gap: 2rem;
+	}
+	.capabilities > article > div > div {
+		width: 100%;
+		padding: 2rem 2rem;
+	}
+	.capabilities > img {
+		height: 40rem;
+		min-height: unset;
+	}
+}
 
 #callToAction {
 	position: relative;
@@ -314,4 +342,24 @@ main, section {
 	top: 0;
 	left: -4rem;
 	z-index: -1;
+}
+@media screen and (max-width: 60rem) {
+	#footer {
+		padding: 2rem 2rem;
+	}
+	#footer > div {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		grid-template-rows: repeat(2, 1fr);
+		gap: 4rem;
+	}
+	#footer > div > div:nth-child(1) {
+		order: 2;
+		text-align: right;
+	}
+	#footer > div > div:last-child {
+		grid-column: 1 / -1;
+		grid-row: 2 / 3;
+		justify-content: center;
+	}
 }
