@@ -91,7 +91,7 @@ export default class SignIn extends React.Component {
 							<p><a href='/forgotPassword'>Forgot your password?</a></p>
 						</div>
 
-						<p>Don't have an account? <b><a href='/signUp'>Sign up</a></b></p>
+						<p>Don't have an account? <b><a href='/signUp'>Sign Up</a></b></p>
 					</form>
 
 					<svg viewBox='0 0 1440 406'>
