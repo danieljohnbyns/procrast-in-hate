@@ -124,28 +124,6 @@ export default class Home extends React.Component {
 
 				<section className='capabilities'>
 					<article>
-						<h1>Light</h1>
-						<p>Built with a lightweight design, our web application is fast and responsive, so you can manage your tasks with ease.</p>
-						<p>Our web application is accessible from any device with an internet connection, so you can manage your tasks on the go.</p>
-
-						<div>
-							<div>
-								<img src='#/' />
-								<h3>Lighweight Design</h3>
-								<p>Our web application is designed to be lightweight and responsive, so you can manage your tasks with ease.</p>
-							</div>
-							<div>
-								<img src='#/' />
-								<h3>No Installation Required</h3>
-								<p>All you need is an internet connection to access our web application, so you can manage your tasks from anywhere.</p>
-							</div>
-						</div>
-					</article>
-					<img src={FeatureFast} alt='Fast' />
-				</section>
-
-				<section className='capabilities'>
-					<article>
 						<h1>Fast</h1>
 						<p>Rapidly manage your tasks with our web application, designed to be fast and responsive for a seamless user experience.</p>
 						<p>Our web application is optimized for speed, so you can manage your tasks efficiently and effectively.</p>
@@ -160,6 +138,28 @@ export default class Home extends React.Component {
 								<img src='#/' />
 								<h3>Sleek User Interface</h3>
 								<p>Maintain focus on your tasks with our sleek user interface, designed for a seamless user experience.</p>
+							</div>
+						</div>
+					</article>
+					<img src={FeatureFast} alt='Fast' />
+				</section>
+
+				<section className='capabilities'>
+					<article>
+						<h1>Light</h1>
+						<p>Built with a lightweight design, our web application is fast and responsive, so you can manage your tasks with ease.</p>
+						<p>Our web application is accessible from any device with an internet connection, so you can manage your tasks on the go.</p>
+
+						<div>
+							<div>
+								<img src='#/' />
+								<h3>Lighweight Design</h3>
+								<p>Our web application is designed to be lightweight and responsive, so you can manage your tasks with ease.</p>
+							</div>
+							<div>
+								<img src='#/' />
+								<h3>No Installation Required</h3>
+								<p>All you need is an internet connection to access our web application, so you can manage your tasks from anywhere.</p>
 							</div>
 						</div>
 					</article>
