@@ -260,7 +260,7 @@ export default class Home extends React.Component {
 
 				<section id='callToAction'>
 					<h3>Are you ready?</h3>
-					<p>Sign up now and start managing your tasks more efficiently.</p>
+					<p>Say goodbye to procrastination and hello to productivity with our all-in-one web application for task management, time tracking, and Pomodoro timer.</p>
 					<Button
 						label='Get Started'
 						href='/signUp'
@@ -270,7 +270,7 @@ export default class Home extends React.Component {
 					/>
 
 					<svg viewBox='0 0 1440 854'>
-						<path d='M1436.04 854H-0.875604C-0.875604 765.5 -0.875702 224 -0.999505 131.265C197.162 169.746 392.739 168.245 627 100.802C1044.5 -19.3962 1416 -5.50003 1440.5 11C1465 27.5 1436.04 854 1436.04 854Z' fill='var(--color-secondary)' />
+						<path d='M1436.04 854H-0.875604C-0.875604 765.5 -0.875702 224 -0.999505 131.265C197.162 169.746 392.739 168.245 627 100.802C1044.5 -19.3962 1416 -5.50003 1440.5 11C1465 27.5 1436.04 854 1436.04 854Z' fill='var(--color-tertiary)' />
 					</svg>
 				</section>
 

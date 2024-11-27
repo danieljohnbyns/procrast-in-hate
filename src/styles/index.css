@@ -2,6 +2,9 @@
 :root {
 	--color-primary: #260351;
 	--color-secondary: #705BD3;
+	--color-tertiary: #9885F0;
+	--color-quaternary: #AC9BFA;
+	--color-quinary: #CDC1FF;
 	
 	--gradient-primary: linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%);
 
