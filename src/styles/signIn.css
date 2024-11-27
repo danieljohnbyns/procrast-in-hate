@@ -63,7 +63,7 @@ body:has(> #root[page="signIn"]) {
 	min-width: calc(100vw + 20rem);
 }
 
-@media (max-width: 1024px) {
+@media screen and (max-width: 60rem) {
 	#root[page="signIn"] {
 		flex-direction: column;
 	}
