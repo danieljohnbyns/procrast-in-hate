@@ -1,11 +1,11 @@
 import React from 'react';
 
-import '../styles/signUp.css';
+import '../styles/signIn.css';
 
 import Input from '../components/Input';
 import Button from '../components/Button';
 
-export default class SignUp extends React.Component {
+export default class SignIn extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -24,20 +24,14 @@ export default class SignUp extends React.Component {
 		setMobile();
 
 		const root = document.getElementById('root');
-		root.setAttribute('page', 'signUp');
+		root.setAttribute('page', 'signIn');
 	};
 	render() {
 		return (
 			<>
-				<div id='signUp'>
+				<div id='signIn'>
 					<form>
-						<h1>Create an account</h1>
-						<Input
-							placeholder='Name'
-							type='text'
-							className='name'
-							required
-						/>
+						<h1>Welcome</h1>
 						<Input
 							placeholder='Email'
 							type='email'
@@ -50,21 +44,18 @@ export default class SignUp extends React.Component {
 							className='password'
 							required
 						/>
-						<Input
-							placeholder='Confirm password'
-							type='password'
-							className='confirmPassword'
-							required
-						/>
-						<Button
-							label='Sign Up'
-							type='CallToAction'
-							head='6'
-							filled={true}
-							theme='dark'
-						/>
+						<div>
+							<Button
+								label='Sign In'
+								type='CallToAction'
+								head='6'
+								filled={true}
+								theme='dark'
+							/>
+							<p><a href='/forgotPassword'>Forgot your password?</a></p>
+						</div>
 
-						<p>Already have an account? <b><a href='/signIn'>Sign In</a></b></p>
+						<p>Don't have an account? <b><a href='/signUp'>Sign up</a></b></p>
 					</form>
 
 					<svg viewBox='0 0 1440 406'>

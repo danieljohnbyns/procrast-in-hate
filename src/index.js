@@ -12,6 +12,7 @@ import './styles/index.css';
 
 import Home from './pages/Home';
 import SignUp from './pages/SignUp';
+import SignIn from './pages/SignIn';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -19,7 +20,8 @@ root.render(
 		<Routes>
 			<Route path='/' element={<Home />} />
 
-			<Route path='/signup' element={<SignUp />} />
+			<Route path='/signUp' element={<SignUp />} />
+			<Route path='/signIn' element={<SignIn />} />
 		</Routes>
 	</BrowserRouter>
 );

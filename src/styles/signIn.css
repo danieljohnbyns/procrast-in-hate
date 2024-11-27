@@ -1,9 +1,9 @@
 
-body:has(> #root[page="signUp"]) {
+body:has(> #root[page="signIn"]) {
 	background-color: var(--color-tertiary);
 }
 
-#root[page="signUp"] {
+#root[page="signIn"] {
 	position: relative;
 	height: 100vh;
 	display: flex;
@@ -13,7 +13,7 @@ body:has(> #root[page="signUp"]) {
 	overflow: hidden;
 }
 
-#signUp {
+#signIn {
 	position: relative;
 	width: 50%;
 	height: 100%;
@@ -27,7 +27,7 @@ body:has(> #root[page="signUp"]) {
 
 	overflow: hidden;
 }
-#signUp > form {
+#signIn > form {
 	position: relative;
 	width: 100%;
 	padding: 4rem 4rem;
@@ -40,8 +40,15 @@ body:has(> #root[page="signUp"]) {
 	border: 0.25rem solid var(--color-primary);
 	z-index: 1;
 }
-#signUp > form > * { text-align: center; }
-#signUp > svg {
+#signIn > form > * { text-align: center; }
+#signIn > form > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: stretch;
+	gap: 1rem;
+}
+#signIn > svg {
 	position: absolute;
 	bottom: -20rem;
 	left: -10rem;
@@ -49,7 +56,7 @@ body:has(> #root[page="signUp"]) {
 	z-index: 0;
 }
 
-#root[page="signUp"] > svg {
+#root[page="signIn"] > svg {
 	position: absolute;
 	bottom: -10rem;
 	left: -10rem;
