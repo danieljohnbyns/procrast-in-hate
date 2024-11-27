@@ -246,8 +246,12 @@ a { text-decoration: none; color: inherit; }
 	border-radius: 8rem;
 
 	text-wrap: nowrap;
+	background-color: transparent;
+	text-align: center;
 
 	transition: background-color var(--transition), color var(--transition);
+
+	cursor: pointer;
 }
 .button > * { color: unset; }
 .button.dark {
@@ -283,4 +287,17 @@ a { text-decoration: none; color: inherit; }
 	background-color: transparent;
 	border: 0.25rem solid var(--color-white);
 	color: var(--color-white);
+}
+
+.input {
+	padding: 1rem 2rem;
+	border-radius: 8rem;
+	border: 0.25rem solid var(--color-primary);
+	outline: none;
+	font-family: unset;
+
+	transition: border-color var(--transition);
+}
+.input:focus {
+	border-color: var(--color-secondary);
 }

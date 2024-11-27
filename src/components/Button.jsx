@@ -42,7 +42,7 @@ const Button = ({
 	};
 	return (
 		<button
-			className={`button ${className} ${props.theme === 'light' ? 'light' : 'dark'}`}
+			className={`button ${className} ${props.theme === 'light' ? 'light' : 'dark'} ${filled ? 'filled' : ''}`}
 		>
 			{
 				head === '6' ? <h6>{children ? children : label}</h6> :
