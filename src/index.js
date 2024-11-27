@@ -14,6 +14,8 @@ import LandingPage from './pages/LandingPage';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 
+import Home from './pages/dashboard/Home';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 	<BrowserRouter>
@@ -22,6 +24,12 @@ root.render(
 
 			<Route path='/signUp' element={<SignUp />} />
 			<Route path='/signIn' element={<SignIn />} />
+
+			<Route path='/dashboard/*' element={
+				<Routes>
+					<Route path='/' element={<Home />} />
+				</Routes>
+			} />
 		</Routes>
 	</BrowserRouter>
 );

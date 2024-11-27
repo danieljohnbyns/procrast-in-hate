@@ -49,7 +49,7 @@ export default class LandingPage extends React.Component {
 		setMobile();
 
 		const root = document.getElementById('root');
-		root.setAttribute('page', 'home');
+		root.setAttribute('page', 'landingPage');
 	};
 	render() {
 		return (

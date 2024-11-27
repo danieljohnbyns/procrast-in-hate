@@ -1,5 +1,5 @@
 
-#root[page="home"] > main, section {
+#root[page="landingPage"] > main, section {
 	width: 100%;
 	max-width: 200rem;
 }
