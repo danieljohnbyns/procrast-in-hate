@@ -292,12 +292,15 @@ main, section {
 	gap: 4rem;
 }
 #footer > div > div:last-child {
-	width: unset;
+	width: 100%;
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
+	justify-content: flex-end;
 	align-items: center;
 	gap: 2rem;
+}
+#footer > div > div:first-child {
+	width: 100%;
 }
 
 #footer > svg {

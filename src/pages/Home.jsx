@@ -224,7 +224,9 @@ export default class Home extends React.Component {
 
 				<section id='footer'>
 					<div>
-						<span>© 2024<br />All rights reserved.</span>
+						<div>
+							<span>© 2024<br />All rights reserved.</span>
+						</div>
 
 						<Logo
 							head='4'

@@ -199,6 +199,7 @@ a { text-decoration: none; color: inherit; }
 .logo[head='3'] > svg { width: calc((2rem * 2 + 2rem) * 1.75); 	height: calc((2rem * 2 + 2rem) * 1.75); }
 .logo[head='2'] > svg { width: calc((2rem * 2 + 2rem) * 2); 	height: calc((2rem * 2 + 2rem) * 2); }
 .logo[head='1'] > svg { width: calc((2rem * 2 + 2rem) * 2.5); 	height: calc((2rem * 2 + 2rem) * 2.5); }
+.logo.strip > div > * { text-wrap: nowrap; }
 .logo.strip[head='6'] > svg { width: calc((2rem * 1 + 2rem) * 1); 	height: calc((2rem * 1 + 2rem) * 1); }
 .logo.strip[head='5'] > svg { width: calc((2rem * 1 + 2rem) * 1.25); 	height: calc((2rem * 1 + 2rem) * 1.25); }
 .logo.strip[head='4'] > svg { width: calc((2rem * 1 + 2rem) * 1.5); 	height: calc((2rem * 1 + 2rem) * 1.5); }
