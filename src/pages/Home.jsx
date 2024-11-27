@@ -47,6 +47,9 @@ export default class Home extends React.Component {
 
 		window.addEventListener('resize', setMobile);
 		setMobile();
+
+		const root = document.getElementById('root');
+		root.setAttribute('page', 'home');
 	};
 	render() {
 		return (

@@ -1,10 +1,10 @@
 
-main, section {
+#root[page="home"] > main, section {
 	width: 100%;
 	max-width: 200rem;
 }
 
-#banner  {
+#banner {
 	min-height: 60rem;
 	padding: 4rem 8rem;
 }

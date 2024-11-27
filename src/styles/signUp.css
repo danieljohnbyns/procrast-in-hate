@@ -1,0 +1,4 @@
+
+body:has(> #root[page="signUp"]) {
+	background: var(--color-secondary);
+}
