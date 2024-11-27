@@ -55,3 +55,25 @@ body:has(> #root[page="signUp"]) {
 	left: -10rem;
 	min-width: calc(100vw + 20rem);
 }
+
+@media (max-width: 1024px) {
+	#root[page="signUp"] {
+		flex-direction: column;
+	}
+	#root[page="signUp"] > *:not(#signUp) {
+		display: none;
+	}
+	#signUp {
+		width: 100%;
+		background-color: var(--color-tertiary);
+	}
+	#signUp > form {
+		padding: 4rem 2rem;
+		background-color: var(--color-white);
+	}
+	#signUp > svg {
+		bottom: -5rem;
+		left: -5rem;
+		min-width: calc(100vw + 10rem);
+	}
+}

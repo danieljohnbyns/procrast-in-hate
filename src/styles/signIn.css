@@ -62,3 +62,25 @@ body:has(> #root[page="signIn"]) {
 	left: -10rem;
 	min-width: calc(100vw + 20rem);
 }
+
+@media (max-width: 1024px) {
+	#root[page="signIn"] {
+		flex-direction: column;
+	}
+	#root[page="signIn"] > *:not(#signIn) {
+		display: none;
+	}
+	#signIn {
+		width: 100%;
+		background-color: var(--color-tertiary);
+	}
+	#signIn > form {
+		padding: 4rem 2rem;
+		background-color: var(--color-white);
+	}
+	#signIn > svg {
+		bottom: -5rem;
+		left: -5rem;
+		min-width: calc(100vw + 10rem);
+	}
+}
