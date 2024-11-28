@@ -8,6 +8,7 @@ import React from 'react';
  * 		className: String,
  * 		active: Boolean,
  *		icon?: JSX.Element,
+ *		minimized?: Boolean,
  * 		children: JSX.Element
  * }) => JSX.Element}
  */
@@ -18,13 +19,14 @@ const Tab = ({
 	className,
 	active,
 	icon,
+	minimized,
 	children,
 	...props
 }) => {
 	const tab = (
 		<a
 			href={href}
-			className={`tab ${className} ${theme === 'light' ? 'light' : 'dark'} ${active ? 'active' : ''}`}
+			className={`tab ${className} ${theme === 'light' ? 'light' : 'dark'} ${active ? 'active' : ''} ${minimized ? 'minimized' : ''}`}
 		>
 			{icon}
 			<span>{children}</span>

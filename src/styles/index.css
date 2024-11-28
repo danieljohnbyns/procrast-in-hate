@@ -290,6 +290,10 @@ a { text-decoration: none; color: inherit; }
 .tab.light::before {
 	background-color: var(--color-white);
 }
+.tab > *:not(svg) {
+	transform-origin: left;
+	transition: transform var(--transition);
+}
 .tab > * {
 	vertical-align: middle;
 	z-index: 2;
@@ -297,6 +301,27 @@ a { text-decoration: none; color: inherit; }
 .tab > svg {
 	width: 4rem;
 	height: 4rem;
+}
+.tab.minimized {
+	position: relative;
+	width: 6rem;
+	height: 6rem;
+	display: inline-flex;
+	padding: 0;
+}
+.tab.minimized > *:not(svg) {
+	position: absolute;
+	top: 50%;
+	left: 6rem;
+	transform: scale(0) translateY(-50%);
+}
+.tab.minimized > svg {
+	position: absolute;
+	width: 4rem;
+	height: 4rem;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 .button {
@@ -373,6 +398,8 @@ a { text-decoration: none; color: inherit; }
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
+	z-index: 10;
+	transition: width var(--transition), padding var(--transition);
 }
 #sidebar > div {
 	width: 100%;
@@ -394,4 +421,70 @@ a { text-decoration: none; color: inherit; }
 	display: block;
 	background-color: var(--color-white);
 	border-radius: 100%;
+	transition: height var(--transition), width var(--transition);
+}
+#sidebarToggleIcon {
+	position: absolute;
+	width: 4rem;
+	height: 4rem;
+	top: 4rem;
+	left: calc(40rem - 4rem - 4rem);
+	cursor: pointer;
+	z-index: 20;
+	transition: left var(--transition);
+}
+#sidebarToggleIcon::before,
+#sidebarToggleIcon::after {
+	content: '';
+	position: absolute;
+	height: 50%;
+	width: 0.5rem;
+	background-color: var(--color-white);
+	border-radius: 0.25rem;
+	transition: top var(--transition), left var(--transition), transform var(--transition), background-color var(--transition);
+}
+#sidebarToggleIcon:hover::before,
+#sidebarToggleIcon:hover::after {
+	background-color: var(--color-primary);
+}
+#sidebarToggleIcon::before {
+	top: calc(18.75% - 0.25rem);
+	left: calc(50% - 0.25rem);
+	transform: rotate(45deg);
+}
+#sidebarToggleIcon::after {
+	top: calc(43.75% - 0.25rem);
+	left: calc(50% - 0.25rem);
+	transform: rotate(-45deg);
+}
+#sidebarToggle {
+	display: none;
+}
+#sidebarToggle:checked ~ #sidebarToggleIcon {
+	left: 2rem;
+}
+#sidebarToggle:checked ~ #sidebarToggleIcon::before {
+	top: calc(18.75% - 0.25rem);
+	left: calc(50% - 0.25rem);
+	transform: rotate(-45deg);
+}
+#sidebarToggle:checked ~ #sidebarToggleIcon::after {
+	top: calc(43.75% - 0.25rem);
+	left: calc(50% - 0.25rem);
+	transform: rotate(45deg);
+}
+#sidebarToggle:checked ~ #sidebar {
+	width: 8rem;
+	padding: 4rem 1rem;
+	padding-top: 12rem;
+}
+#sidebarToggle:checked ~ #sidebar > div > img {
+	height: 4rem;
+	width: 4rem;
+}
+#sidebarToggle:checked ~ #sidebar > div:nth-child(1) > div {
+	display: none;
+}
+#sidebarToggle:checked ~ #sidebar > div:nth-child(2) {
+	gap: 2rem;
 }

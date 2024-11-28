@@ -5,7 +5,7 @@ import '../styles/dashboard.css';
 import Sidebar from '../components/Sidebar';
 import Tab from '../components/Tab';
 
-export default class Home extends React.Component {
+export default class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -26,6 +26,23 @@ export default class Home extends React.Component {
 		const root = document.getElementById('root');
 		root.classList.add('dashboard');
 		root.setAttribute('page', 'home');
+
+		const sidebar = document.getElementById('sidebar');
+		const sidebarToggle = document.getElementById('sidebarToggle');
+
+		sidebarToggle.onchange = () => {
+			const tabs = sidebar.querySelectorAll('.tab');
+
+			if (sidebarToggle.checked) {
+				for (const tab of tabs) {
+					tab.classList.add('minimized');
+				};
+			} else {
+				for (const tab of tabs) {
+					tab.classList.remove('minimized');
+				};
+			};
+		};
 	};
 	render() {
 		return (
