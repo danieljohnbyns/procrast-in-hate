@@ -45,15 +45,21 @@ export default class Dashboard extends React.Component {
 				};
 			};
 		};
-		
-		for (const tab of tabs) {
-			tab.onclick = () => {
-				for (const tab of tabs) {
-					tab.classList.remove('active');
-				};
-				tab.classList.add('active');
+
+		const activateTab = () => {
+			for (const tab of tabs) {
+				tab.classList.remove('active');
 			};
+			setTimeout(() => {
+				const currentTab = sidebar.querySelector(`.tab[href='${window.location.pathname}']`);
+				currentTab.classList.add('active');
+			}, 10);
 		};
+
+		for (const tab of tabs) {
+			tab.addEventListener('click', activateTab);
+		};
+		activateTab();
 	};
 	render() {
 		return (
