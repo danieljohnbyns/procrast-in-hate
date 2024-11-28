@@ -7,6 +7,7 @@ import React from 'react';
  * 		rel: 'noopener noreferrer' | 'noreferrer',
  * 		head: '6' | '5' | '4' | '3' | '2' | '1',
  * 		theme: 'dark' | 'light',
+ * 		active: Boolean,
  * 		className: String,
  * 		children: JSX.Element
  * }) => JSX.Element}
@@ -17,6 +18,7 @@ const Anchor = ({
 	rel,
 	head = '6',
 	theme,
+	active,
 	className,
 	children
 }) => {
@@ -25,7 +27,7 @@ const Anchor = ({
 			href={href}
 			target={target}
 			rel={rel}
-			className={`anchor ${className} ${theme === 'light' ? 'light' : 'dark'}`}
+			className={`anchor ${className} ${theme === 'light' ? 'light' : 'dark'} ${active ? 'active' : ''}`}
 		>
 			{children}
 		</a>

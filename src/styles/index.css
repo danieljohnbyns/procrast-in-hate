@@ -251,6 +251,52 @@ a { text-decoration: none; color: inherit; }
 	height: 4rem;
 }
 
+*:has(> .tab) { width: 100%; }
+.tab {
+	position: relative;
+	width: 100%;
+	display: inline-flex;
+
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 2rem;
+
+	padding: 0.5rem 1rem;
+}
+.tab::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 100%;
+	border-left: unset;
+	background: linear-gradient(90deg, var(--color-white), transparent);
+	opacity: 0.5;
+	transition: width var(--transition), left var(--transition);
+	z-index: 1;
+}
+.tab:hover::before,
+.tab.active::before {
+	width: 100%;
+	border-left: 0.25rem solid var(--color-primary);
+}
+.tab.light {
+	color: var(--color-white);
+}
+.tab.light::before {
+	background-color: var(--color-white);
+}
+.tab > * {
+	vertical-align: middle;
+	z-index: 2;
+}
+.tab > svg {
+	width: 4rem;
+	height: 4rem;
+}
+
 .button {
 	padding: 1rem 2rem;
 	border-radius: 8rem;
@@ -345,10 +391,4 @@ a { text-decoration: none; color: inherit; }
 	display: block;
 	background-color: var(--color-white);
 	border-radius: 100%;
-}
-#sidebar > div > *:has(> .anchor),
-#sidebar > div > *:has(> .anchor) > .anchor {
-	width: 100%;
-	text-align: left;
-	justify-content: flex-start;
 }

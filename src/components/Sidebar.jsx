@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Anchor from './Anchor';
+import Tab from './Tab';
 
 /**
  * @type {(props: {
@@ -34,18 +34,17 @@ const Sidebar = ({
 			</div>
 
 			<div>
-				<Anchor className='active'>
-					<svg viewBox='0 0 48 48' fill='transparent'>
-						<path d='M18 44V24H30V44M6 18L24 4L42 18V40C42 41.0609 41.5786 42.0783 40.8284 42.8284C40.0783 43.5786 39.0609 44 38 44H10C8.93913 44 7.92172 43.5786 7.17157 42.8284C6.42143 42.0783 6 41.0609 6 40V18Z' stroke='var(--color-primary)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' />
-					</svg>
-					Home
-				</Anchor>
-				<Anchor>
-					<svg viewBox='0 0 48 48' fill='transparent'>
-						<path d='M18 44V24H30V44M6 18L24 4L42 18V40C42 41.0609 41.5786 42.0783 40.8284 42.8284C40.0783 43.5786 39.0609 44 38 44H10C8.93913 44 7.92172 43.5786 7.17157 42.8284C6.42143 42.0783 6 41.0609 6 40V18Z' stroke='var(--color-primary)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' />
-					</svg>
-					Notification
-				</Anchor>
+				{children}
+			</div>
+
+			<div>
+				<Tab
+					icon={
+						<svg viewBox='0 0 48 48' fill='transparent'>
+							<path d='M18 42H10C8.93913 42 7.92172 41.5786 7.17157 40.8284C6.42143 40.0783 6 39.0609 6 38V10C6 8.93913 6.42143 7.92172 7.17157 7.17157C7.92172 6.42143 8.93913 6 10 6H18M32 34L42 24M42 24L32 14M42 24H18' stroke='var(--color-primary)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' />
+						</svg>
+					}
+				>Logout</Tab>
 			</div>
 		</div>
 	);
