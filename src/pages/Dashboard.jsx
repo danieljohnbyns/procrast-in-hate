@@ -1,9 +1,9 @@
 import React from 'react';
 
-import '../../styles/dashboard/home.css';
+import '../styles/dashboard.css';
 
-import Sidebar from '../../components/Sidebar';
-import Tab from '../../components/Tab';
+import Sidebar from '../components/Sidebar';
+import Tab from '../components/Tab';
 
 export default class Home extends React.Component {
 	constructor(props) {
@@ -68,6 +68,8 @@ export default class Home extends React.Component {
 						}
 					>Connections</Tab>
 				</Sidebar>
+
+				<main></main>
 			</>
 		);
 	};

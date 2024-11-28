@@ -385,6 +385,7 @@ a { text-decoration: none; color: inherit; }
 }
 #sidebar > div:nth-child(2) {
 	align-items: flex-start;
+	gap: unset;
 	text-align: left;
 }
 #sidebar > div > img {

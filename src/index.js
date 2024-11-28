@@ -13,7 +13,7 @@ import LandingPage from './pages/LandingPage';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 
-import Home from './pages/dashboard/Home';
+import Dashboard from './pages/Dashboard';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -25,8 +25,8 @@ root.render(
 				<Route path='/signUp' element={<SignUp />} />
 				<Route path='/signIn' element={<SignIn />} />
 
-				<Route path='/dashboard' element={<Home />}>
-					<Route path='home' element={<Home />} />
+				<Route path='/dashboard' element={<Dashboard />}>
+					<Route path='home' element={<Dashboard />} />
 				</Route>
 			</Routes>
 		</BrowserRouter>
