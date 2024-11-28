@@ -25,9 +25,7 @@ root.render(
 				<Route path='/signUp' element={<SignUp />} />
 				<Route path='/signIn' element={<SignIn />} />
 
-				<Route path='/dashboard' element={<Dashboard />}>
-					<Route path='home' element={<Dashboard />} />
-				</Route>
+				<Route path='/dashboard/*' element={<Dashboard />} />
 			</Routes>
 		</BrowserRouter>
 	</>

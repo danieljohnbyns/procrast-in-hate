@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 /**
  * @type {(props: {
@@ -24,13 +25,14 @@ const Tab = ({
 	...props
 }) => {
 	const tab = (
-		<a
+		<Link
 			href={href}
+			to={href}
 			className={`tab ${className} ${theme === 'light' ? 'light' : 'dark'} ${active ? 'active' : ''} ${minimized ? 'minimized' : ''}`}
 		>
 			{icon}
 			<span>{children}</span>
-		</a>
+		</Link>
 	);
 
 	return (

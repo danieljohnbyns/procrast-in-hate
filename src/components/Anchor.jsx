@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 /**
  * @type {(props: {
@@ -23,14 +24,14 @@ const Anchor = ({
 	children
 }) => {
 	const anchor = (
-		<a
+		<Link
 			href={href}
 			target={target}
 			rel={rel}
 			className={`anchor ${className} ${theme === 'light' ? 'light' : 'dark'} ${active ? 'active' : ''}`}
 		>
 			{children}
-		</a>
+		</Link>
 	);
 
 	return (
