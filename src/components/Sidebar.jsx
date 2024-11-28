@@ -2,6 +2,8 @@ import React from 'react';
 
 import Tab from './Tab';
 
+import globals from '../utils/globals';
+
 /**
  * @type {(props: {
  * 		children: React.ReactNode,
@@ -16,10 +18,21 @@ const Sidebar = ({
 	const [email, setEmail] = React.useState();
 
 	React.useEffect(() => {
-		setProfile('https://via.placeholder.com/200');
-		setName('Random na pangalan');
-		setEmail('random@na.email');
+		if (!localStorage.getItem('authentication')) {
+			window.location.href = '/signIn';
+		};
+		const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+		fetch(`${globals.API_URL}/users/${_id}`)
+			.then((response) => response.json())
+			.then((data) => {
+				setProfile(data.profile || 'https://via.placeholder.com/200');
+				setName(data.name);
+				setEmail(data.email);
+			}).catch((error) => {
+				console.error('Error:', error);
+			});
 	}, []);
+
 	return (
 		<>
 			<input type='checkbox' id='sidebarToggle' />
