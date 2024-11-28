@@ -1,0 +1,5 @@
+
+#root.dashboard[page="home"] > main, section {
+	width: 100%;
+	max-width: 200rem;
+}

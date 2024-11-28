@@ -80,9 +80,9 @@ export default class SignIn extends React.Component {
 									if (response.status === 200) {
 										const data = await response.json();
 										const authentication = data.authentication;
-										
+
 										localStorage.setItem('authentication', JSON.stringify(authentication));
-										window.location.href = '/';
+										window.location.href = '/dashboard/';
 									} else {
 										alert('Invalid email or password');
 									};

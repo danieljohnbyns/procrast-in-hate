@@ -1,11 +1,15 @@
 import React from 'react';
 
+import '../../styles/dashboard/home.css';
+
+import Sidebar from '../../components/Sidebar';
+
 export default class Home extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			mobile: false,
+			mobile: false
 		};
 	};
 	componentDidMount() {
@@ -19,14 +23,13 @@ export default class Home extends React.Component {
 		setMobile();
 
 		const root = document.getElementById('root');
+		root.classList.add('dashboard');
 		root.setAttribute('page', 'home');
 	};
 	render() {
 		return (
 			<>
-				<div id='home'>
-					<h1>Welcome</h1>
-				</div>
+				<Sidebar />
 			</>
 		);
 	};
