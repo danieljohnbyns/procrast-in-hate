@@ -24,8 +24,7 @@ export default class Dashboard extends React.Component {
 		setMobile();
 
 		const root = document.getElementById('root');
-		root.classList.add('dashboard');
-		root.setAttribute('page', 'home');
+		root.setAttribute('page', 'dashboard');
 
 		const sidebar = document.getElementById('sidebar');
 		const sidebarToggle = document.getElementById('sidebarToggle');
@@ -86,7 +85,9 @@ export default class Dashboard extends React.Component {
 					>Connections</Tab>
 				</Sidebar>
 
-				<main></main>
+				<main id='dashboard'>
+					<h1>Home</h1>
+				</main>
 			</>
 		);
 	};
