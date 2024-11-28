@@ -32,7 +32,7 @@ export default class Dashboard extends React.Component {
 
 		const sidebar = document.getElementById('sidebar');
 		const sidebarToggle = document.getElementById('sidebarToggle');
-		const tabs = sidebar.querySelectorAll('.tab');
+		const tabs = sidebar.querySelectorAll('div:nth-child(2) > .tab');
 
 		sidebarToggle.onchange = () => {
 			if (sidebarToggle.checked) {
@@ -51,7 +51,7 @@ export default class Dashboard extends React.Component {
 				tab.classList.remove('active');
 			};
 			setTimeout(() => {
-				const currentTab = sidebar.querySelector(`.tab[href='${window.location.pathname}']`);
+				const currentTab = sidebar.querySelector(`div:nth-child(2) > .tab[href='${window.location.pathname}']`);
 				currentTab.classList.add('active');
 			}, 10);
 		};
