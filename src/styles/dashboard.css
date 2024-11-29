@@ -26,3 +26,40 @@
 		left: 8rem;
 	}
 }
+
+#home > header > div {
+	width: fit-content;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+#home > header > div > label {
+	width: 8rem;
+	height: 6rem;
+	border: solid 0.25rem var(--color-primary);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: background-color var(--transition);
+}
+#home > header > div > label:hover {
+	background-color: var(--color-primary);
+}
+#home > header > div > label:first-of-type {
+	border-top-left-radius: 6rem;
+	border-bottom-left-radius: 6rem;
+}
+#home > header > div > label:last-of-type {
+	border-top-right-radius: 6rem;
+	border-bottom-right-radius: 6rem;
+}
+#home > header > div > label > svg {
+	width: 4rem;
+	height: 4rem;
+}
+#home > header > div > label > svg > * {
+	transition: stroke var(--transition);
+}
+#home > header > div > label:hover > svg > * {
+	stroke: var(--color-white);
+}
