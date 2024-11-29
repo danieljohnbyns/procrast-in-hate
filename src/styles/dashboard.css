@@ -85,3 +85,37 @@
 #home > header > div > div > label:hover > svg > * {
 	stroke: var(--color-white);
 }
+#home > header > div > #createButton {
+	position: relative;
+	height: 8rem;
+	width: 8rem;
+	border-radius: 8rem;
+	border: solid 0.25rem var(--color-primary);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: background-color var(--transition);
+}
+#home > header > div > #createButton:hover {
+	background-color: var(--color-primary);
+}
+#home > header > div > #createButton::before,
+#home > header > div > #createButton::after {
+	position: absolute;
+	content: "";
+	border-radius: 0.5rem;
+	background-color: var(--color-primary);
+	transition: background-color var(--transition);
+}
+#home > header > div > #createButton::before {
+	width: 0.5rem;
+	height: 4rem;
+}
+#home > header > div > #createButton::after {
+	width: 4rem;
+	height: 0.5rem;
+}
+#home > header > div > #createButton:hover::before,
+#home > header > div > #createButton:hover::after {
+	background-color: var(--color-white);
+}
