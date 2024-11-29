@@ -27,13 +27,35 @@
 	}
 }
 
+#home > header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 2rem;
+}
 #home > header > div {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 2rem;
+}
+#home > header > div > div {
 	width: fit-content;
 	display: flex;
-	justify-content: center;
+	justify-content: flex-end;
 	align-items: center;
 }
-#home > header > div > label {
+#home > header > div > div > input {
+	display: none;
+}
+#home > header > div > div > input:checked + label {
+	background-color: var(--color-primary);
+}
+#home > header > div > div > input:checked + label > svg > * {
+	stroke: var(--color-white);
+}
+#home > header > div > div > label {
 	width: 8rem;
 	height: 6rem;
 	border: solid 0.25rem var(--color-primary);
@@ -42,24 +64,24 @@
 	align-items: center;
 	transition: background-color var(--transition);
 }
-#home > header > div > label:hover {
+#home > header > div > div > label:hover {
 	background-color: var(--color-primary);
 }
-#home > header > div > label:first-of-type {
+#home > header > div > div > label:first-of-type {
 	border-top-left-radius: 6rem;
 	border-bottom-left-radius: 6rem;
 }
-#home > header > div > label:last-of-type {
+#home > header > div > div > label:last-of-type {
 	border-top-right-radius: 6rem;
 	border-bottom-right-radius: 6rem;
 }
-#home > header > div > label > svg {
+#home > header > div > div > label > svg {
 	width: 4rem;
 	height: 4rem;
 }
-#home > header > div > label > svg > * {
+#home > header > div > div > label > svg > * {
 	transition: stroke var(--transition);
 }
-#home > header > div > label:hover > svg > * {
+#home > header > div > div > label:hover > svg > * {
 	stroke: var(--color-white);
 }
