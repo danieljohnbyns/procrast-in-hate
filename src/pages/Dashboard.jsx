@@ -9,6 +9,8 @@ import '../styles/dashboard.css';
 import Sidebar from '../components/Sidebar';
 import Tab from '../components/Tab';
 
+import Home from './dashboard/Home';
+
 export default class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
@@ -112,11 +114,7 @@ export default class Dashboard extends React.Component {
 					<Routes>
 						<Route
 							path='/'
-							element={
-								<div>
-									<h1>Dashboard</h1>
-								</div>
-							}
+							element={<Home />}
 						/>
 						<Route
 							path='/notification'
