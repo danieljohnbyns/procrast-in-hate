@@ -19,3 +19,10 @@
 	width: calc(100% - 8rem);
 	left: 8rem;
 }
+
+@media screen and (max-width: 60rem) {
+	#dashboard {
+		width: calc(100% - 8rem);
+		left: 8rem;
+	}
+}

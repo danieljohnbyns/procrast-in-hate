@@ -32,7 +32,7 @@ export default class Dashboard extends React.Component {
 
 		const sidebar = document.getElementById('sidebar');
 		const sidebarToggle = document.getElementById('sidebarToggle');
-		const tabs = sidebar.querySelectorAll('div:nth-child(2) > * > .tab');
+		const tabs = sidebar.querySelectorAll('.tab');
 
 		sidebarToggle.onchange = () => {
 			if (sidebarToggle.checked) {
