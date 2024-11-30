@@ -66,7 +66,7 @@ export default class Home extends React.Component {
 		return (
 			<div id='home'>
 				<header>
-					<h1>My Tasks</h1>
+					<h1>{this.state.mobile ? 'Tasks' : 'My Tasks'}</h1>
 
 					<div>
 						<h6>

@@ -119,6 +119,18 @@
 #home > header > div > #createButton:hover::after {
 	background-color: var(--color-white);
 }
+@media screen and (max-width: 60rem) {
+	#home > header > div > #createButton {
+		position: fixed;
+		bottom: 2rem;
+		right: 2rem;
+		z-index: 100;
+	}
+	#home > header > div > h6 {
+		display: none;
+	}
+}
+
 #home > #summaryViewPanel {
 	padding: 2rem;
     display: flex;
@@ -137,6 +149,11 @@
 #home > #summaryViewPanel > div:nth-child(1) { width: calc(40% - 1rem); }
 #home > #summaryViewPanel > div:nth-child(2) { width: calc(60% - 1rem); }
 #home > #summaryViewPanel > div:nth-child(3) { width: 100%; }
+@media screen and (max-width: 60rem) {
+	#home > #summaryViewPanel > div {
+		width: 100% !important;
+	}
+}
 
 #home > #summaryViewPanel > #summaryCalendarPanel {
 	display: flex;
