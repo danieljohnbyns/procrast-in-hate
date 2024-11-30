@@ -18,6 +18,37 @@ export default class Home extends React.Component {
 					days: [
 						{ date: 1, day: 0 },
 					]
+				},
+				taskListPanel: {
+					tasks: [
+						...(() => {
+							const tasks = [];
+							for (let i = 1; i <= 50; i++) {
+								const start = new Date(`${Math.floor(Math.random() * 12) + 1}/${Math.floor(Math.random() * 28) + 1}/2024`);
+								const end = new Date(`${start.getMonth() + Math.floor(Math.random() * 3) + 1}/${start.getDate() + Math.floor(Math.random() * 10) + 1}/${start.getFullYear()}`);
+								tasks.push({
+									id: i,
+									title: `Task ${i}`,
+									description: `Task ${i} description`,
+									dates: {
+										start: start.toDateString(),
+										end: end.toDateString()
+									},
+									completed: false,
+									priority: Math.floor(Math.random() * 3) + 1, // 1, 2, 3
+									notes: [
+										{
+											id: 1,
+											note: `Task ${i} note 1`,
+											created: '2024-12-01 00:00',
+											updated: '2024-12-01 00:00'
+										}
+									]
+								});
+							};
+							return tasks;
+						})()
+					]
 				}
 			}
 		};
@@ -94,22 +125,22 @@ export default class Home extends React.Component {
 
 							<input
 								type='radio'
-								id='listView'
+								id='calendarView'
 								name='taskView'
-								onChange={() => this.setState({ view: 'list' })}
+								onChange={() => this.setState({ view: 'calendar' })}
 							/>
-							<label htmlFor='listView'>
+							<label htmlFor='calendarView'>
 								<svg viewBox='0 0 35 39' fill='transparent'>
 									<path d='M24.2083 2V8.83333M10.5417 2V8.83333M2 15.6667H32.75M5.41667 5.41667H29.3333C31.2203 5.41667 32.75 6.94636 32.75 8.83333V32.75C32.75 34.637 31.2203 36.1667 29.3333 36.1667H5.41667C3.52969 36.1667 2 34.637 2 32.75V8.83333C2 6.94636 3.52969 5.41667 5.41667 5.41667Z' stroke='var(--color-primary)' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
 								</svg>
 							</label>
 							<input
 								type='radio'
-								id='calendarView'
+								id='listView'
 								name='taskView'
-								onChange={() => this.setState({ view: 'calendar' })}
+								onChange={() => this.setState({ view: 'list' })}
 							/>
-							<label htmlFor='calendarView'>
+							<label htmlFor='listView'>
 								<svg viewBox='0 0 41 25' fill='transparent'>
 									<path d='M12.2083 2H38.75M12.2083 12.5H38.75M12.2083 23H38.75M2 2H2.02042M2 12.5H2.02042M2 23H2.02042' stroke='var(--color-primary)' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
 								</svg>
@@ -122,7 +153,7 @@ export default class Home extends React.Component {
 
 				<main id='summaryViewPanel'>
 					<div id='summaryCalendarPanel'>
-						<div id='summaryCalendarHeader'>
+						<header id='summaryCalendarHeader'>
 							<h6>{this.state.summaryView.calendarPanel.month} {this.state.summaryView.calendarPanel.year}</h6>
 
 							<div>
@@ -203,7 +234,7 @@ export default class Home extends React.Component {
 									</svg>
 								</span>
 							</div>
-						</div>
+						</header>
 
 						<div id='summaryCalendarDaysLabel'>
 							<span><b>Sun</b></span>
@@ -225,7 +256,102 @@ export default class Home extends React.Component {
 							}
 						</div>
 					</div>
-					<div></div>
+
+
+
+					<div id='summaryListPanel'>
+						<header id='summaryListHeader'>
+							<h6>Tasks</h6>
+						</header>
+
+						<div id='summaryListTasks'>
+							{
+								this.state.summaryView.taskListPanel.tasks.slice(0, 6).map((task, i) => (
+									<div key={i} data-start={task.dates.start} data-end={task.dates.end} data-priority={task.priority} data-completed={task.completed} data-index={i}>
+										<div>
+											<input
+												type='checkbox'
+												id={`task${task.id}`}
+												onChange={() => {
+													const tasks = this.state.summaryView.taskListPanel.tasks.map(t => {
+														if (t.id === task.id) {
+															return {
+																...t,
+																completed: !t.completed
+															};
+														} else {
+															return t;
+														};
+													});
+
+													this.setState({
+														summaryView: {
+															...this.state.summaryView,
+															taskListPanel: {
+																...this.state.summaryView.taskListPanel,
+																tasks
+															}
+														}
+													});
+												}}
+												defaultChecked={task.completed}
+											/>
+											<label htmlFor={`task${task.id}`}>{task.title}</label>
+										</div>
+
+										<div>
+											<span>
+												<b>
+													{(() => {
+														const today = new Date();
+														const taskDate = new Date(task.dates.end);
+
+														// Label with "Today" "Tomorrow" "Yesterday" "This week" "Next week" "Last week" "This month" "Next month" "Last month" "Long time ago" "Soon"
+														if (today.toDateString() === taskDate.toDateString()) {
+															return 'Today';
+														} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
+															return 'Yesterday';
+														} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
+															return 'Tomorrow';
+														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
+															return 'This week';
+														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
+															return 'Last week';
+														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
+															return 'Next week';
+														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
+															return 'This month';
+														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
+															return 'Last month';
+														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
+															return 'Next month';
+														} else if (today.getFullYear() === taskDate.getFullYear()) {
+															return 'Soon';
+														} else {
+															return 'Long time ago';
+														};
+													})()}
+												</b>
+											</span>
+										</div>
+									</div>
+								))
+							}
+						</div>
+
+						<div
+							style={{ cursor: 'pointer' }}
+							onClick={() => {
+								const listView = document.getElementById('listView');
+								listView.click()
+							}}
+						>
+							View all tasks
+						</div>
+					</div>
+
+
+
 					<div></div>
 				</main>
 			</div>

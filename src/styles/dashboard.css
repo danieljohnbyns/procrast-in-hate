@@ -160,7 +160,7 @@
 	flex-direction: column;
 }
 #home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarHeader {
-	height: 4rem;
+	height: 6rem;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -243,4 +243,70 @@
 }
 #home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays > span > b {
 	font-size: 1.5rem;
+}
+
+#home > #summaryViewPanel > #summaryListPanel {
+	display: flex;
+	flex-direction: column;
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListHeader {
+	height: 6rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListTasks {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListTasks > div {
+	position: relative;
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-white);
+	margin-bottom: 1rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	transition: border-top-left-radius var(--transition), border-top-right-radius var(--transition);
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListTasks > div:hover {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListTasks > div::before {
+	content: attr(data-start) " - " attr(data-end);
+	position: absolute;
+	width: 100%;
+	height: 4rem;
+	top: 0;
+	left: -0.125rem;
+	border: solid 0.25rem var(--color-primary);
+	border-top-left-radius: 1rem;
+	border-top-right-radius: 1rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--color-primary);
+	color: var(--color-white);
+	opacity: 0;
+	pointer-events: none;
+	transition: top var(--transition), opacity var(--transition);
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListTasks > div:hover::before {
+	top: -4rem;
+	opacity: 1;
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListTasks > div > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
 }
