@@ -9,7 +9,17 @@ export default class Home extends React.Component {
 		this.state = {
 			mobile: false,
 			/** @type {'summary' | 'list' | 'calendar'} */
-			view: 'summary'
+			view: 'summary',
+
+			summaryView: {
+				calendarPanel: {
+					year: new Date().getFullYear(),
+					month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][new Date().getMonth()],
+					days: [
+						{ date: 1, day: 0 },
+					]
+				}
+			}
 		};
 	};
 	componentDidMount() {
@@ -24,6 +34,33 @@ export default class Home extends React.Component {
 
 		const root = document.getElementById('root');
 		root.setAttribute('page', 'dashboard');
+
+		const days = [];
+		const month = this.state.summaryView.calendarPanel.month;
+		const year = this.state.summaryView.calendarPanel.year;
+		const firstDay = new Date(`${month} 1, ${year}`).getDay();
+		const lastDate = new Date(year, ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(month) + 1, 0).getDate();
+		const lastDay = new Date(`${month} ${lastDate}, ${year}`).getDay();
+
+		for (let i = 0; i < firstDay; i++) {
+			days.push({ date: '', day: i });
+		};
+		for (let i = 1; i <= lastDate; i++) {
+			days.push({ date: i, day: (firstDay + i - 1) % 7 });
+		};
+		for (let i = 0; i < 6 - lastDay; i++) {
+			days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
+		};
+
+		this.setState({
+			summaryView: {
+				...this.state.summaryView,
+				calendarPanel: {
+					...this.state.summaryView.calendarPanel,
+					days
+				}
+			}
+		});
 	};
 	render() {
 		return (
@@ -82,6 +119,115 @@ export default class Home extends React.Component {
 						<div id='createButton' />
 					</div>
 				</header>
+
+				<main id='summaryViewPanel'>
+					<div id='calendarPanel'>
+						<div id='calendarHeader'>
+							<h6>{this.state.summaryView.calendarPanel.month} {this.state.summaryView.calendarPanel.year}</h6>
+
+							<div>
+								<span
+									onClick={() => {
+										const monthName = this.state.summaryView.calendarPanel.month;
+										const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(monthName);
+
+										const days = [];
+										const year = this.state.summaryView.calendarPanel.year;
+										const firstDay = new Date(`${monthName} 1, ${year}`).getDay();
+										const lastDate = new Date(year, month, 0).getDate();
+										const lastDay = new Date(`${monthName} ${lastDate}, ${year}`).getDay();
+
+										for (let i = 0; i < firstDay; i++) {
+											days.push({ date: '', day: i });
+										};
+										for (let i = 1; i <= lastDate; i++) {
+											days.push({ date: i, day: (firstDay + i - 1) % 7 });
+										};
+										for (let i = 0; i < 6 - lastDay; i++) {
+											days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
+										};
+
+										this.setState({
+											summaryView: {
+												...this.state.summaryView,
+												calendarPanel: {
+													...this.state.summaryView.calendarPanel,
+													month: month === 0 ? 'December' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month - 1],
+													year: month === 0 ? this.state.summaryView.calendarPanel.year - 1 : this.state.summaryView.calendarPanel.year,
+													days
+												}
+											}
+										});
+									}}
+								>
+									<svg viewBox='0 0 13 14'>
+										<path d='M0 6.70222L12.1265 -0.000102353L12.1265 13.4045L0 6.70222Z' fill='var(--color-primary)' />
+									</svg>
+								</span>
+								<span
+									onClick={() => {
+										const monthName = this.state.summaryView.calendarPanel.month;
+										const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(monthName);
+
+										const days = [];
+										const year = this.state.summaryView.calendarPanel.year;
+										const firstDay = new Date(`${monthName} 1, ${year}`).getDay();
+										const lastDate = new Date(year, month, 0).getDate();
+										const lastDay = new Date(`${monthName} ${lastDate}, ${year}`).getDay();
+
+										for (let i = 0; i < firstDay; i++) {
+											days.push({ date: '', day: i });
+										};
+										for (let i = 1; i <= lastDate; i++) {
+											days.push({ date: i, day: (firstDay + i - 1) % 7 });
+										};
+										for (let i = 0; i < 6 - lastDay; i++) {
+											days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
+										};
+
+										this.setState({
+											summaryView: {
+												...this.state.summaryView,
+												calendarPanel: {
+													...this.state.summaryView.calendarPanel,
+													month: month === 0 ? 'December' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month - 1],
+													year: month === 0 ? this.state.summaryView.calendarPanel.year - 1 : this.state.summaryView.calendarPanel.year,
+													days
+												}
+											}
+										});
+									}}
+								>
+									<svg viewBox='0 0 13 14'>
+										<path d='M13 7.29754L0.873493 13.9999L0.873493 0.595215L13 7.29754Z' fill='var(--color-primary)' />
+									</svg>
+								</span>
+							</div>
+						</div>
+
+						<div id='calendarDaysLabel'>
+							<span><b>Sun</b></span>
+							<span><b>Mon</b></span>
+							<span><b>Tue</b></span>
+							<span><b>Wed</b></span>
+							<span><b>Thu</b></span>
+							<span><b>Fri</b></span>
+							<span><b>Sat</b></span>
+						</div>
+
+						<div id='calendarDays'>
+							{
+								this.state.summaryView.calendarPanel.days.map((day, i) => (
+									<span key={i} className={day.date ? '' : 'empty'}>
+										<b>{day.date}</b>
+									</span>
+								))
+							}
+						</div>
+					</div>
+					<div></div>
+					<div></div>
+				</main>
 			</div>
 		);
 	};
