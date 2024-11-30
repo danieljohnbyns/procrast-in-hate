@@ -53,8 +53,12 @@ export default class Dashboard extends React.Component {
 				tab.classList.remove('active');
 			};
 			setTimeout(() => {
-				const currentTab = sidebar.querySelector(`div:nth-child(2) > * > .tab[href='${window.location.pathname}']`);
-				currentTab.classList.add('active');
+				try {
+					const currentTab = sidebar.querySelector(`div:nth-child(2) > * > .tab[href='${window.location.pathname}']`) || sidebar.querySelector(`div:nth-child(2) > * > .tab[href='${window.location.pathname.slice(0, -1)}']`);
+					currentTab.classList.add('active');
+				} catch (error) {
+					console.error('Error:', error);
+				};
 			}, 10);
 		};
 
