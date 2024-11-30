@@ -138,24 +138,24 @@
 #home > #summaryViewPanel > div:nth-child(2) { width: calc(60% - 1rem); }
 #home > #summaryViewPanel > div:nth-child(3) { width: 100%; }
 
-#home > #summaryViewPanel > #calendarPanel {
+#home > #summaryViewPanel > #summaryCalendarPanel {
 	display: flex;
 	flex-direction: column;
 }
-#home > #summaryViewPanel > #calendarPanel > #calendarHeader {
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarHeader {
 	height: 4rem;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
 }
-#home > #summaryViewPanel > #calendarPanel > #calendarHeader > div {
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarHeader > div {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
 }
-#home > #summaryViewPanel > #calendarPanel > #calendarHeader > div > span {
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarHeader > div > span {
 	width: 4rem;
 	height: 4rem;
 	display: flex;
@@ -163,21 +163,21 @@
 	align-items: center;
 	cursor: pointer;
 }
-#home > #summaryViewPanel > #calendarPanel > #calendarHeader > div > span:hover {
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarHeader > div > span:hover {
 	opacity: 0.5;
 }
-#home > #summaryViewPanel > #calendarPanel > #calendarHeader > div > span > svg {
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarHeader > div > span > svg {
 	width: 2rem;
 	height: 2rem;
 }
-#home > #summaryViewPanel > #calendarPanel > #calendarDaysLabel {
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDaysLabel {
 	width: 100%;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
 }
-#home > #summaryViewPanel > #calendarPanel > #calendarDaysLabel > span {
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDaysLabel > span {
 	width: calc(100% / 7);
 	height: 4rem;
 	display: flex;
@@ -187,13 +187,13 @@
 	color: var(--color-white);
 	text-align: center;
 }
-#home > #summaryViewPanel > #calendarPanel > #calendarDaysLabel > span:first-of-type {
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDaysLabel > span:first-of-type {
 	border-top-left-radius: 1rem;
 }
-#home > #summaryViewPanel > #calendarPanel > #calendarDaysLabel > span:last-of-type {
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDaysLabel > span:last-of-type {
 	border-top-right-radius: 1rem;
 }
-#home > #summaryViewPanel > #calendarPanel > #calendarDays {
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays {
 	width: 100%;
 	padding: 0.25rem;
 	border: solid 0.25rem var(--color-primary);
@@ -207,7 +207,7 @@
 	flex-wrap: wrap;
 	gap: 0.25rem;
 }
-#home > #summaryViewPanel > #calendarPanel > #calendarDays > span {
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays > span {
 	width: calc(100% / 7 - 0.25rem);
 	height: 6rem;
 	padding: 0.5rem;
@@ -220,10 +220,10 @@
 	cursor: pointer;
 	transition: background-color var(--transition), color var(--transition);
 }
-#home > #summaryViewPanel > #calendarPanel > #calendarDays > span:hover {
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays > span:hover {
 	background-color: var(--color-primary);
 	color: var(--color-white);
 }
-#home > #summaryViewPanel > #calendarPanel > #calendarDays > span > b {
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays > span > b {
 	font-size: 1.5rem;
 }

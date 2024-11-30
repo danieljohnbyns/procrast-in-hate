@@ -121,8 +121,8 @@ export default class Home extends React.Component {
 				</header>
 
 				<main id='summaryViewPanel'>
-					<div id='calendarPanel'>
-						<div id='calendarHeader'>
+					<div id='summaryCalendarPanel'>
+						<div id='summaryCalendarHeader'>
 							<h6>{this.state.summaryView.calendarPanel.month} {this.state.summaryView.calendarPanel.year}</h6>
 
 							<div>
@@ -205,7 +205,7 @@ export default class Home extends React.Component {
 							</div>
 						</div>
 
-						<div id='calendarDaysLabel'>
+						<div id='summaryCalendarDaysLabel'>
 							<span><b>Sun</b></span>
 							<span><b>Mon</b></span>
 							<span><b>Tue</b></span>
@@ -215,7 +215,7 @@ export default class Home extends React.Component {
 							<span><b>Sat</b></span>
 						</div>
 
-						<div id='calendarDays'>
+						<div id='summaryCalendarDays'>
 							{
 								this.state.summaryView.calendarPanel.days.map((day, i) => (
 									<span key={i} className={day.date ? '' : 'empty'}>
