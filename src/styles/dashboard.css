@@ -13,6 +13,7 @@
 	top: 0;
 	left: 40rem;
 	transition: width var(--transition), left var(--transition);
+	overflow-y: auto;
 }
 
 #sidebarToggle:checked ~ #dashboard {
@@ -237,6 +238,14 @@
 	cursor: pointer;
 	transition: background-color var(--transition), color var(--transition);
 }
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays > span.today {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays > span.empty {
+	background-color: var(--color-white);
+	color: var(--color-primary);
+}
 #home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays > span:hover {
 	background-color: var(--color-primary);
 	color: var(--color-white);
@@ -309,4 +318,94 @@
 	justify-content: flex-start;
 	align-items: center;
 	gap: 1rem;
+}
+
+#home > #summaryViewPanel > #summaryProjectPanel {
+	display: flex;
+	flex-direction: column;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectListHeader {
+	height: 6rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList {
+	width: 100%;
+	display: flex;
+	justify-content: flex-start;
+	align-items: stretch;
+	flex-wrap: wrap;
+	gap: 2rem;
+	flex-direction: row;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article {
+	position: relative;
+	width: calc(25% - 2rem);
+	padding: 2rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-white);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: stretch;
+	gap: 2rem;
+	transition: transform var(--transition);
+	z-index: 1;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article::before,
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article::after {
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	border-radius: 1rem;
+	background-color: var(--color-primary);
+	transition: transform var(--transition);
+	z-index: -2;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article::after {
+	background-color: var(--color-white);
+	z-index: -1;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article:hover {
+	transform: translateY(-0.5rem);
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article:hover::before {
+	transform: translateY(0.5rem);
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > header > span {
+	padding: 0.5rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 2rem;
+	font-size: 1.5rem;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 1rem;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > div > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > div > div > * {
+	width: 100%;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > div > div > h6 {
+	font-size: 1.5rem;
 }

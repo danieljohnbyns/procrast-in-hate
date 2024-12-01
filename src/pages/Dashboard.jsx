@@ -1,7 +1,8 @@
 import React from 'react';
 import {
 	Routes,
-	Route
+	Route,
+	Navigate
 } from 'react-router-dom';
 
 import '../styles/dashboard.css';
@@ -72,7 +73,7 @@ export default class Dashboard extends React.Component {
 			<>
 				<Sidebar>
 					<Tab
-						href='/dashboard'
+						href='/dashboard/home'
 						icon={
 							<svg viewBox='0 0 48 48' fill='transparent'>
 								<path d='M18 44V24H30V44M6 18L24 4L42 18V40C42 41.0609 41.5786 42.0783 40.8284 42.8284C40.0783 43.5786 39.0609 44 38 44H10C8.93913 44 7.92172 43.5786 7.17157 42.8284C6.42143 42.0783 6 41.0609 6 40V18Z' stroke='var(--color-primary)' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
@@ -118,6 +119,10 @@ export default class Dashboard extends React.Component {
 					<Routes>
 						<Route
 							path='/'
+							element={<Navigate to='/dashboard/home' replace />}
+						/>
+						<Route
+							path='/home'
 							element={<Home />}
 						/>
 						<Route

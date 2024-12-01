@@ -25,35 +25,88 @@ export default class Home extends React.Component {
 							const tasks = [];
 							for (let i = 1; i <= 50; i++) {
 								const start = new Date(`${Math.floor(Math.random() * 12) + 1}/${Math.floor(Math.random() * 28) + 1}/2024`);
-								const end = new Date(`${start.getMonth() + Math.floor(Math.random() * 3) + 1}/${start.getDate() + Math.floor(Math.random() * 10) + 1}/${start.getFullYear()}`);
+								const end = new Date(`${start.getMonth() + Math.floor(Math.random() * 2) + 1}/${start.getDate() + Math.floor(Math.random() * 10) + 1}/${start.getFullYear()}`);
+								const createDate = new Date(`${new Date().getMonth() - Math.floor(Math.random() * 2) + 1}/${new Date().getDate() - Math.floor(Math.random() * 10) + 1}/${new Date().getFullYear()}`);
 								tasks.push({
 									id: i,
 									title: `Task ${i}`,
 									description: `Task ${i} description`,
 									dates: {
 										start: start.toDateString(),
-										end: end.toDateString()
+										end: end.toDateString(),
+										create: createDate.toDateString()
 									},
 									completed: false,
 									priority: Math.floor(Math.random() * 3) + 1, // 1, 2, 3
-									notes: [
-										{
-											id: 1,
-											note: `Task ${i} note 1`,
-											created: '2024-12-01 00:00',
-											updated: '2024-12-01 00:00'
-										}
-									]
+									creatorId: Math.floor(Math.random() * 10) + 1,
+									collaborators: [
+										...(() => {
+											const collaborators = [];
+											for (let j = 1; j <= Math.floor(Math.random() * 5) + 1; j++) {
+												collaborators.push(Math.floor(Math.random() * 10) + 1);
+											};
+											return collaborators;
+										})()
+									],
+									checklists: [
+										...(() => {
+											const items = [];
+											for (let j = 1; j <= Math.floor(Math.random() * 5) + 1; j++) {
+												items.push({
+													id: j,
+													item: `Task ${i} checklist item ${j}`,
+													completed: Math.random() < 0.5
+												});
+											};
+											return items;
+										})()
+									],
+									project: Math.floor(Math.random() * 1) % 2 === 0 ? null : Math.floor(Math.random() * 10) + 1
 								});
 							};
 							return tasks;
 						})()
 					]
-				}
+				},
+				projectListPanel: [
+					...(() => {
+						const projects = [];
+						for (let i = 1; i <= 10; i++) {
+							const start = new Date(`${Math.floor(Math.random() * 12) + 1}/${Math.floor(Math.random() * 28) + 1}/2024`);
+							const end = new Date(`${start.getMonth() + Math.floor(Math.random() * 2) + 1}/${start.getDate() + Math.floor(Math.random() * 10) + 1}/${start.getFullYear()}`);
+							const createDate = new Date(`${new Date().getMonth() - Math.floor(Math.random() * 2) + 1}/${new Date().getDate() - Math.floor(Math.random() * 10) + 1}/${new Date().getFullYear()}`);
+							projects.push({
+								id: i,
+								title: `Project ${i}`,
+								description: `Project ${i} description`,
+								dates: {
+									start: start.toDateString(),
+									end: end.toDateString(),
+									create: createDate.toDateString()
+								},
+								progress: (Math.floor(Math.random() * 100) + 1),
+								completed: false,
+								priority: Math.floor(Math.random() * 3) + 1, // 1, 2, 3
+								creatorId: Math.floor(Math.random() * 10) + 1,
+								collaborators: [
+									...(() => {
+										const collaborators = [];
+										for (let j = 1; j <= Math.floor(Math.random() * 5) + 1; j++) {
+											collaborators.push(Math.floor(Math.random() * 10) + 1);
+										};
+										return collaborators;
+									})()
+								]
+							});
+						};
+						return projects;
+					})()
+				]
 			}
 		};
 	};
 	componentDidMount() {
+		console.log(this.state);
 		const setMobile = () => {
 			this.setState({
 				mobile: matchMedia('screen and (max-width: 60rem)').matches
@@ -154,7 +207,7 @@ export default class Home extends React.Component {
 				<main id='summaryViewPanel'>
 					<div id='summaryCalendarPanel'>
 						<header id='summaryCalendarHeader'>
-							<h6>{this.state.summaryView.calendarPanel.month} {this.state.summaryView.calendarPanel.year}</h6>
+							<h5>{this.state.summaryView.calendarPanel.month} {this.state.summaryView.calendarPanel.year}</h5>
 
 							<div>
 								<span
@@ -203,7 +256,7 @@ export default class Home extends React.Component {
 										const days = [];
 										const year = this.state.summaryView.calendarPanel.year;
 										const firstDay = new Date(`${monthName} 1, ${year}`).getDay();
-										const lastDate = new Date(year, month, 0).getDate();
+										const lastDate = new Date(year, month + 1, 0).getDate();
 										const lastDay = new Date(`${monthName} ${lastDate}, ${year}`).getDay();
 
 										for (let i = 0; i < firstDay; i++) {
@@ -221,8 +274,8 @@ export default class Home extends React.Component {
 												...this.state.summaryView,
 												calendarPanel: {
 													...this.state.summaryView.calendarPanel,
-													month: month === 0 ? 'December' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month - 1],
-													year: month === 0 ? this.state.summaryView.calendarPanel.year - 1 : this.state.summaryView.calendarPanel.year,
+													month: month === 11 ? 'January' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month + 1],
+													year: month === 11 ? this.state.summaryView.calendarPanel.year + 1 : this.state.summaryView.calendarPanel.year,
 													days
 												}
 											}
@@ -248,11 +301,14 @@ export default class Home extends React.Component {
 
 						<div id='summaryCalendarDays'>
 							{
-								this.state.summaryView.calendarPanel.days.map((day, i) => (
-									<span key={i} className={day.date ? '' : 'empty'}>
-										<b>{day.date}</b>
-									</span>
-								))
+								this.state.summaryView.calendarPanel.days.map((day, i) => {
+									const isToday = new Date().toDateString() === new Date(`${this.state.summaryView.calendarPanel.month} ${day.date}, ${this.state.summaryView.calendarPanel.year}`).toDateString();
+									return (
+										<span key={i} className={`${isToday ? 'today' : ''} ${day.date === '' ? 'empty' : ''}`} data-day={day.day}>
+											<b>{day.date}</b>
+										</span>
+									);
+								})
 							}
 						</div>
 					</div>
@@ -261,7 +317,7 @@ export default class Home extends React.Component {
 
 					<div id='summaryListPanel'>
 						<header id='summaryListHeader'>
-							<h6>Tasks</h6>
+							<h5>Tasks</h5>
 						</header>
 
 						<div id='summaryListTasks'>
@@ -340,19 +396,88 @@ export default class Home extends React.Component {
 						</div>
 
 						<div
-							style={{ cursor: 'pointer' }}
-							onClick={() => {
-								const listView = document.getElementById('listView');
-								listView.click()
-							}}
+							style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem 0' }}
 						>
-							View all tasks
+							<h6
+								style={{ cursor: 'pointer' }}
+								onClick={() => {
+									const listView = document.getElementById('listView');
+									listView.click()
+								}}
+							>
+								View ALl Tasks
+							</h6>
 						</div>
 					</div>
 
 
 
-					<div></div>
+					<div id='summaryProjectPanel'>
+						<header id='summaryProjectListHeader'>
+							<h5>Projects</h5>
+						</header>
+
+						<div id='summaryProjectList'>
+							{
+								this.state.summaryView.projectListPanel.map((project, i) => (
+									<article key={i}>
+										<header>
+											<h6>{project.title}</h6>
+
+											<span>
+												{project.completed ? 'Completed' : 'In progress'}
+											</span>
+										</header>
+
+										<div>
+											<p>{project.description}</p>
+
+											<div>
+												<progress value={project.progress} max='100' />
+												<h6>{project.progress}% complete</h6>
+											</div>
+										</div>
+
+										<footer>
+											<span>
+												<b>
+													Due {(() => {
+														const today = new Date();
+														const projectDate = new Date(project.dates.end);
+
+														// Label with "Today" "Tomorrow" "Yesterday" "This week" "Next week" "Last week" "This month" "Next month" "Last month" "Long time ago" "Soon"
+														if (today.toDateString() === projectDate.toDateString()) {
+															return 'today';
+														} else if (today.toDateString() === new Date(projectDate.getTime() - 86400000).toDateString()) {
+															return 'yesterday';
+														} else if (today.toDateString() === new Date(projectDate.getTime() + 86400000).toDateString()) {
+															return 'tomorrow';
+														} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() && today.getDate() < projectDate.getDate() && projectDate.getDate() - today.getDate() <= 6) {
+															return 'this week';
+														} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() && today.getDate() > projectDate.getDate() && today.getDate() - projectDate.getDate() <= 6) {
+															return 'last week';
+														} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() && today.getDate() < projectDate.getDate() && projectDate.getDate() - today.getDate() <= 13) {
+															return 'next week';
+														} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth()) {
+															return 'this month';
+														} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() - 1) {
+															return 'last month';
+														} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() + 1) {
+															return 'next month';
+														} else if (today.getFullYear() === projectDate.getFullYear()) {
+															return 'soon';
+														} else {
+															return 'long time ago';
+														};
+													})()}
+												</b>
+											</span>
+										</footer>
+									</article>
+								))
+							}
+						</div>
+					</div>
 				</main>
 			</div>
 		);
