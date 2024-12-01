@@ -1,4 +1,5 @@
 import React from 'react';
+import Swal from 'sweetalert2';
 
 import '../../styles/dashboard.css';
 
@@ -41,7 +42,7 @@ export default class Home extends React.Component {
 								collaborators: [
 									...(() => {
 										const collaborators = [];
-										for (let j = 1; j <= Math.floor(Math.random() * 5) + 1; j++) {
+										for (let j = 1; j <= Math.floor(Math.random() * 5); j++) {
 											collaborators.push(Math.floor(Math.random() * 10) + 1);
 										};
 										return collaborators;
@@ -143,6 +144,9 @@ export default class Home extends React.Component {
 				}
 			}
 		});
+
+		const createButton = document.getElementById('createButton');
+		createButton.click();
 	};
 	render() {
 		return (
@@ -198,7 +202,77 @@ export default class Home extends React.Component {
 							</label>
 						</div>
 						
-						<div id='createButton' />
+						<div
+							id='createButton'
+							onClick={() => {
+								Swal.fire({
+									title: 'Create Task',
+									html: `
+										<form id='createTaskForm'>
+											<div>
+												<label for='taskTitle'>Title</label>
+												<input type='text' id='taskTitle' required />
+											</div>
+											<div>
+												<label for='taskDescription'>Description</label>
+												<textarea id='taskDescription' required></textarea>
+											</div>
+											<div>
+												<label for='taskStartDate'>Start Date</label>
+												<input type='date' id='taskStartDate' required />
+											</div>
+											<div>
+												<label for='taskEndDate'>End Date</label>
+												<input type='date' id='taskEndDate' required />
+											</div>
+											<div>
+												<label for='taskLabel'>Label</label>
+												<input type='text' id='taskLabel' required />
+											</div>
+											<div>
+												<label for='taskProject'>Project</label>
+												<input type='text' id='taskProject' />
+											</div>
+											<div>
+												<label for='taskCollaborators'>Collaborators</label>
+												<div>
+													<input type='text' id='taskCollaborators' />
+													<button
+														type='button'
+														id='addCollaboratorButton'
+														onclick="(() => {
+															const input = document.getElementById('taskCollaborators');
+															const value = input.value.trim();
+															if (value) {
+																const list = document.getElementById('collaboratorsList');
+																const item = document.createElement('div');
+																item.innerHTML = value;
+																list.appendChild(item);
+																input.value = '';
+															};
+														})()"
+													>
+														Add
+													</button>
+													<div id='collaboratorsList'></div>
+												</div>
+											</div>
+										</form>
+									`,
+									showClass: {
+										popup: `fadeIn`
+									},
+									hideClass: {
+										popup: `fadeOut`
+									},
+									showCancelButton: true,
+									confirmButtonText: '<h6 style="color: var(--color-white);">Create</h6>',
+									cancelButtonText: '<h6 style="color: var(--color-white);">Cancel</h6>',
+									preConfirm: () => {
+									}
+								});
+							}}
+						/>
 					</div>
 				</header>
 
@@ -469,6 +543,10 @@ export default class Home extends React.Component {
 															})()}
 														</b>
 													</span>
+
+													<div>
+														{project.label}
+													</div>
 												</footer>
 											</article>
 										))

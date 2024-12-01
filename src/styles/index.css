@@ -490,3 +490,43 @@ a { text-decoration: none; color: inherit; }
 #sidebarToggle:checked ~ #sidebar > div:nth-child(2) {
 	gap: 2rem;
 }
+
+.swal2-popup {
+	width: 80rem;
+	background-color: var(--color-white);
+	border: 0.25rem solid var(--color-primary);
+	border-radius: 1rem;
+	font-size: unset;
+}
+.swal2-confirm {
+	background-color: var(--color-primary);
+	border-radius: 1rem;
+	color: var(--color-white);
+}
+.swal2-cancel {
+	background-color: var(--color-secondary);
+	border-radius: 1rem;
+	color: var(--color-primary);
+}
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+.fadeIn {
+	animation: fadeIn var(--transition);
+}
+.fadeOut {
+	animation: fadeOut var(--transition);
+}

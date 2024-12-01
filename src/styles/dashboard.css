@@ -289,6 +289,7 @@
 	justify-content: space-between;
 	align-items: center;
 	transition: border-top-left-radius var(--transition), border-top-right-radius var(--transition);
+	cursor: pointer;
 }
 #home > #summaryViewPanel > #summaryListPanel > #summaryListTasks > div:hover {
 	border-top-left-radius: 0;
@@ -358,6 +359,7 @@
 	gap: 2rem;
 	transition: transform var(--transition);
 	z-index: 1;
+	cursor: pointer;
 }
 #home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article::before,
 #home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article::after {
@@ -573,6 +575,7 @@
 	align-items: stretch;
 	gap: 2rem;
 	transition: transform var(--transition);
+	cursor: pointer;
 }
 #home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard::before,
 #home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard::after {
@@ -656,4 +659,75 @@
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
+}
+
+
+
+#createTaskForm {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 2rem;
+}
+#createTaskForm > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 2rem;
+}
+#createTaskForm > div > label {
+	width: 20rem;
+	text-align: right;
+}
+#createTaskForm > div > label:has(~ input[required])::after,
+#createTaskForm > div > label:has(~ textarea[required])::after {
+	content: "*";
+	color: var(--color-primary);
+}
+#createTaskForm > div > input,
+#createTaskForm > div > textarea,
+	#createTaskForm > div:last-of-type > div > input {
+		width: 100%;
+		padding: 1rem;
+		border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+}
+#createTaskForm > div:last-of-type > div {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 2rem;
+}
+#createTaskForm > div:last-of-type > div > input {
+	width: calc(100% - 8rem);
+}
+#createTaskForm > div:last-of-type > div > button {
+	width: 6rem;
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-white);
+	transition: background-color var(--transition), color var(--transition);
+	cursor: pointer;
+}
+#createTaskForm > div:last-of-type > div > button:hover {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#createTaskForm > div:last-of-type > div > div {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 2rem;
+}
+#createTaskForm > div:last-of-type > div > div:not(:has(*)) {
+	display: none;
 }
