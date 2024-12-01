@@ -92,6 +92,7 @@
 	width: 8rem;
 	border-radius: 8rem;
 	border: solid 0.25rem var(--color-primary);
+	background-color: var(--color-white);
 	display: flex;
 	justify-content: center;
 	align-items: center;
