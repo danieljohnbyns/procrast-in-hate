@@ -410,3 +410,11 @@
 #home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > div > div > h6 {
 	font-size: 1.5rem;
 }
+@media screen and (max-width: 60rem) {
+	#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList {
+		flex-direction: column;
+	}
+	#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article {
+		width: 100%;
+	}
+}
