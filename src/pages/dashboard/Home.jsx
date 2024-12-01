@@ -11,64 +11,62 @@ export default class Home extends React.Component {
 			/** @type {'summary' | 'list' | 'calendar'} */
 			view: 'summary',
 
-			summaryView: {
-				calendarPanel: {
+			data: {
+				calendar: {
 					year: new Date().getFullYear(),
 					month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][new Date().getMonth()],
 					days: [
 						{ date: 1, day: 0 },
 					]
 				},
-				taskListPanel: {
-					tasks: [
-						...(() => {
-							const tasks = [];
-							for (let i = 1; i <= 50; i++) {
-								const start = new Date(`${Math.floor(Math.random() * 12) + 1}/${Math.floor(Math.random() * 28) + 1}/2024`);
-								const end = new Date(`${start.getMonth() + Math.floor(Math.random() * 2) + 1}/${start.getDate() + Math.floor(Math.random() * 10) + 1}/${start.getFullYear()}`);
-								const createDate = new Date(`${new Date().getMonth() - Math.floor(Math.random() * 2) + 1}/${new Date().getDate() - Math.floor(Math.random() * 10) + 1}/${new Date().getFullYear()}`);
-								tasks.push({
-									id: i,
-									title: `Task ${i}`,
-									description: `Task ${i} description`,
-									dates: {
-										start: start.toDateString(),
-										end: end.toDateString(),
-										create: createDate.toDateString()
-									},
-									completed: false,
-									priority: Math.floor(Math.random() * 3) + 1, // 1, 2, 3
-									creatorId: Math.floor(Math.random() * 10) + 1,
-									collaborators: [
-										...(() => {
-											const collaborators = [];
-											for (let j = 1; j <= Math.floor(Math.random() * 5) + 1; j++) {
-												collaborators.push(Math.floor(Math.random() * 10) + 1);
-											};
-											return collaborators;
-										})()
-									],
-									checklists: [
-										...(() => {
-											const items = [];
-											for (let j = 1; j <= Math.floor(Math.random() * 5) + 1; j++) {
-												items.push({
-													id: j,
-													item: `Task ${i} checklist item ${j}`,
-													completed: Math.random() < 0.5
-												});
-											};
-											return items;
-										})()
-									],
-									project: Math.floor(Math.random() * 1) % 2 === 0 ? null : Math.floor(Math.random() * 10) + 1
-								});
-							};
-							return tasks;
-						})()
-					]
-				},
-				projectListPanel: [
+				tasks: [
+					...(() => {
+						const tasks = [];
+						for (let i = 1; i <= 50; i++) {
+							const start = new Date(`${Math.floor(Math.random() * 12) + 1}/${Math.floor(Math.random() * 28) + 1}/2024`);
+							const end = new Date(`${start.getMonth() + Math.floor(Math.random() * 2) + 1}/${start.getDate() + Math.floor(Math.random() * 10) + 1}/${start.getFullYear()}`);
+							const createDate = new Date(`${new Date().getMonth() - Math.floor(Math.random() * 2) + 1}/${new Date().getDate() - Math.floor(Math.random() * 10) + 1}/${new Date().getFullYear()}`);
+							tasks.push({
+								id: i,
+								title: `Task ${i}`,
+								description: `Task ${i} description`,
+								dates: {
+									start: start.toDateString(),
+									end: end.toDateString(),
+									create: createDate.toDateString()
+								},
+								completed: false,
+								priority: Math.floor(Math.random() * 3) + 1, // 1, 2, 3
+								creatorId: Math.floor(Math.random() * 10) + 1,
+								collaborators: [
+									...(() => {
+										const collaborators = [];
+										for (let j = 1; j <= Math.floor(Math.random() * 5) + 1; j++) {
+											collaborators.push(Math.floor(Math.random() * 10) + 1);
+										};
+										return collaborators;
+									})()
+								],
+								checklists: [
+									...(() => {
+										const items = [];
+										for (let j = 1; j <= Math.floor(Math.random() * 5) + 1; j++) {
+											items.push({
+												id: j,
+												item: `Task ${i} checklist item ${j}`,
+												completed: Math.random() < 0.5
+											});
+										};
+										return items;
+									})()
+								],
+								project: Math.floor(Math.random() * 1) % 2 === 0 ? null : Math.floor(Math.random() * 10) + 1
+							});
+						};
+						return tasks;
+					})()
+				],
+				projects: [
 					...(() => {
 						const projects = [];
 						for (let i = 1; i <= 10; i++) {
@@ -120,8 +118,8 @@ export default class Home extends React.Component {
 		root.setAttribute('page', 'dashboard');
 
 		const days = [];
-		const month = this.state.summaryView.calendarPanel.month;
-		const year = this.state.summaryView.calendarPanel.year;
+		const month = this.state.data.calendar.month;
+		const year = this.state.data.calendar.year;
 		const firstDay = new Date(`${month} 1, ${year}`).getDay();
 		const lastDate = new Date(year, ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(month) + 1, 0).getDate();
 		const lastDay = new Date(`${month} ${lastDate}, ${year}`).getDay();
@@ -137,10 +135,10 @@ export default class Home extends React.Component {
 		};
 
 		this.setState({
-			summaryView: {
-				...this.state.summaryView,
-				calendarPanel: {
-					...this.state.summaryView.calendarPanel,
+			data: {
+				...this.state.data,
+				calendar: {
+					...this.state.data.calendar,
 					days
 				}
 			}
@@ -204,281 +202,282 @@ export default class Home extends React.Component {
 					</div>
 				</header>
 
-				<main id='summaryViewPanel'>
-					<div id='summaryCalendarPanel'>
-						<header id='summaryCalendarHeader'>
-							<h5>{this.state.summaryView.calendarPanel.month} {this.state.summaryView.calendarPanel.year}</h5>
+				{
+					this.state.view === 'summary' ? (
+						<main id='summaryViewPanel'>
+							<div id='summaryCalendarPanel'>
+								<header id='summaryCalendarHeader'>
+									<h5>{this.state.data.calendar.month} {this.state.data.calendar.year}</h5>
 
-							<div>
-								<span
-									onClick={() => {
-										const monthName = this.state.summaryView.calendarPanel.month;
-										const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(monthName);
+									<div>
+										<span
+											onClick={() => {
+												const monthName = this.state.data.calendar.month;
+												const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(monthName);
 
-										const days = [];
-										const year = this.state.summaryView.calendarPanel.year;
-										const firstDay = new Date(`${monthName} 1, ${year}`).getDay();
-										const lastDate = new Date(year, month, 0).getDate();
-										const lastDay = new Date(`${monthName} ${lastDate}, ${year}`).getDay();
+												const days = [];
+												const year = this.state.data.calendar.year;
+												const firstDay = new Date(`${monthName} 1, ${year}`).getDay();
+												const lastDate = new Date(year, month, 0).getDate();
+												const lastDay = new Date(`${monthName} ${lastDate}, ${year}`).getDay();
 
-										for (let i = 0; i < firstDay; i++) {
-											days.push({ date: '', day: i });
-										};
-										for (let i = 1; i <= lastDate; i++) {
-											days.push({ date: i, day: (firstDay + i - 1) % 7 });
-										};
-										for (let i = 0; i < 6 - lastDay; i++) {
-											days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
-										};
+												for (let i = 0; i < firstDay; i++) {
+													days.push({ date: '', day: i });
+												};
+												for (let i = 1; i <= lastDate; i++) {
+													days.push({ date: i, day: (firstDay + i - 1) % 7 });
+												};
+												for (let i = 0; i < 6 - lastDay; i++) {
+													days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
+												};
 
-										this.setState({
-											summaryView: {
-												...this.state.summaryView,
-												calendarPanel: {
-													...this.state.summaryView.calendarPanel,
-													month: month === 0 ? 'December' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month - 1],
-													year: month === 0 ? this.state.summaryView.calendarPanel.year - 1 : this.state.summaryView.calendarPanel.year,
-													days
-												}
-											}
-										});
-									}}
-								>
-									<svg viewBox='0 0 13 14'>
-										<path d='M0 6.70222L12.1265 -0.000102353L12.1265 13.4045L0 6.70222Z' fill='var(--color-primary)' />
-									</svg>
-								</span>
-								<span
-									onClick={() => {
-										const monthName = this.state.summaryView.calendarPanel.month;
-										const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(monthName);
-
-										const days = [];
-										const year = this.state.summaryView.calendarPanel.year;
-										const firstDay = new Date(`${monthName} 1, ${year}`).getDay();
-										const lastDate = new Date(year, month + 1, 0).getDate();
-										const lastDay = new Date(`${monthName} ${lastDate}, ${year}`).getDay();
-
-										for (let i = 0; i < firstDay; i++) {
-											days.push({ date: '', day: i });
-										};
-										for (let i = 1; i <= lastDate; i++) {
-											days.push({ date: i, day: (firstDay + i - 1) % 7 });
-										};
-										for (let i = 0; i < 6 - lastDay; i++) {
-											days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
-										};
-
-										this.setState({
-											summaryView: {
-												...this.state.summaryView,
-												calendarPanel: {
-													...this.state.summaryView.calendarPanel,
-													month: month === 11 ? 'January' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month + 1],
-													year: month === 11 ? this.state.summaryView.calendarPanel.year + 1 : this.state.summaryView.calendarPanel.year,
-													days
-												}
-											}
-										});
-									}}
-								>
-									<svg viewBox='0 0 13 14'>
-										<path d='M13 7.29754L0.873493 13.9999L0.873493 0.595215L13 7.29754Z' fill='var(--color-primary)' />
-									</svg>
-								</span>
-							</div>
-						</header>
-
-						<div id='summaryCalendarDaysLabel'>
-							<span><b>Sun</b></span>
-							<span><b>Mon</b></span>
-							<span><b>Tue</b></span>
-							<span><b>Wed</b></span>
-							<span><b>Thu</b></span>
-							<span><b>Fri</b></span>
-							<span><b>Sat</b></span>
-						</div>
-
-						<div id='summaryCalendarDays'>
-							{
-								this.state.summaryView.calendarPanel.days.map((day, i) => {
-									const isToday = new Date().toDateString() === new Date(`${this.state.summaryView.calendarPanel.month} ${day.date}, ${this.state.summaryView.calendarPanel.year}`).toDateString();
-									return (
-										<span key={i} className={`${isToday ? 'today' : ''} ${day.date === '' ? 'empty' : ''}`} data-day={day.day}>
-											<b>{day.date}</b>
-										</span>
-									);
-								})
-							}
-						</div>
-					</div>
-
-
-
-					<div id='summaryListPanel'>
-						<header id='summaryListHeader'>
-							<h5>Tasks</h5>
-						</header>
-
-						<div id='summaryListTasks'>
-							{
-								this.state.summaryView.taskListPanel.tasks.slice(0, 6).map((task, i) => (
-									<div key={i} data-start={task.dates.start} data-end={task.dates.end} data-priority={task.priority} data-completed={task.completed} data-index={i}>
-										<div>
-											<input
-												type='checkbox'
-												id={`task${task.id}`}
-												onChange={() => {
-													const tasks = this.state.summaryView.taskListPanel.tasks.map(t => {
-														if (t.id === task.id) {
-															return {
-																...t,
-																completed: !t.completed
-															};
-														} else {
-															return t;
-														};
-													});
-
-													this.setState({
-														summaryView: {
-															...this.state.summaryView,
-															taskListPanel: {
-																...this.state.summaryView.taskListPanel,
-																tasks
-															}
+												this.setState({
+													data: {
+														...this.state.data,
+														calendar: {
+															...this.state.data.calendar,
+															month: month === 0 ? 'December' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month - 1],
+															year: month === 0 ? this.state.data.calendar.year - 1 : this.state.data.calendar.year,
+															days
 														}
-													});
-												}}
-												defaultChecked={task.completed}
-											/>
-											<label htmlFor={`task${task.id}`}>{task.title}</label>
-										</div>
+													}
+												});
+											}}
+										>
+											<svg viewBox='0 0 13 14'>
+												<path d='M0 6.70222L12.1265 -0.000102353L12.1265 13.4045L0 6.70222Z' fill='var(--color-primary)' />
+											</svg>
+										</span>
+										<span
+											onClick={() => {
+												const monthName = this.state.data.calendar.month;
+												const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(monthName);
 
-										<div>
-											<span>
-												<b>
-													{(() => {
-														const today = new Date();
-														const taskDate = new Date(task.dates.end);
+												const days = [];
+												const year = this.state.data.calendar.year;
+												const firstDay = new Date(`${monthName} 1, ${year}`).getDay();
+												const lastDate = new Date(year, month + 1, 0).getDate();
+												const lastDay = new Date(`${monthName} ${lastDate}, ${year}`).getDay();
 
-														// Label with "Today" "Tomorrow" "Yesterday" "This week" "Next week" "Last week" "This month" "Next month" "Last month" "Long time ago" "Soon"
-														if (today.toDateString() === taskDate.toDateString()) {
-															return 'Today';
-														} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
-															return 'Yesterday';
-														} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
-															return 'Tomorrow';
-														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
-															return 'This week';
-														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
-															return 'Last week';
-														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
-															return 'Next week';
-														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
-															return 'This month';
-														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
-															return 'Last month';
-														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
-															return 'Next month';
-														} else if (today.getFullYear() === taskDate.getFullYear()) {
-															return 'Soon';
-														} else {
-															return 'Long time ago';
-														};
-													})()}
-												</b>
-											</span>
-										</div>
+												for (let i = 0; i < firstDay; i++) {
+													days.push({ date: '', day: i });
+												};
+												for (let i = 1; i <= lastDate; i++) {
+													days.push({ date: i, day: (firstDay + i - 1) % 7 });
+												};
+												for (let i = 0; i < 6 - lastDay; i++) {
+													days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
+												};
+
+												this.setState({
+													data: {
+														...this.state.data,
+														calendar: {
+															...this.state.data.calendar,
+															month: month === 11 ? 'January' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month + 1],
+															year: month === 11 ? this.state.data.calendar.year + 1 : this.state.data.calendar.year,
+															days
+														}
+													}
+												});
+											}}
+										>
+											<svg viewBox='0 0 13 14'>
+												<path d='M13 7.29754L0.873493 13.9999L0.873493 0.595215L13 7.29754Z' fill='var(--color-primary)' />
+											</svg>
+										</span>
 									</div>
-								))
-							}
-						</div>
+								</header>
 
-						<div
-							style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem 0' }}
-						>
-							<h6
-								style={{ cursor: 'pointer' }}
-								onClick={() => {
-									const listView = document.getElementById('listView');
-									listView.click()
-								}}
-							>
-								View ALl Tasks
-							</h6>
-						</div>
-					</div>
+								<div id='summaryCalendarDaysLabel'>
+									<span><b>Sun</b></span>
+									<span><b>Mon</b></span>
+									<span><b>Tue</b></span>
+									<span><b>Wed</b></span>
+									<span><b>Thu</b></span>
+									<span><b>Fri</b></span>
+									<span><b>Sat</b></span>
+								</div>
+
+								<div id='summaryCalendarDays'>
+									{
+										this.state.data.calendar.days.map((day, i) => {
+											const isToday = new Date().toDateString() === new Date(`${this.state.data.calendar.month} ${day.date}, ${this.state.data.calendar.year}`).toDateString();
+											return (
+												<span key={i} className={`${isToday ? 'today' : ''} ${day.date === '' ? 'empty' : ''}`} data-day={day.day}>
+													<b>{day.date}</b>
+												</span>
+											);
+										})
+									}
+								</div>
+							</div>
 
 
 
-					<div id='summaryProjectPanel'>
-						<header id='summaryProjectListHeader'>
-							<h5>Projects</h5>
-						</header>
+							<div id='summaryListPanel'>
+								<header id='summaryListHeader'>
+									<h5>Tasks</h5>
+								</header>
 
-						<div id='summaryProjectList'>
-							{
-								this.state.summaryView.projectListPanel.map((project, i) => (
-									<article key={i}>
-										<header>
-											<h6>{project.title}</h6>
+								<div id='summaryListTasks'>
+									{
+										this.state.data.tasks.slice(0, 6).map((task, i) => (
+											<div key={i} data-start={task.dates.start} data-end={task.dates.end} data-priority={task.priority} data-completed={task.completed} data-index={i}>
+												<div>
+													<input
+														type='checkbox'
+														id={`task${task.id}`}
+														onChange={() => {
+															const tasks = this.state.data.tasks.map(t => {
+																if (t.id === task.id) {
+																	return {
+																		...t,
+																		completed: !t.completed
+																	};
+																} else {
+																	return t;
+																};
+															});
 
-											<span>
-												{project.completed ? 'Completed' : 'In progress'}
-											</span>
-										</header>
+															this.setState({
+																data: {
+																	...this.state.data,
+																	tasks
+																}
+															});
+														}}
+														defaultChecked={task.completed}
+													/>
+													<label htmlFor={`task${task.id}`}>{task.title}</label>
+												</div>
 
-										<div>
-											<p>{project.description}</p>
+												<div>
+													<span>
+														<b>
+															{(() => {
+																const today = new Date();
+																const taskDate = new Date(task.dates.end);
 
-											<div>
-												<progress value={project.progress} max='100' />
-												<h6>{project.progress}% complete</h6>
+																// Label with "Today" "Tomorrow" "Yesterday" "This week" "Next week" "Last week" "This month" "Next month" "Last month" "Long time ago" "Soon"
+																if (today.toDateString() === taskDate.toDateString()) {
+																	return 'Today';
+																} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
+																	return 'Yesterday';
+																} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
+																	return 'Tomorrow';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
+																	return 'This week';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
+																	return 'Last week';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
+																	return 'Next week';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
+																	return 'This month';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
+																	return 'Last month';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
+																	return 'Next month';
+																} else if (today.getFullYear() === taskDate.getFullYear()) {
+																	return 'Soon';
+																} else {
+																	return 'Long time ago';
+																};
+															})()}
+														</b>
+													</span>
+												</div>
 											</div>
-										</div>
+										))
+									}
+								</div>
 
-										<footer>
-											<span>
-												<b>
-													Due {(() => {
-														const today = new Date();
-														const projectDate = new Date(project.dates.end);
+								<div
+									style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem 0' }}
+								>
+									<h6
+										style={{ cursor: 'pointer' }}
+										onClick={() => {
+											const listView = document.getElementById('listView');
+											listView.click()
+										}}
+									>
+										View ALl Tasks
+									</h6>
+								</div>
+							</div>
 
-														// Label with "Today" "Tomorrow" "Yesterday" "This week" "Next week" "Last week" "This month" "Next month" "Last month" "Long time ago" "Soon"
-														if (today.toDateString() === projectDate.toDateString()) {
-															return 'today';
-														} else if (today.toDateString() === new Date(projectDate.getTime() - 86400000).toDateString()) {
-															return 'yesterday';
-														} else if (today.toDateString() === new Date(projectDate.getTime() + 86400000).toDateString()) {
-															return 'tomorrow';
-														} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() && today.getDate() < projectDate.getDate() && projectDate.getDate() - today.getDate() <= 6) {
-															return 'this week';
-														} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() && today.getDate() > projectDate.getDate() && today.getDate() - projectDate.getDate() <= 6) {
-															return 'last week';
-														} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() && today.getDate() < projectDate.getDate() && projectDate.getDate() - today.getDate() <= 13) {
-															return 'next week';
-														} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth()) {
-															return 'this month';
-														} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() - 1) {
-															return 'last month';
-														} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() + 1) {
-															return 'next month';
-														} else if (today.getFullYear() === projectDate.getFullYear()) {
-															return 'soon';
-														} else {
-															return 'long time ago';
-														};
-													})()}
-												</b>
-											</span>
-										</footer>
-									</article>
-								))
-							}
-						</div>
-					</div>
-				</main>
+
+
+							<div id='summaryProjectPanel'>
+								<header id='summaryProjectListHeader'>
+									<h5>Projects</h5>
+								</header>
+
+								<div id='summaryProjectList'>
+									{
+										this.state.data.projects.map((project, i) => (
+											<article key={i}>
+												<header>
+													<h6>{project.title}</h6>
+
+													<span>
+														{project.completed ? 'Completed' : 'In progress'}
+													</span>
+												</header>
+
+												<div>
+													<p>{project.description}</p>
+
+													<div>
+														<progress value={project.progress} max='100' />
+														<h6>{project.progress}% complete</h6>
+													</div>
+												</div>
+
+												<footer>
+													<span>
+														<b>
+															Due {(() => {
+																const today = new Date();
+																const projectDate = new Date(project.dates.end);
+
+																// Label with "Today" "Tomorrow" "Yesterday" "This week" "Next week" "Last week" "This month" "Next month" "Last month" "Long time ago" "Soon"
+																if (today.toDateString() === projectDate.toDateString()) {
+																	return 'today';
+																} else if (today.toDateString() === new Date(projectDate.getTime() - 86400000).toDateString()) {
+																	return 'yesterday';
+																} else if (today.toDateString() === new Date(projectDate.getTime() + 86400000).toDateString()) {
+																	return 'tomorrow';
+																} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() && today.getDate() < projectDate.getDate() && projectDate.getDate() - today.getDate() <= 6) {
+																	return 'this week';
+																} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() && today.getDate() > projectDate.getDate() && today.getDate() - projectDate.getDate() <= 6) {
+																	return 'last week';
+																} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() && today.getDate() < projectDate.getDate() && projectDate.getDate() - today.getDate() <= 13) {
+																	return 'next week';
+																} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth()) {
+																	return 'this month';
+																} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() - 1) {
+																	return 'last month';
+																} else if (today.getFullYear() === projectDate.getFullYear() && today.getMonth() === projectDate.getMonth() + 1) {
+																	return 'next month';
+																} else if (today.getFullYear() === projectDate.getFullYear()) {
+																	return 'soon';
+																} else {
+																	return 'long time ago';
+																};
+															})()}
+														</b>
+													</span>
+												</footer>
+											</article>
+										))
+									}
+								</div>
+							</div>
+						</main>
+					) : null
+				}
 			</div>
 		);
 	};
