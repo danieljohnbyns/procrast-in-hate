@@ -335,7 +335,7 @@
 #home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList {
 	width: 100%;
 	display: flex;
-	justify-content: flex-start;
+	justify-content: space-between;
 	align-items: stretch;
 	flex-wrap: wrap;
 	gap: 2rem;
