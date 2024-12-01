@@ -9,7 +9,7 @@ export default class Home extends React.Component {
 		this.state = {
 			mobile: false,
 			/** @type {'summary' | 'calendar' | 'list'} */
-			view: 'list',
+			view: 'summary',
 
 			data: {
 				calendar: {
