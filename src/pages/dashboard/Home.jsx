@@ -36,7 +36,7 @@ export default class Home extends React.Component {
 									create: createDate.toDateString()
 								},
 								completed: false,
-								priority: Math.floor(Math.random() * 3) + 1, // 1, 2, 3
+								label: ['Personal', 'Work', 'Shopping', 'Others'][Math.floor(Math.random() * 4)],
 								creatorId: Math.floor(Math.random() * 10) + 1,
 								collaborators: [
 									...(() => {
@@ -84,7 +84,7 @@ export default class Home extends React.Component {
 								},
 								progress: (Math.floor(Math.random() * 100) + 1),
 								completed: false,
-								priority: Math.floor(Math.random() * 3) + 1, // 1, 2, 3
+								label: ['Personal', 'Work', 'School'][Math.floor(Math.random() * 3)],
 								creatorId: Math.floor(Math.random() * 10) + 1,
 								collaborators: [
 									...(() => {
@@ -323,7 +323,7 @@ export default class Home extends React.Component {
 								<div id='summaryListTasks'>
 									{
 										this.state.data.tasks.slice(0, 6).map((task, i) => (
-											<div key={i} data-start={task.dates.start} data-end={task.dates.end} data-priority={task.priority} data-completed={task.completed} data-index={i}>
+											<div key={i} data-start={task.dates.start} data-end={task.dates.end}>
 												<div>
 													<input
 														type='checkbox'
@@ -604,92 +604,161 @@ export default class Home extends React.Component {
 								<div id='listViewTasks'>
 									{
 										this.state.data.tasks.map((task, i) => (
-											<div key={i} data-start={task.dates.start} data-end={task.dates.end} data-priority={task.priority} data-completed={task.completed} data-index={i}>
-												<div>
-													<input
-														type='checkbox'
-														id={`task${task.id}`}
-														onChange={() => {
-															const tasks = this.state.data.tasks.map(t => {
-																if (t.id === task.id) {
-																	return {
-																		...t,
-																		completed: !t.completed
+											<div key={i} className='taskCard'>
+												<header>
+													<div>
+														<input
+															type='checkbox'
+															id={`task${task.id}`}
+															onChange={() => {
+																const tasks = this.state.data.tasks.map(t => {
+																	if (t.id === task.id) {
+																		return {
+																			...t,
+																			completed: !t.completed
+																		};
+																	} else {
+																		return t;
 																	};
-																} else {
-																	return t;
-																};
-															});
+																});
 
-															this.setState({
-																data: {
-																	...this.state.data,
-																	tasks
-																}
-															});
-														}}
-														defaultChecked={task.completed}
-													/>
-													<label htmlFor={`task${task.id}`}><h6>{task.title}</h6></label>
+																this.setState({
+																	data: {
+																		...this.state.data,
+																		tasks
+																	}
+																});
+															}}
+															defaultChecked={task.completed}
+														/>
+														<label htmlFor={`task${task.id}`}><h6>{task.title}</h6></label>
+													</div>
+
+													<div>
+														<span>
+															<b>
+																Due {(() => {
+																	const today = new Date();
+																	const taskDate = new Date(task.dates.end);
+
+																	// Label with "Today" "Tomorrow" "Yesterday" "This week" "Next week" "Last week" "This month" "Next month" "Last month" "Long time ago" "Soon"
+																	if (today.toDateString() === taskDate.toDateString()) {
+																		return 'today';
+																	} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
+																		return 'yesterday';
+																	} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
+																		return 'tomorrow';
+																	} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
+																		return 'this week';
+																	} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
+																		return 'last week';
+																	} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
+																		return 'next week';
+																	} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
+																		return 'this month';
+																	} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
+																		return 'last month';
+																	} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
+																		return 'next month';
+																	} else if (today.getFullYear() === taskDate.getFullYear()) {
+																		return 'soon';
+																	} else {
+																		return 'long time ago';
+																	};
+																})()}
+															</b>
+														</span>
+
+														{/* <span>
+															<b>
+																{(() => {
+																	const today = new Date();
+																	const taskDate = new Date(task.dates.end);
+
+																	const diffTime = Math.abs(taskDate - today);
+																	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+																	return `${diffDays} days left`;
+																})()}
+															</b>
+														</span> */}
+													</div>
+												</header>
+
+												<div>
+													<p>{task.description}</p>
 												</div>
 
 												<div>
-													<span>
-														<i>
-															{task.description}
-														</i>
-													</span>
+													<h6>Checklist</h6>
+
+													{
+														task.checklists.map((item, j) => (
+															<div key={j}>
+																<input
+																	type='checkbox'
+																	id={`task${task.id}Checklist${item.id}`}
+																	onChange={() => {
+																		const tasks = this.state.data.tasks.map(t => {
+																			if (t.id === task.id) {
+																				const checklists = t.checklists.map(c => {
+																					if (c.id === item.id) {
+																						return {
+																							...c,
+																							completed: !c.completed
+																						};
+																					} else {
+																						return c;
+																					};
+																				});
+
+																				return {
+																					...t,
+																					checklists
+																				};
+																			} else {
+																				return t;
+																			};
+																		});
+
+																		this.setState({
+																			data: {
+																				...this.state.data,
+																				tasks
+																			}
+																		});
+																	}}
+																	defaultChecked={item.completed}
+																/>
+																<label htmlFor={`task${task.id}Checklist${item.id}`}>{item.item}</label>
+															</div>
+														))
+													}
 												</div>
 
-												<div>
-													<span>
-														<b>
-															Due {(() => {
-																const today = new Date();
-																const taskDate = new Date(task.dates.end);
+												<footer>
+													<div>
+														<span>
+															Start: {task.dates.start}
+														</span>
+														<span>
+															End: {task.dates.end}
+														</span>
+													</div>
 
-																// Label with "Today" "Tomorrow" "Yesterday" "This week" "Next week" "Last week" "This month" "Next month" "Last month" "Long time ago" "Soon"
-																if (today.toDateString() === taskDate.toDateString()) {
-																	return 'today';
-																} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
-																	return 'yesterday';
-																} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
-																	return 'tomorrow';
-																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
-																	return 'this week';
-																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
-																	return 'last week';
-																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
-																	return 'next week';
-																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
-																	return 'this month';
-																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
-																	return 'last month';
-																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
-																	return 'next month';
-																} else if (today.getFullYear() === taskDate.getFullYear()) {
-																	return 'soon';
-																} else {
-																	return 'long time ago';
-																};
-															})()}
-														</b>
-													</span>
-
-													<span>
-														<b>
-															{(() => {
-																const today = new Date();
-																const taskDate = new Date(task.dates.end);
-
-																const diffTime = Math.abs(taskDate - today);
-																const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-																return `${diffDays} days left`;
-															})()}
-														</b>
-													</span>
-												</div>
+													<div>
+														{
+															task.collaborators.slice(0, 3).map((collaborator, j) => (
+																<img key={j} src={`https://randomuser.me/api/portraits/${Math.floor(Math.random() * 2) % 2 === 1 ? 'men' : 'women'}/${collaborator + Math.floor(Math.random() * 50)}.jpg`} alt='Collaborator' />
+															))
+														}
+														{
+															task.collaborators.length > 3 ? (
+																<span>+{task.collaborators.length - 3}</span>
+															) : null
+														}
+													</div>
+												</footer>
 											</div>
 										))
 									}
