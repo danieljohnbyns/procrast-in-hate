@@ -478,6 +478,120 @@ export default class Home extends React.Component {
 						</main>
 					) : null
 				}
+
+				{
+					this.state.view === 'calendar' ? (
+						<main id='calendarViewPanel'>
+							<div id='calendarPanel'>
+								<header id='calendarHeader'>
+									<h5>{this.state.data.calendar.month} {this.state.data.calendar.year}</h5>
+
+									<div>
+										<span
+											onClick={() => {
+												const monthName = this.state.data.calendar.month;
+												const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(monthName);
+
+												const days = [];
+												const year = this.state.data.calendar.year;
+												const firstDay = new Date(`${monthName} 1, ${year}`).getDay();
+												const lastDate = new Date(year, month, 0).getDate();
+												const lastDay = new Date(`${monthName} ${lastDate}, ${year}`).getDay();
+
+												for (let i = 0; i < firstDay; i++) {
+													days.push({ date: '', day: i });
+												};
+												for (let i = 1; i <= lastDate; i++) {
+													days.push({ date: i, day: (firstDay + i - 1) % 7 });
+												};
+												for (let i = 0; i < 6 - lastDay; i++) {
+													days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
+												};
+
+												this.setState({
+													data: {
+														...this.state.data,
+														calendar: {
+															...this.state.data.calendar,
+															month: month === 0 ? 'December' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month - 1],
+															year: month === 0 ? this.state.data.calendar.year - 1 : this.state.data.calendar.year,
+															days
+														}
+													}
+												});
+											}}
+										>
+											<svg viewBox='0 0 13 14'>
+												<path d='M0 6.70222L12.1265 -0.000102353L12.1265 13.4045L0 6.70222Z' fill='var(--color-primary)' />
+											</svg>
+										</span>
+										<span
+											onClick={() => {
+												const monthName = this.state.data.calendar.month;
+												const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(monthName);
+
+												const days = [];
+												const year = this.state.data.calendar.year;
+												const firstDay = new Date(`${monthName} 1, ${year}`).getDay();
+												const lastDate = new Date(year, month + 1, 0).getDate();
+												const lastDay = new Date(`${monthName} ${lastDate}, ${year}`).getDay();
+
+												for (let i = 0; i < firstDay; i++) {
+													days.push({ date: '', day: i });
+												};
+												for (let i = 1; i <= lastDate; i++) {
+													days.push({ date: i, day: (firstDay + i - 1) % 7 });
+												};
+												for (let i = 0; i < 6 - lastDay; i++) {
+													days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
+												};
+
+												this.setState({
+													data: {
+														...this.state.data,
+														calendar: {
+															...this.state.data.calendar,
+															month: month === 11 ? 'January' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month + 1],
+															year: month === 11 ? this.state.data.calendar.year + 1 : this.state.data.calendar.year,
+															days
+														}
+													}
+												});
+											}}
+										>
+											<svg viewBox='0 0 13 14'>
+												<path d='M13 7.29754L0.873493 13.9999L0.873493 0.595215L13 7.29754Z' fill='var(--color-primary)' />
+											</svg>
+										</span>
+									</div>
+								</header>
+
+								<div id='calendarDaysLabel'>
+									<span><b>Sun</b></span>
+									<span><b>Mon</b></span>
+									<span><b>Tue</b></span>
+									<span><b>Wed</b></span>
+									<span><b>Thu</b></span>
+									<span><b>Fri</b></span>
+									<span><b>Sat</b></span>
+								</div>
+
+								<div id='calendarDays'>
+									{
+										this.state.data.calendar.days.map((day, i) => {
+											const isToday = new Date().toDateString() === new Date(`${this.state.data.calendar.month} ${day.date}, ${this.state.data.calendar.year}`).toDateString();
+											return (
+												<span key={i} className={`${isToday ? 'today' : ''} ${day.date === '' ? 'empty' : ''}`} data-day={day.day}>
+													<b>{day.date}</b>
+												</span>
+											);
+										})
+									}
+								</div>
+							</div>
+						</main>
+					) : null
+				}
 			</div>
 		);
 	};
