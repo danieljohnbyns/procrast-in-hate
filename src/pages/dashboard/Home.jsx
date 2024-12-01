@@ -8,8 +8,8 @@ export default class Home extends React.Component {
 
 		this.state = {
 			mobile: false,
-			/** @type {'summary' | 'list' | 'calendar'} */
-			view: 'summary',
+			/** @type {'summary' | 'calendar' | 'list'} */
+			view: 'list',
 
 			data: {
 				calendar: {
@@ -586,6 +586,112 @@ export default class Home extends React.Component {
 												</span>
 											);
 										})
+									}
+								</div>
+							</div>
+						</main>
+					) : null
+				}
+
+				{
+					this.state.view === 'list' ? (
+						<main id='listViewPanel'>
+							<div id='listPanel'>
+								<header id='listViewHeader'>
+									<h5>Tasks</h5>
+								</header>
+
+								<div id='listViewTasks'>
+									{
+										this.state.data.tasks.map((task, i) => (
+											<div key={i} data-start={task.dates.start} data-end={task.dates.end} data-priority={task.priority} data-completed={task.completed} data-index={i}>
+												<div>
+													<input
+														type='checkbox'
+														id={`task${task.id}`}
+														onChange={() => {
+															const tasks = this.state.data.tasks.map(t => {
+																if (t.id === task.id) {
+																	return {
+																		...t,
+																		completed: !t.completed
+																	};
+																} else {
+																	return t;
+																};
+															});
+
+															this.setState({
+																data: {
+																	...this.state.data,
+																	tasks
+																}
+															});
+														}}
+														defaultChecked={task.completed}
+													/>
+													<label htmlFor={`task${task.id}`}><h6>{task.title}</h6></label>
+												</div>
+
+												<div>
+													<span>
+														<i>
+															{task.description}
+														</i>
+													</span>
+												</div>
+
+												<div>
+													<span>
+														<b>
+															Due {(() => {
+																const today = new Date();
+																const taskDate = new Date(task.dates.end);
+
+																// Label with "Today" "Tomorrow" "Yesterday" "This week" "Next week" "Last week" "This month" "Next month" "Last month" "Long time ago" "Soon"
+																if (today.toDateString() === taskDate.toDateString()) {
+																	return 'today';
+																} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
+																	return 'yesterday';
+																} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
+																	return 'tomorrow';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
+																	return 'this week';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
+																	return 'last week';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
+																	return 'next week';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
+																	return 'this month';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
+																	return 'last month';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
+																	return 'next month';
+																} else if (today.getFullYear() === taskDate.getFullYear()) {
+																	return 'soon';
+																} else {
+																	return 'long time ago';
+																};
+															})()}
+														</b>
+													</span>
+
+													<span>
+														<b>
+															{(() => {
+																const today = new Date();
+																const taskDate = new Date(task.dates.end);
+
+																const diffTime = Math.abs(taskDate - today);
+																const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+																return `${diffDays} days left`;
+															})()}
+														</b>
+													</span>
+												</div>
+											</div>
+										))
 									}
 								</div>
 							</div>
