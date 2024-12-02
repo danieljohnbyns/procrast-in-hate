@@ -1,0 +1,712 @@
+#home {
+	min-height: 100%;
+}
+#home > header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 2rem;
+}
+#home > header > div {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 2rem;
+}
+#home > header > div > div {
+	width: fit-content;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+#home > header > div > div > input {
+	display: none;
+}
+#home > header > div > div > input:checked + label {
+	background-color: var(--color-primary);
+}
+#home > header > div > div > input:checked + label > svg > * {
+	stroke: var(--color-white);
+}
+#home > header > div > div > label {
+	width: 8rem;
+	height: 6rem;
+	border: solid 0.25rem var(--color-primary);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--color-white);
+	transition: background-color var(--transition);
+}
+#home > header > div > div > label:hover {
+	background-color: var(--color-primary);
+}
+#home > header > div > div > label:first-of-type {
+	border-top-left-radius: 6rem;
+	border-bottom-left-radius: 6rem;
+}
+#home > header > div > div > label:last-of-type {
+	border-top-right-radius: 6rem;
+	border-bottom-right-radius: 6rem;
+}
+#home > header > div > div > label > svg {
+	width: 4rem;
+	height: 4rem;
+}
+#home > header > div > div > label > svg > * {
+	transition: stroke var(--transition);
+}
+#home > header > div > div > label:hover > svg > * {
+	stroke: var(--color-white);
+}
+#home > header > div > #createButton {
+	position: relative;
+	height: 8rem;
+	width: 8rem;
+	border-radius: 8rem;
+	border: solid 0.25rem var(--color-primary);
+	background-color: var(--color-white);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: background-color var(--transition);
+}
+#home > header > div > #createButton:hover {
+	background-color: var(--color-primary);
+}
+#home > header > div > #createButton::before,
+#home > header > div > #createButton::after {
+	position: absolute;
+	content: "";
+	border-radius: 0.5rem;
+	background-color: var(--color-primary);
+	transition: background-color var(--transition);
+}
+#home > header > div > #createButton::before {
+	width: 0.5rem;
+	height: 4rem;
+}
+#home > header > div > #createButton::after {
+	width: 4rem;
+	height: 0.5rem;
+}
+#home > header > div > #createButton:hover::before,
+#home > header > div > #createButton:hover::after {
+	background-color: var(--color-white);
+}
+@media screen and (max-width: 60rem) {
+	#home > header > div > #createButton {
+		position: fixed;
+		bottom: 2rem;
+		right: 2rem;
+		z-index: 100;
+	}
+	#home > header > div > h6 {
+		display: none;
+	}
+}
+
+#home > #summaryViewPanel {
+	padding: 2rem;
+    display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: stretch;
+	flex-wrap: wrap;
+	gap: 4rem;
+}
+#home > #summaryViewPanel > div {
+	padding: 2rem;
+
+	background-color: var(--color-white);
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+}
+#home > #summaryViewPanel > div:nth-child(1) { width: calc(40% - 2rem); }
+#home > #summaryViewPanel > div:nth-child(2) { width: calc(60% - 2rem); }
+#home > #summaryViewPanel > div:nth-child(3) { width: 100%; }
+@media screen and (max-width: 60rem) {
+	#home > #summaryViewPanel > div {
+		width: 100% !important;
+	}
+}
+
+#home > #summaryViewPanel > #summaryCalendarPanel {
+	display: flex;
+	flex-direction: column;
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarHeader {
+	height: 6rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarHeader > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarHeader > div > span {
+	width: 4rem;
+	height: 4rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarHeader > div > span:hover {
+	opacity: 0.5;
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarHeader > div > span > svg {
+	width: 2rem;
+	height: 2rem;
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDaysLabel {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDaysLabel > span {
+	width: calc(100% / 7);
+	height: 4rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--color-primary);
+	color: var(--color-white);
+	text-align: center;
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDaysLabel > span:first-of-type {
+	border-top-left-radius: 1rem;
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDaysLabel > span:last-of-type {
+	border-top-right-radius: 1rem;
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays {
+	width: 100%;
+	padding: 0.25rem;
+	border: solid 0.25rem var(--color-primary);
+	border-top: none;
+	border-bottom-left-radius: 1rem;
+	border-bottom-right-radius: 1rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays > span {
+	width: calc(100% / 7 - 0.25rem);
+	height: 6rem;
+	padding: 0.5rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	text-align: left;
+	cursor: pointer;
+	transition: background-color var(--transition), color var(--transition);
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays > span.today {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays > span.empty {
+	background-color: var(--color-white);
+	color: var(--color-primary);
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays > span:hover {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#home > #summaryViewPanel > #summaryCalendarPanel > #summaryCalendarDays > span > b {
+	font-size: 1.5rem;
+}
+
+#home > #summaryViewPanel > #summaryListPanel {
+	display: flex;
+	flex-direction: column;
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListHeader {
+	height: 6rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListTasks {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListTasks > div {
+	position: relative;
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-white);
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	transition: border-top-left-radius var(--transition), border-top-right-radius var(--transition);
+	cursor: pointer;
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListTasks > div:hover {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListTasks > div::before {
+	content: attr(data-start) " - " attr(data-end);
+	position: absolute;
+	width: 100%;
+	height: 4rem;
+	top: 0;
+	left: -0.125rem;
+	border: solid 0.25rem var(--color-primary);
+	border-top-left-radius: 1rem;
+	border-top-right-radius: 1rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--color-primary);
+	color: var(--color-white);
+	opacity: 0;
+	pointer-events: none;
+	transition: top var(--transition), opacity var(--transition);
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListTasks > div:hover::before {
+	top: -4rem;
+	opacity: 1;
+}
+#home > #summaryViewPanel > #summaryListPanel > #summaryListTasks > div > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+}
+
+#home > #summaryViewPanel > #summaryProjectPanel {
+	display: flex;
+	flex-direction: column;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectListHeader {
+	height: 6rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList {
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-auto-rows: auto;
+	gap: 2rem;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article {
+	position: relative;
+	padding: 2rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-white);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: stretch;
+	gap: 2rem;
+	transition: transform var(--transition);
+	z-index: 1;
+	cursor: pointer;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article::before,
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article::after {
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	border-radius: 1rem;
+	background-color: var(--color-primary);
+	transition: transform var(--transition);
+	z-index: -2;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article::after {
+	background-color: var(--color-white);
+	z-index: -1;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article:hover {
+	transform: translateY(-0.5rem);
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article:hover::before {
+	transform: translateY(0.5rem);
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > header > span {
+	padding: 0.5rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 2rem;
+	font-size: 1.5rem;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 1rem;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > div > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > div > div > * {
+	width: 100%;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > div > div > h6 {
+	font-size: 1.5rem;
+}
+@media screen and (max-width: 60rem) {
+	#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList {
+		grid-template-columns: 1fr;
+		grid-auto-rows: auto;
+		gap: 2rem;
+	}
+	#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article {
+		width: 100%;
+	}
+}
+
+#home > #calendarViewPanel {
+	height: calc(100vh - 12rem);
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+}
+#home > #calendarViewPanel > #calendarPanel {
+	height: 100%;
+	padding: 2rem;
+	background-color: var(--color-white);
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	display: flex;
+	flex-direction: column;
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarHeader {
+	height: 6rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarHeader > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarHeader > div > span {
+	width: 4rem;
+	height: 4rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarHeader > div > span:hover {
+	opacity: 0.5;
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarHeader > div > span > svg {
+	width: 2rem;
+	height: 2rem;
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarDaysLabel {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarDaysLabel > span {
+	width: calc(100% / 7);
+	height: 4rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--color-primary);
+	color: var(--color-white);
+	text-align: center;
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarDaysLabel > span:first-of-type {
+	border-top-left-radius: 1rem;
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarDaysLabel > span:last-of-type {
+	border-top-right-radius: 1rem;
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarDays {
+	width: 100%;
+	height: 100%;
+	padding: 0.25rem;
+	border: solid 0.25rem var(--color-primary);
+	border-top: none;
+	border-bottom-left-radius: 1rem;
+	border-bottom-right-radius: 1rem;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarDays > span {
+	width: calc(100% / 7 - 0.25rem);
+	padding: 0.5rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	text-align: left;
+	cursor: pointer;
+	transition: background-color var(--transition), color var(--transition);
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarDays > span.today {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarDays > span.empty {
+	background-color: var(--color-white);
+	color: var(--color-primary);
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarDays > span:hover {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#home > #calendarViewPanel > #calendarPanel > #calendarDays > span > b {
+	font-size: 1.5rem;
+}
+
+#home > #listViewPanel {
+	height: calc(100% - 12rem + 2rem);
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+#home > #listViewPanel > #listPanel {
+	padding: 2rem;
+	background-color: var(--color-white);
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	display: flex;
+	flex-direction: column;
+}
+#home > #listViewPanel > #listPanel > #listViewHeader {
+	height: 6rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #listViewPanel > #listPanel > #listViewTasks {
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-auto-rows: auto;
+	gap: 4rem;
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard {
+	position: relative;
+	padding: 2rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-white);
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 2rem;
+	transition: transform var(--transition);
+	cursor: pointer;
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard::before,
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard::after {
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	border-radius: 1rem;
+	background-color: var(--color-primary);
+	transition: transform var(--transition);
+	z-index: -2;
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard::after {
+	background-color: var(--color-white);
+	z-index: -1;
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard:hover {
+	transform: translateY(-0.5rem);
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard:hover::before {
+	transform: translateY(0.5rem);
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard > header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard > header > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 1rem;
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard > div:not(:first-of-type) {
+	height: 100%;
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard > div > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard > footer {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard > footer > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard > footer > div:last-of-type {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+}
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard > footer > div:last-of-type > img,
+#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard > footer > div:last-of-type > span {
+	width: 4rem;
+	height: 4rem;
+	margin-left: -2rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 4rem;
+	background-color: var(--color-white);
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+}
+@media screen and (max-width: 60rem) {
+	#home > #listViewPanel  > #listPanel > #listViewTasks {
+		grid-template-columns: 1fr;
+		grid-auto-rows: auto;
+		gap: 2rem;
+	}
+	#home > #listViewPanel  > #listPanel > #listViewTasks > .taskCard {
+		width: 100%;
+	}
+}
+
+
+
+#createTaskForm {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 2rem;
+}
+#createTaskForm > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 2rem;
+}
+#createTaskForm > div > label {
+	width: 20rem;
+	text-align: right;
+}
+#createTaskForm > div > label:has(~ input[required])::after,
+#createTaskForm > div > label:has(~ textarea[required])::after {
+	content: "*";
+	color: var(--color-primary);
+}
+#createTaskForm > div > input,
+#createTaskForm > div > textarea,
+#createTaskForm > div:has(> div) > div > input {
+	width: 100%;
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+}
+#createTaskForm > div:has(> div) > div {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 2rem;
+}
+#createTaskForm > div:has(> div) > div > input {
+	width: calc(100% - 8rem);
+}
+#createTaskForm > div:has(> div) > div > button {
+	width: 6rem;
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-white);
+	transition: background-color var(--transition), color var(--transition);
+	cursor: pointer;
+}
+#createTaskForm > div:has(> div) > div > button:hover {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#createTaskForm > div:has(> div) > div > div {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 2rem;
+}
+#createTaskForm > div:has(> div) > div > div:not(:has(*)) {
+	display: none;
+}

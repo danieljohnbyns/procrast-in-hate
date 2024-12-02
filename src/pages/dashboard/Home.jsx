@@ -1,7 +1,9 @@
 import React from 'react';
 import Swal from 'sweetalert2';
 
-import '../../styles/dashboard.css';
+import '../../styles/dashboard/home.css';
+
+import globals from '../../utils/globals';
 
 export default class Home extends React.Component {
 	constructor(props) {
@@ -20,53 +22,7 @@ export default class Home extends React.Component {
 						{ date: 1, day: 0 },
 					]
 				},
-				tasks: [
-					...(() => {
-						const tasks = [];
-						for (let i = 1; i <= 50; i++) {
-							const start = new Date(`${Math.floor(Math.random() * 12) + 1}/${Math.floor(Math.random() * 28) + 1}/2024`);
-							const end = new Date(`${start.getMonth() + Math.floor(Math.random() * 2) + 1}/${start.getDate() + Math.floor(Math.random() * 10) + 1}/${start.getFullYear()}`);
-							const createDate = new Date(`${new Date().getMonth() - Math.floor(Math.random() * 2) + 1}/${new Date().getDate() - Math.floor(Math.random() * 10) + 1}/${new Date().getFullYear()}`);
-							tasks.push({
-								id: i,
-								title: `Task ${i}`,
-								description: `Task ${i} description`,
-								dates: {
-									start: start.toDateString(),
-									end: end.toDateString(),
-									create: createDate.toDateString()
-								},
-								completed: false,
-								label: ['Personal', 'Work', 'Shopping', 'Others'][Math.floor(Math.random() * 4)],
-								creatorId: Math.floor(Math.random() * 10) + 1,
-								collaborators: [
-									...(() => {
-										const collaborators = [];
-										for (let j = 1; j <= Math.floor(Math.random() * 5); j++) {
-											collaborators.push(Math.floor(Math.random() * 10) + 1);
-										};
-										return collaborators;
-									})()
-								],
-								checklists: [
-									...(() => {
-										const items = [];
-										for (let j = 1; j <= Math.floor(Math.random() * 5) + 1; j++) {
-											items.push({
-												id: j,
-												item: `Task ${i} checklist item ${j}`,
-												completed: Math.random() < 0.5
-											});
-										};
-										return items;
-									})()
-								],
-								project: Math.floor(Math.random() * 1) % 2 === 0 ? null : Math.floor(Math.random() * 10) + 1
-							});
-						};
-						return tasks;
-					})()
-				],
+				tasks: [],
 				projects: [
 					...(() => {
 						const projects = [];
@@ -145,8 +101,24 @@ export default class Home extends React.Component {
 			}
 		});
 
-		const createButton = document.getElementById('createButton');
-		createButton.click();
+		this.fetchTasks();
+	};
+	fetchTasks = async () => {
+		if (!localStorage.getItem('authentication')) {
+			window.location.href = '/signIn';
+		};
+		const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+		fetch(`${globals.API_URL}/tasks/user/${_id}`)
+			.then(response => response.json())
+			.then(data => {
+				console.log(data);
+				this.setState({
+					data: {
+						...this.state.data,
+						tasks: data
+					}
+				});
+			});
 	};
 	render() {
 		return (
@@ -234,6 +206,30 @@ export default class Home extends React.Component {
 												<input type='text' id='taskProject' />
 											</div>
 											<div>
+												<label for='taskChecklist'>Checklist</label>
+												<div>
+													<input type='text' id='taskChecklist' />
+													<button
+														type='button'
+														id='addChecklistButton'
+														onclick="(() => {
+															const input = document.getElementById('taskChecklist');
+															const value = input.value.trim();
+															if (value) {
+																const list = document.getElementById('checklistList');
+																const item = document.createElement('div');
+																item.innerHTML = value;
+																list.appendChild(item);
+																input.value = '';
+															};
+														})()"
+													>
+														Add
+													</button>
+													<div id='checklistList'></div>
+												</div>
+											</div>
+											<div>
 												<label for='taskCollaborators'>Collaborators</label>
 												<div>
 													<input type='text' id='taskCollaborators' />
@@ -268,7 +264,62 @@ export default class Home extends React.Component {
 									showCancelButton: true,
 									confirmButtonText: '<h6 style="color: var(--color-white);">Create</h6>',
 									cancelButtonText: '<h6 style="color: var(--color-white);">Cancel</h6>',
-									preConfirm: () => {
+									preConfirm: async () => {
+										const form = document.getElementById('createTaskForm');
+										const title = form.querySelector('#taskTitle').value;
+										const description = form.querySelector('#taskDescription').value;
+										const startDate = form.querySelector('#taskStartDate').value;
+										const endDate = form.querySelector('#taskEndDate').value;
+										const label = form.querySelector('#taskLabel').value;
+										const project = form.querySelector('#taskProject').value;
+										const checklist = Array.from(form.querySelector('#checklistList').children).map(item => item.innerHTML);
+										const collaborators = Array.from(form.querySelector('#collaboratorsList').children).map(item => item.innerHTML);
+
+										if (!title || !description || !startDate || !endDate || !label) {
+											Swal.showValidationMessage('All fields are required');
+											return;
+										};
+
+										const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+
+										const response = await fetch(`${globals.API_URL}/tasks/user/`, {
+											method: 'PUT',
+											headers: {
+												'Content-Type': 'application/json'
+											},
+											body: JSON.stringify({
+												title,
+												description,
+												dates: {
+													start: startDate,
+													end: endDate
+												},
+												label,
+												project,
+												checklist,
+												collaborators,
+												creatorId: _id
+											})
+										});
+										if (response.ok) {
+											const data = await response.json();
+											console.log(data);
+											this.fetchTasks();
+										} else {
+											const error = await response.json();
+											console.error(error);
+											Swal.fire({
+												icon: 'error',
+												title: 'Error',
+												text: error.message,
+												showClass: {
+													popup: `fadeIn`
+												},
+												hideClass: {
+													popup: `fadeOut`
+												}
+											});
+										};
 									}
 								});
 							}}
@@ -397,7 +448,7 @@ export default class Home extends React.Component {
 								<div id='summaryListTasks'>
 									{
 										this.state.data.tasks.slice(0, 6).map((task, i) => (
-											<div key={i} data-start={task.dates.start} data-end={task.dates.end}>
+											<div key={i} data-start={new Date(task.dates.start).toDateString()} data-end={new Date(task.dates.end).toDateString()} data-completed={task.completed}>
 												<div>
 													<input
 														type='checkbox'
@@ -746,20 +797,6 @@ export default class Home extends React.Component {
 																})()}
 															</b>
 														</span>
-
-														{/* <span>
-															<b>
-																{(() => {
-																	const today = new Date();
-																	const taskDate = new Date(task.dates.end);
-
-																	const diffTime = Math.abs(taskDate - today);
-																	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-																	return `${diffDays} days left`;
-																})()}
-															</b>
-														</span> */}
 													</div>
 												</header>
 
@@ -771,7 +808,7 @@ export default class Home extends React.Component {
 													<h6>Checklist</h6>
 
 													{
-														task.checklists.map((item, j) => (
+														task.checklists?.map((item, j) => (
 															<div key={j}>
 																<input
 																	type='checkbox'
@@ -817,16 +854,16 @@ export default class Home extends React.Component {
 												<footer>
 													<div>
 														<span>
-															Start: {task.dates.start}
+															Start: {new Date(task.dates.start).toDateString()}
 														</span>
 														<span>
-															End: {task.dates.end}
+															End: {new Date(task.dates.end).toDateString()}
 														</span>
 													</div>
 
 													<div>
 														{
-															task.collaborators.slice(0, 3).map((collaborator, j) => (
+															task.collaborators?.slice(0, 3).map((collaborator, j) => (
 																<img key={j} src={`https://randomuser.me/api/portraits/${Math.floor(Math.random() * 2) % 2 === 1 ? 'men' : 'women'}/${collaborator + Math.floor(Math.random() * 50)}.jpg`} alt='Collaborator' />
 															))
 														}

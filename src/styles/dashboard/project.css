@@ -1,0 +1,300 @@
+#projects {
+	min-height: 100%;
+}
+#projects > header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 2rem;
+}
+#projects > header > div {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 2rem;
+}
+#projects > header > div > div {
+	width: fit-content;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+#projects > header > div > div > input {
+	display: none;
+}
+#projects > header > div > div > input:checked + label {
+	background-color: var(--color-primary);
+}
+#projects > header > div > div > input:checked + label > svg > * {
+	stroke: var(--color-white);
+}
+#projects > header > div > div > label {
+	width: 8rem;
+	height: 6rem;
+	border: solid 0.25rem var(--color-primary);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--color-white);
+	transition: background-color var(--transition);
+}
+#projects > header > div > div > label:hover {
+	background-color: var(--color-primary);
+}
+#projects > header > div > div > label:first-of-type {
+	border-top-left-radius: 6rem;
+	border-bottom-left-radius: 6rem;
+}
+#projects > header > div > div > label:last-of-type {
+	border-top-right-radius: 6rem;
+	border-bottom-right-radius: 6rem;
+}
+#projects > header > div > div > label > svg {
+	width: 4rem;
+	height: 4rem;
+}
+#projects > header > div > div > label > svg > * {
+	transition: stroke var(--transition);
+}
+#projects > header > div > div > label:hover > svg > * {
+	stroke: var(--color-white);
+}
+#projects > header > div > #createButton {
+	position: relative;
+	height: 8rem;
+	width: 8rem;
+	border-radius: 8rem;
+	border: solid 0.25rem var(--color-primary);
+	background-color: var(--color-white);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: background-color var(--transition);
+}
+#projects > header > div > #createButton:hover {
+	background-color: var(--color-primary);
+}
+#projects > header > div > #createButton::before,
+#projects > header > div > #createButton::after {
+	position: absolute;
+	content: "";
+	border-radius: 0.5rem;
+	background-color: var(--color-primary);
+	transition: background-color var(--transition);
+}
+#projects > header > div > #createButton::before {
+	width: 0.5rem;
+	height: 4rem;
+}
+#projects > header > div > #createButton::after {
+	width: 4rem;
+	height: 0.5rem;
+}
+#projects > header > div > #createButton:hover::before,
+#projects > header > div > #createButton:hover::after {
+	background-color: var(--color-white);
+}
+@media screen and (max-width: 60rem) {
+	#projects > header > div > #createButton {
+		position: fixed;
+		bottom: 2rem;
+		right: 2rem;
+		z-index: 100;
+	}
+	#projects > header > div > h6 {
+		display: none;
+	}
+}
+
+
+
+#projects > main {
+	height: calc(100% - 8rem);
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(3, 1fr);
+	gap: 2rem;
+	padding: 2rem;
+}
+#projects > main > .project {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 2rem;
+	padding: 2rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-white);
+	transition: transform var(--transition);
+}
+#projects > main > .project::before,
+#projects > main > .project::after {
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	border-radius: 1rem;
+	background-color: var(--color-primary);
+	transition: transform var(--transition);
+	z-index: -2;
+}
+#projects > main > .project::after {
+	background-color: var(--color-white);
+	z-index: -1;
+}
+#projects > main > .project:hover {
+	transform: translateY(-0.5rem);
+}
+#projects > main > .project:hover::before {
+	transform: translateY(0.5rem);
+}
+#projects > main > .project > header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#projects > main > .project > header > span {
+	background-color: var(--color-white);
+	color: var(--color-primary);
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 2rem;
+	padding: 0.5rem 1.5rem;
+}
+#projects > main > .project > main {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 1rem;
+}
+#projects > main > .project > main > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+}
+#projects > main > .project > main > div > * { width: 100%; }
+#projects > main > .project > main > div > h6 { font-size: 1.5rem; }
+#projects > main > .project > footer {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#projects > main > .project > footer > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+}
+#projects > main > .project > footer > div:last-of-type {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+}
+#projects > main > .project > footer > div:last-of-type > img,
+#projects > main > .project > footer > div:last-of-type > span {
+	width: 4rem;
+	height: 4rem;
+	margin-left: -2rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 4rem;
+	background-color: var(--color-white);
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+}
+
+
+#createProjectForm {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 2rem;
+}
+#createProjectForm > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 2rem;
+}
+#createProjectForm > div > label {
+	width: 20rem;
+	text-align: right;
+}
+#createProjectForm > div > label:has(~ input[required])::after,
+#createProjectForm > div > label:has(~ textarea[required])::after {
+	content: "*";
+	color: var(--color-primary);
+}
+#createProjectForm > div > input,
+#createProjectForm > div > textarea,
+#createProjectForm > div:last-of-type > div > input {
+	width: 100%;
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+}
+#createProjectForm > div:last-of-type > div {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 2rem;
+}
+#createProjectForm > div:last-of-type > div > input {
+	width: calc(100% - 8rem);
+}
+#createProjectForm > div:last-of-type > div > button {
+	width: 6rem;
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-white);
+	transition: background-color var(--transition), color var(--transition);
+	cursor: pointer;
+}
+#createProjectForm > div:last-of-type > div > button:hover {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#createProjectForm > div:last-of-type > div > div {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 2rem;
+}
+#createProjectForm > div:last-of-type > div > div:not(:has(*)) {
+	display: none;
+}
+
+.projectDetails {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 2rem;
+}
+.projectDetails > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 2rem;
+}
+.projectDetails > div:nth-child(2) {
+	flex-direction: column;
+}

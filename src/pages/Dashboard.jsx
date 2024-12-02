@@ -11,6 +11,7 @@ import Sidebar from '../components/Sidebar';
 import Tab from '../components/Tab';
 
 import Home from './dashboard/Home';
+import Projects from './dashboard/Projects';
 
 export default class Dashboard extends React.Component {
 	constructor(props) {
@@ -135,11 +136,7 @@ export default class Dashboard extends React.Component {
 						/>
 						<Route
 							path='/projects'
-							element={
-								<div>
-									<h1>Projects</h1>
-								</div>
-							}
+							element={<Projects />}
 						/>
 						<Route
 							path='/pomodoro'
