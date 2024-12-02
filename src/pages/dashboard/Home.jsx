@@ -282,7 +282,7 @@ export default class Home extends React.Component {
 
 										const _id = JSON.parse(localStorage.getItem('authentication'))._id;
 
-										const response = await fetch(`${globals.API_URL}/tasks/user/`, {
+										const response = await fetch(`${globals.API_URL}/tasks/`, {
 											method: 'PUT',
 											headers: {
 												'Content-Type': 'application/json'
