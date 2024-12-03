@@ -120,6 +120,196 @@ export default class Home extends React.Component {
 				});
 			});
 	};
+
+	showTask = async (id) => {
+		const response = await fetch(`${globals.API_URL}/tasks/${id}`);
+		if (!response.ok) {
+			Swal.fire({
+				icon: 'error',
+				title: '<h1>Error</h1>',
+				text: 'An error occurred while fetching the task',
+				showClass: {
+					popup: `fadeIn`
+				},
+				hideClass: {
+					popup: `fadeOut`
+				}
+			});
+			console.error(response);
+			return;
+		};
+		const task = await response.json();
+
+		Swal.fire({
+			title: `<h1>${task.title}</h1>`,
+			html: `
+				<div id='taskDetails'>
+					<header>
+						<p>${task.description}</p>
+						<sub><i>${task.label}</i></sub>
+					</header>
+					<div id='taskChecklists'>
+						<header>
+							<h5>Checklist</h5>
+							<div>
+								<input type='text' id='addChecklistItem' placeholder='Add checklist item' />
+								<button
+									type='button'
+									id='addChecklistItemButton'
+									onclick="(() => {
+										const input = document.getElementById('addChecklistItem');
+										const value = input.value.trim();
+										if (value) {
+											const list = document.getElementById('checklistList');
+											if (list.children.length === 1) {
+												list.innerHTML = '';
+											};
+											const item = document.createElement('div');
+											const checkbox = document.createElement('input');
+											checkbox.type = 'checkbox';
+											checkbox.id = \`task${task.id}Checklist\${list.children.length}\`;
+											const label = document.createElement('label');
+											label.htmlFor = \`task${task.id}Checklist\${list.children.length}\`;
+											label.innerHTML = value;
+											item.appendChild(checkbox);
+											item.appendChild(label);
+											list.appendChild(item);
+											input.value = '';
+										};
+									})()"
+								>
+									Add
+								</button>
+							</div>
+						</header>
+						<div id='checklistList'>
+							${task.checklists?.map((item, j) => (`
+							<div id='task${task.id}Checklist${item.id}'>
+								<input type='checkbox' id='task${task.id}Checklist${item.id}' />
+								<label for='task${task.id}Checklist${item.id}'>${item.item}</label>
+								<button
+									type='button'
+									onclick="(() => {
+										const item = document.getElementById('task${task.id}Checklist${item.id}');
+										item.remove();
+									})()"
+								>
+									Remove
+								</button>
+							</div>`)).join('') || '<i>No checklist items</i>'}
+						</div>
+					</div>
+					<div id='taskCollaborators'>
+						<header>
+							<h5>Collaborators</h5>
+
+							<div>
+								<input type='text' id='addCollaborator' placeholder='Add collaborator Id' />
+								<button
+									type='button'
+									id='addCollaboratorButton'
+									onclick="(() => {
+										const input = document.getElementById('addCollaborator');
+										const value = input.value.trim();
+										if (value) {
+											const list = document.getElementById('collaboratorsList');
+											if (list.children.length === 1) {
+												list.innerHTML = '';
+											};
+											const item = document.createElement('div');
+											item.innerHTML = value;
+											list.appendChild(item);
+											input.value = '';
+										};
+									})()"
+								>
+									Add
+								</button>
+							</div>
+						</header>
+
+						<div id='collaboratorsList'>
+							${task.collaborators?.map((collaborator, j) => (`
+								<div>
+									<p>${collaborator}</p>
+									<button
+										type='button'
+										onclick="(() => {
+											const item = document.getElementById('collaboratorsList').children[${j}];
+											item.remove();
+										})()"
+									>
+										Remove
+									</button>
+								</div>
+							`)).join('') || '<i>No collaborators</i>'}
+						</div>
+					</div>
+					<div id='taskProject'>
+						<h5>Project</h5>
+						<div>${task.project || '<i>Not part of a project</i>'}</div>
+
+						${task.project ? `
+							<button
+								type='button'
+								id='viewProjectButton'
+								onclick="(() => {
+									const listView = document.getElementById('listView');
+									listView.click();
+								})()"
+							>
+								View Project
+							</button>
+						` : ''}
+					</div>
+					<div id='taskDates'>
+						<h5>Deadline</h5>
+						<div id='taskDatesDisplay'>
+						${(() => {
+					const today = new Date();
+					const taskStartDate = new Date(task.dates.start);
+					const taskEndDate = new Date(task.dates.end);
+
+					const dueDifference = taskEndDate - today;
+					return `
+						<progress value='${Math.floor((today - taskStartDate) / (taskEndDate - taskStartDate) * 100)}' max='100'></progress>
+						<h6>${dueDifference > 0 ? 'Due in' : 'Overdue by'} ${Math.floor(dueDifference / 86400000) < 1 ? 'today' : `${Math.floor(dueDifference / 86400000)} days`}</h6>
+						${
+							today.getTime() < taskStartDate.getTime()
+								? `<sub>Starts in ${Math.floor((taskStartDate - today) / 86400000) < 1 ? 'today' : `${Math.floor((taskStartDate - today) / 86400000)} days`}</sub>` :
+								`<sub>Started ${Math.floor((today - taskStartDate) / 86400000) < 1 ? 'today' : `${Math.floor((today - taskStartDate) / 86400000)} days ago`}</sub>`
+						}
+					`;
+				})()}
+						</div>
+
+						<div id='taskDatesEdit'>
+							<div>
+								<label for='editStartDate'>Start Date</label>
+								<input type='datetime-local' id='editStartDate' value='${task.dates.start.split('.')[0]}' />
+							</div>
+							<div>
+								<label for='editEndDate'>End Date</label>
+								<input type='datetime-local' id='editEndDate' value='${task.dates.end.split('.')[0]}' />
+							</div>
+						</div>
+					</div>
+				</div>
+			`,
+			confirmButtonText: '<h6 style="color: var(--color-white);">Mark as completed</h6>',
+			showConfirmButton: !task.completed,
+			denyButtonText: '<h6 style="color: var(--color-white);">Delete</h6>',
+			showDenyButton: !task.completed,
+			cancelButtonText: '<h6 style="color: var(--color-white);">Close</h6>',
+			showCancelButton: true,
+			showClass: {
+				popup: `fadeIn`
+			},
+			hideClass: {
+				popup: `fadeOut`
+			}
+		});
+	};
 	render() {
 		return (
 			<div id='home'>
@@ -178,7 +368,7 @@ export default class Home extends React.Component {
 							id='createButton'
 							onClick={() => {
 								Swal.fire({
-									title: 'Create Task',
+									title: '<h1>Create Task</h1>',
 									html: `
 										<form id='createTaskForm'>
 											<div>
@@ -191,11 +381,11 @@ export default class Home extends React.Component {
 											</div>
 											<div>
 												<label for='taskStartDate'>Start Date</label>
-												<input type='date' id='taskStartDate' required />
+												<input type='datetime-local' id='taskStartDate' required />
 											</div>
 											<div>
 												<label for='taskEndDate'>End Date</label>
-												<input type='date' id='taskEndDate' required />
+												<input type='datetime-local' id='taskEndDate' required />
 											</div>
 											<div>
 												<label for='taskLabel'>Label</label>
@@ -310,7 +500,7 @@ export default class Home extends React.Component {
 											console.error(error);
 											Swal.fire({
 												icon: 'error',
-												title: 'Error',
+												title: '<h1>Error</h1>',
 												text: error.message,
 												showClass: {
 													popup: `fadeIn`
@@ -448,30 +638,18 @@ export default class Home extends React.Component {
 								<div id='summaryListTasks'>
 									{
 										this.state.data.tasks.slice(0, 6).map((task, i) => (
-											<div key={i} data-start={new Date(task.dates.start).toDateString()} data-end={new Date(task.dates.end).toDateString()} data-completed={task.completed}>
+											<div
+												key={i}
+												data-start={new Date(task.dates.start).toDateString()}
+												data-end={new Date(task.dates.end).toDateString()}
+												data-completed={task.completed}
+												onClick={() => this.showTask(task._id)}
+											>
 												<div>
 													<input
 														type='checkbox'
 														id={`task${task.id}`}
-														onChange={() => {
-															const tasks = this.state.data.tasks.map(t => {
-																if (t.id === task.id) {
-																	return {
-																		...t,
-																		completed: !t.completed
-																	};
-																} else {
-																	return t;
-																};
-															});
-
-															this.setState({
-																data: {
-																	...this.state.data,
-																	tasks
-																}
-															});
-														}}
+														disabled
 														defaultChecked={task.completed}
 													/>
 													<label htmlFor={`task${task.id}`}>{task.title}</label>
@@ -733,32 +911,18 @@ export default class Home extends React.Component {
 								<div id='listViewTasks'>
 									{
 										this.state.data.tasks.map((task, i) => (
-											<div key={i} className='taskCard'>
+											<div
+												key={i}
+												className='taskCard'
+												onClick={() => this.showTask(task._id)}
+											>
 												<header>
 													<div>
 														<input
 															type='checkbox'
 															id={`task${task.id}`}
-															onChange={() => {
-																const tasks = this.state.data.tasks.map(t => {
-																	if (t.id === task.id) {
-																		return {
-																			...t,
-																			completed: !t.completed
-																		};
-																	} else {
-																		return t;
-																	};
-																});
-
-																this.setState({
-																	data: {
-																		...this.state.data,
-																		tasks
-																	}
-																});
-															}}
 															defaultChecked={task.completed}
+															disabled
 														/>
 														<label htmlFor={`task${task.id}`}><h6>{task.title}</h6></label>
 													</div>
@@ -813,37 +977,8 @@ export default class Home extends React.Component {
 																<input
 																	type='checkbox'
 																	id={`task${task.id}Checklist${item.id}`}
-																	onChange={() => {
-																		const tasks = this.state.data.tasks.map(t => {
-																			if (t.id === task.id) {
-																				const checklists = t.checklists.map(c => {
-																					if (c.id === item.id) {
-																						return {
-																							...c,
-																							completed: !c.completed
-																						};
-																					} else {
-																						return c;
-																					};
-																				});
-
-																				return {
-																					...t,
-																					checklists
-																				};
-																			} else {
-																				return t;
-																			};
-																		});
-
-																		this.setState({
-																			data: {
-																				...this.state.data,
-																				tasks
-																			}
-																		});
-																	}}
 																	defaultChecked={item.completed}
+																	disabled
 																/>
 																<label htmlFor={`task${task.id}Checklist${item.id}`}>{item.item}</label>
 															</div>
@@ -853,12 +988,8 @@ export default class Home extends React.Component {
 
 												<footer>
 													<div>
-														<span>
-															Start: {new Date(task.dates.start).toDateString()}
-														</span>
-														<span>
-															End: {new Date(task.dates.end).toDateString()}
-														</span>
+														<sub>Start: {new Date(task.dates.start).toDateString()}</sub>
+														<sub>End: {new Date(task.dates.end).toDateString()}</sub>
 													</div>
 
 													<div>

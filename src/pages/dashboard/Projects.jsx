@@ -91,11 +91,11 @@ export default class Projects extends React.Component {
 											</div>
 											<div>
 												<label for='projectStartDate'>Start Date</label>
-												<input type='date' id='projectStartDate' required />
+												<input type='datetime-local' id='projectStartDate' required />
 											</div>
 											<div>
 												<label for='projectEndDate'>End Date</label>
-												<input type='date' id='projectEndDate' required />
+												<input type='datetime-local' id='projectEndDate' required />
 											</div>
 											<div>
 												<label for='projectLabel'>Label</label>
@@ -187,12 +187,8 @@ export default class Projects extends React.Component {
 
 							<footer>
 								<div>
-									<span>
-										Start: {project.dates.start}
-									</span>
-									<span>
-										End: {project.dates.end}
-									</span>
+									<sub>Start: {project.dates.start}</sub>
+									<sub>End: {project.dates.end}</sub>
 								</div>
 
 								<div>

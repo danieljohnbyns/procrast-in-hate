@@ -71,6 +71,7 @@
 	justify-content: center;
 	align-items: center;
 	transition: background-color var(--transition);
+	cursor: pointer;
 }
 #home > header > div > #createButton:hover {
 	background-color: var(--color-primary);
@@ -709,4 +710,159 @@
 }
 #createTaskForm > div:has(> div) > div > div:not(:has(*)) {
 	display: none;
+}
+
+#taskDetails {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 4rem;
+}
+#taskDetails > header {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+}
+#taskDetails > header > sub {
+	padding: 0.5rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 2rem;
+	background-color: var(--color-white);
+}
+#taskDetails > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+}
+#taskDetails > div > * {
+	width: 100%;
+	text-align: left;
+}
+#taskDetails > #taskChecklists,
+#taskDetails > #taskCollaborators {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 2rem;
+}
+#taskDetails > #taskChecklists > header,
+#taskDetails > #taskCollaborators > header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#taskDetails > #taskChecklists > header > div,
+#taskDetails > #taskCollaborators > header > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+}
+#taskDetails > #taskChecklists > header > div > button,
+#taskDetails > #taskCollaborators > header > div > button {
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-white);
+	transition: background-color var(--transition), color var(--transition);
+	cursor: pointer;
+}
+#taskDetails > #taskChecklists > header > div > button:hover,
+#taskDetails > #taskCollaborators > header > div > button:hover {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#taskDetails > #taskChecklists > header > div > input,
+#taskDetails > #taskCollaborators > header > div > input {
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+}
+#taskDetails > #taskChecklists > #checklistList,
+#taskDetails > #taskCollaborators > #collaboratorsList {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 1rem;
+}
+#taskDetails > #taskChecklists > #checklistList > div,
+#taskDetails > #taskCollaborators > #collaboratorsList > div {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+}
+#taskDetails > #taskChecklists > #checklistList > div > button,
+#taskDetails > #taskCollaborators > #collaboratorsList > div > button {
+	display: none;
+	position: absolute;
+	right: 0;
+	padding: 0.25rem 0.25rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 0.5rem;
+	background-color: var(--color-white);
+	transition: background-color var(--transition), color var(--transition);
+	cursor: pointer;
+}
+#taskDetails > #taskChecklists > #checklistList > div > button:hover,
+#taskDetails > #taskCollaborators > #collaboratorsList > div > button:hover {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#taskDetails > #taskChecklists > #checklistList > div:hover > button,
+#taskDetails > #taskCollaborators > #collaboratorsList > div:hover > button {
+	display: inline-flex;
+}
+#taskDetails > #taskProject {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 2rem;
+}
+#taskDetails > #taskDates {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 2rem;
+}
+#taskDetails > #taskDates > #taskDatesDisplay {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+}
+#taskDetails > #taskDates > #taskDatesDisplay > progress {
+	width: 100%;
+	height: 2rem;
+}
+#taskDetails > #taskDates > #taskDatesEdit {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#taskDetails > #taskDates > #taskDatesEdit > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+}
+#taskDetails > #taskDates > #taskDatesEdit > div > input {
+	width: 20rem;
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
 }

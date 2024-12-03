@@ -43,6 +43,7 @@ h2 { font-size: calc(2rem * 2); }
 h1 { font-size: calc(2rem * 2.5); }
 p { font-family: 'Montserrat', sans-serif;}
 a { text-decoration: none; color: inherit; }
+sub, sup { font-size: 0.75em; }
 
 #root {
 	display: flex;
@@ -493,20 +494,22 @@ a { text-decoration: none; color: inherit; }
 
 .swal2-popup {
 	width: 80rem;
+	max-height: calc(100vh - 8rem);
 	background-color: var(--color-white);
 	border: 0.25rem solid var(--color-primary);
 	border-radius: 1rem;
 	font-size: unset;
+	overflow-y: scroll;
 }
-.swal2-confirm {
-	background-color: var(--color-primary);
+div:where(.swal2-container) button:where(.swal2-styled):not([disabled]) {
 	border-radius: 1rem;
 	color: var(--color-white);
 }
+.swal2-confirm {
+	background-color: var(--color-primary);
+}
 .swal2-cancel {
 	background-color: var(--color-secondary);
-	border-radius: 1rem;
-	color: var(--color-primary);
 }
 @keyframes fadeIn {
 	from {
