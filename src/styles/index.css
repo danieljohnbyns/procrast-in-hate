@@ -502,8 +502,12 @@ sub, sup { font-size: 0.75em; }
 	font-size: unset;
 	overflow-y: auto;
 }
+.swal2-validation-message {
+	color: var(--color-primary);
+	background-color: var(--color-white);
+}
 .swal2-title {
-	height: 6rem;
+	height: 8rem;
 	color: var(--color-primary);
 }
 .swal2-actions {

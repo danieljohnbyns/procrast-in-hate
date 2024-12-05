@@ -163,7 +163,7 @@ export default class Home extends React.Component {
 		 * 			item: String,
 		 * 			completed: Boolean
 		 * 		}[],
-		 * 		project: String
+		 * 		projectId: String
 		 * }}
 		 */
 		const task = await response.json();
@@ -382,7 +382,7 @@ export default class Home extends React.Component {
 										const startDate = form.querySelector('#taskStartDate').value;
 										const endDate = form.querySelector('#taskEndDate').value;
 										const label = form.querySelector('#taskLabel').value;
-										const project = form.querySelector('#taskProject').value;
+										const projectId = form.querySelector('#taskProject').value;
 										const checklist = Array.from(form.querySelector('#checklistList').children).map(item => item.innerHTML);
 										const collaborators = Array.from(form.querySelector('#collaboratorsList').children).map(item => item.innerHTML);
 
@@ -406,7 +406,7 @@ export default class Home extends React.Component {
 													end: endDate
 												},
 												label,
-												project,
+												projectId,
 												checklist,
 												collaborators,
 												creatorId: _id
@@ -564,7 +564,7 @@ export default class Home extends React.Component {
 												data-start={new Date(task.dates.start).toDateString()}
 												data-end={new Date(task.dates.end).toDateString()}
 												data-completed={task.completed}
-												onClick={() => this.showTask(task._id)}
+												onClick={() => window.showTask(task._id)}
 											>
 												<div>
 													<input
@@ -969,7 +969,7 @@ class TaskDetails extends React.Component {
 			 * 			item: String,
 			 * 			completed: Boolean
 			 * 		}[],
-			 * 		project: String
+			 * 		projectId: String
 			 * }}
 			 */
 			task: {
@@ -985,7 +985,7 @@ class TaskDetails extends React.Component {
 				creatorId: null,
 				collaborators: [],
 				checklists: [],
-				project: null
+				projectId: null
 			},
 			id: props.id
 		};

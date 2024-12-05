@@ -781,10 +781,15 @@
 	color: var(--color-white);
 }
 #taskDetails > #taskChecklists > header > div > input,
-#taskDetails > #taskCollaborators > header > div > input {
+#taskDetails > #taskCollaborators > header > div > input,
+#taskDetails > #taskCollaborators > header > div > select {
 	padding: 1rem;
 	border: solid 0.25rem var(--color-primary);
 	border-radius: 1rem;
+}
+#taskDetails > #taskCollaborators > header > div > select {
+	width: 20rem;
+	padding: unset 1rem;
 }
 #taskDetails > #taskChecklists > #checklistList,
 #taskDetails > #taskCollaborators > #collaboratorsList {
