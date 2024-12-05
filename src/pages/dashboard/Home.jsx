@@ -1391,6 +1391,6 @@ class TaskDetails extends React.Component {
 					</div>
 				</footer>
 			</article>
-		)
+		);
 	};
 };

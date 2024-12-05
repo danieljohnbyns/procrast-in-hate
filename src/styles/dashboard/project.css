@@ -281,20 +281,148 @@
 	display: none;
 }
 
-.projectDetails {
+.swal2-popup:has(> div > #projectDetails) {
+	width: calc(100vw - 8rem);
+}
+.swal2-popup:has(> div > #projectDetails) > .swal2-title {
+	text-align: left;
+}
+#projectDetails {
+	height: calc(100vh - 8rem - 6rem - 6rem - 2rem - 4rem);
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 4rem;
+}
+#projectDetails > main {
+	height: 100%;
+	width: 40%;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: stretch;
 	gap: 2rem;
 }
-.projectDetails > div {
+#projectDetails > main > header {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
 	align-items: center;
+	gap: 1rem;
+}
+#projectDetails > main > header > sub {
+	padding: 0.5rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 2rem;
+	background-color: var(--color-white);
+}
+#projectDetails > main > div > * {
+	width: 100%;
+	text-align: left;
+}
+#projectDetails > main > #projectCollaborators {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
 	gap: 2rem;
 }
-.projectDetails > div:nth-child(2) {
+#projectDetails > main > #projectCollaborators > header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#projectDetails > main > #projectCollaborators > header > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+}
+#projectDetails > main > #projectCollaborators > header > div > button {
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-white);
+	transition: background-color var(--transition), color var(--transition);
+	cursor: pointer;
+}
+#projectDetails > main > #projectCollaborators > header > div > button:hover {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#projectDetails > main > #projectCollaborators > header > div > input {
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+}
+#projectDetails > main > #projectCollaborators > #collaboratorsList {
+	display: flex;
 	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 1rem;
+}
+#projectDetails > main > #projectCollaborators > #collaboratorsList > div {
+	position: relative;
+	height: 2rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+}
+#projectDetails > main > #projectCollaborators > #collaboratorsList > div > button {
+	display: none;
+	padding: 0.25rem 0.25rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 0.5rem;
+	background-color: var(--color-white);
+	transition: background-color var(--transition), color var(--transition);
+	cursor: pointer;
+}
+#projectDetails > main > #projectCollaborators > #collaboratorsList > div > button:hover {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
+#projectDetails > main > #projectCollaborators > #collaboratorsList > div:hover > button {
+	display: inline-flex;
+}
+#projectDetails > main > #projectDates {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 2rem;
+}
+#projectDetails > main > #projectDates > #projectDatesDisplay {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+}
+#projectDetails > main > #projectDates > #projectDatesDisplay > progress {
+	width: 100%;
+	height: 2rem;
+}
+#projectDetails > main > #projectDates > #projectDatesEdit {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+#projectDetails > main > #projectDates > #projectDatesEdit > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+}
+#projectDetails > main > #projectDates > #projectDatesEdit > div > input {
+	width: 20rem;
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
 }
