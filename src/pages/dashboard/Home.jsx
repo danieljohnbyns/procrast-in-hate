@@ -125,7 +125,7 @@ export default class Home extends React.Component {
 			});
 	};
 
-	showTask = async (id, silent) => {
+	showTask = async (id) => {
 		const response = await fetch(`${globals.API_URL}/tasks/${id}`);
 		if (!response.ok) {
 			Swal.fire({
@@ -172,16 +172,63 @@ export default class Home extends React.Component {
 			title: <h1>{task.title}</h1>,
 			html: <TaskDetails task={task} id={id} />,
 			showClass: {
-				popup: silent ? '' : `fadeIn`
+				popup: `fadeIn`
 			},
 			hideClass: {
-				popup: silent ? '' : `fadeOut`
+				popup: `fadeOut`
 			},
-			confirmButtonText: <h6 style={{ color: 'var(--color-white)' }}>Mark as Done</h6>,
+			confirmButtonText: !task.completed ? <h6 style={{ color: 'var(--color-white)' }}>Mark as Complete</h6> : <h6 style={{ color: 'var(--color-white)' }}>Mark as Incomplete</h6>,
 			denyButtonText: <h6 style={{ color: 'var(--color-white)' }}>Delete</h6>,
 			cancelButtonText: <h6 style={{ color: 'var(--color-white)' }}>Close</h6>,
 			showDenyButton: true,
-			showCancelButton: true
+			showCancelButton: true,
+			preDeny: async () => {
+				const response = await fetch(`${globals.API_URL}/tasks/${id}`, {
+					method: 'DELETE'
+				});
+				if (response.ok) {
+					Swal.fire({
+						icon: 'success',
+						title: '<h1>Success</h1>',
+						text: 'Task deleted',
+						showClass: {
+							popup: `fadeIn`
+						},
+						hideClass: {
+							popup: `fadeOut`
+						},
+						timer: 2000,
+						timerProgressBar: true
+					});
+					this.fetchTasks();
+				} else {
+					const error = await response.json();
+					console.error(error);
+					Swal.fire({
+						icon: 'error',
+						title: '<h1>Error</h1>',
+						text: error.message,
+						showClass: {
+							popup: `fadeIn`
+						},
+						hideClass: {
+							popup: `fadeOut`
+						}
+					});
+				};
+			},
+			preConfirm: async () => {
+				const response = await fetch(`${globals.API_URL}/tasks/${id}/${task.completed ? 'false' : 'true'}`, {
+					method: 'PATCH'
+				});
+
+				if (!response.ok) {
+					Swal.showValidationMessage('An error occurred');
+					return;
+				};
+
+				this.fetchTasks();
+			}
 		});
 	};
 	render() {
@@ -281,7 +328,7 @@ export default class Home extends React.Component {
 															const value = input.value.trim();
 															if (value) {
 																const list = document.getElementById('checklistList');
-																const item = document.createElement('div');
+																const item = document.createElement('p');
 																item.innerHTML = value;
 																list.appendChild(item);
 																input.value = '';
@@ -523,10 +570,13 @@ export default class Home extends React.Component {
 													<input
 														type='checkbox'
 														id={`task${task._id}`}
-														disabled
-														defaultChecked={task.completed}
+														checked={task.completed}
+														onChange={(e) => {
+															e.target.checked = false;
+														}}
+														style={{ cursor: 'inherit' }}
 													/>
-													<label htmlFor={`task${task._id}`}>{task.title}</label>
+													<label htmlFor={`task${task._id}`} style={{ cursor: 'inherit' }}>{task.title}</label>
 												</div>
 
 												<div>
@@ -981,9 +1031,10 @@ class TaskDetails extends React.Component {
 						<h6>Checklist</h6>
 
 						<div>
-							<input type='text' id='taskChecklistInput' placeholder='Add item' />
+							<input type='text' disabled={this.state.task.completed} id='taskChecklistInput' placeholder='Add item' />
 							<button
 								type='button'
+								disabled={this.state.task.completed}
 								id='taskChecklistButton'
 								onClick={async () => {
 									const input = document.getElementById('taskChecklistInput');
@@ -1029,6 +1080,7 @@ class TaskDetails extends React.Component {
 								<div key={i}>
 									<input
 										type='checkbox'
+										disabled={this.state.task.completed}
 										id={`checklistItem${item.id}`}
 										defaultChecked={item.completed}
 										onChange={async () => {
@@ -1064,6 +1116,7 @@ class TaskDetails extends React.Component {
 									<label htmlFor={`checklistItem${item.id}`}><p>{item.item}</p></label>
 									<button
 										type='button'
+										disabled={this.state.task.completed}
 										onClick={async () => {
 											const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists/${item.id}`, {
 												method: 'DELETE'
@@ -1100,9 +1153,10 @@ class TaskDetails extends React.Component {
 						<h6>Collaborators</h6>
 
 						<div>
-							<input type='text' id='taskCollaboratorInput' placeholder='Add collaborator' />
+							<input type='text' disabled={this.state.task.completed} id='taskCollaboratorInput' placeholder='Add collaborator' />
 							<button
 								type='button'
+								disabled={this.state.task.completed}
 								id='taskCollaboratorButton'
 								onClick={async () => {
 									const input = document.getElementById('taskCollaboratorInput');
@@ -1149,34 +1203,43 @@ class TaskDetails extends React.Component {
 								<div key={i}>
 									<p>{collaborator.name}</p>
 									<sub>{collaborator._id}</sub>
-									<button
-										type='button'
-										onClick={async () => {
-											const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/collaborators/${collaborator._id}`, {
-												method: 'DELETE'
-											});
-											if (!response.ok) {
-												const error = await response.json();
-												console.error(error);
-												Swal.fire({
-													icon: 'error',
-													title: '<h1>Error</h1>',
-													text: error.message,
-													showClass: {
-														popup: `fadeIn`
-													},
-													hideClass: {
-														popup: `fadeOut`
-													}
-												});
-												return;
-											};
+									{(() => {
+										const _id = JSON.parse(localStorage.getItem('authentication'))._id;
 
-											await this.fetchTask();
-										}}
-									>
-										Remove
-									</button>
+										if (!this.state.task.collaborators?.find(collab => collab._id === _id)) {
+											return (
+												<button
+													type='button'
+													disabled={this.state.task.completed}
+													onClick={async () => {
+														const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/collaborators/${collaborator._id}`, {
+															method: 'DELETE'
+														});
+														if (!response.ok) {
+															const error = await response.json();
+															console.error(error);
+															Swal.fire({
+																icon: 'error',
+																title: '<h1>Error</h1>',
+																text: error.message,
+																showClass: {
+																	popup: `fadeIn`
+																},
+																hideClass: {
+																	popup: `fadeOut`
+																}
+															});
+															return;
+														};
+
+														await this.fetchTask();
+													}}
+												>
+													Remove
+												</button>
+											);
+										};
+									})()}
 								</div>
 							)) : <i>No collaborators</i>
 						}
@@ -1231,11 +1294,20 @@ class TaskDetails extends React.Component {
 							<label htmlFor='taskStartDate'>Start Date</label>
 							<input
 								type='datetime-local'
+								disabled={this.state.task.completed}
 								id='taskStartDate'
 								defaultValue={this.state.task.dates.start?.split('.')[0]}
-								onBlur={async () => {
+								onBlur={async (e) => {
 									const input = document.getElementById('taskStartDate');
 									const value = input.value;
+
+									if (new Date(value).getTime() > new Date(this.state.task.dates.end).getTime()) {
+										Swal.showValidationMessage('Start date cannot be after end date');
+										e.target.value = this.state.task.dates.start?.split('.')[0];
+										return;
+									};
+
+									if (input.value === this.state.task.dates.start) return;
 
 									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/dates/start`, {
 										method: 'PATCH',
@@ -1271,11 +1343,20 @@ class TaskDetails extends React.Component {
 							<label htmlFor='taskEndDate'>End Date</label>
 							<input
 								type='datetime-local'
+								disabled={this.state.task.completed}
 								id='taskEndDate'
 								defaultValue={this.state.task.dates.end?.split('.')[0]}
-								onBlur={async () => {
+								onBlur={async (e) => {
 									const input = document.getElementById('taskEndDate');
 									const value = input.value;
+
+									if (new Date(value).getTime() > new Date(this.state.task.dates.start).getTime()) {
+										Swal.showValidationMessage('End date cannot be before start date');
+										e.target.value = this.state.task.dates.end?.split('.')[0];
+										return;
+									};
+
+									if (input.value === this.state.task.dates.end) return;
 
 									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/dates/end`, {
 										method: 'PATCH',
