@@ -475,16 +475,74 @@
 }
 
 #projectDetails > main {
+	position: relative;
 	width: 60%;
 	display: flex;
 	flex-direction: column;
+	overflow-y: auto;
+}
+@media screen and (max-width: 60rem) {
+	#projectDetails > main {
+		overflow-y: unset;
+	}
 }
 #projectDetails > main > header {
-	height: 6rem;
+	height: 8rem;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
+}
+#projectDetails > main > header > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+}
+#projectDetails > main > header > div > #createTaskButton {
+	position: relative;
+	height: 6rem;
+	width: 6rem;
+	border-radius: 6rem;
+	border: solid 0.25rem var(--color-primary);
+	background-color: var(--color-white);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: background-color var(--transition);
+	cursor: pointer;
+}
+#projectDetails > main > header > div > #createTaskButton:hover {
+	background-color: var(--color-primary);
+}
+#projectDetails > main > header > div > #createTaskButton::before,
+#projectDetails > main > header > div > #createTaskButton::after {
+	position: absolute;
+	content: "";
+	border-radius: 0.5rem;
+	background-color: var(--color-primary);
+	transition: background-color var(--transition);
+}
+#projectDetails > main > header > div > #createTaskButton::before {
+	width: 0.5rem;
+	height: 4rem;
+}
+#projectDetails > main > header > div > #createTaskButton::after {
+	width: 4rem;
+	height: 0.5rem;
+}
+#projectDetails > main > header > div > #createTaskButton:hover::before,
+#projectDetails > main > header > div > #createTaskButton:hover::after {
+	background-color: var(--color-white);
+}
+@media screen and (max-width: 60rem) {
+	#projectDetails > main > header > div > #createTaskButton {
+		position: fixed;
+		bottom: 8rem;
+		right: 4rem;
+		z-index: 100;
+	}
 }
 #projectDetails > main > div {
 	display: grid;

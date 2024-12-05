@@ -669,8 +669,9 @@
 }
 #createTaskForm > div > input,
 #createTaskForm > div > textarea,
-#createTaskForm > div:has(> div) > div > input {
-	width: 100%;
+#createTaskForm > div:has(> div) > div > input,
+#createTaskForm > div:has(> div) > div > select {
+	flex: 1;
 	padding: 1rem;
 	border: solid 0.25rem var(--color-primary);
 	border-radius: 1rem;

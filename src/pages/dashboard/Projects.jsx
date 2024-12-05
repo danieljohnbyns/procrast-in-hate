@@ -767,6 +767,165 @@ class ProjectDetails extends React.Component {
 				<main>
 					<header>
 						<h6>Tasks</h6>
+						<div>
+							<div
+								id='createTaskButton'
+								onClick={() => {
+									withReactContent(Swal).fire({
+										title: <h1>Create Task</h1>,
+										html: (
+											<form id='createTaskForm'>
+												<div>
+													<label htmlFor='taskTitle'>Title</label>
+													<input type='text' id='taskTitle' required />
+												</div>
+												<div>
+													<label htmlFor='taskDescription'>Description</label>
+													<textarea id='taskDescription' required></textarea>
+												</div>
+												<div>
+													<label htmlFor='taskStartDate'>Start Date</label>
+													<input type='datetime-local' id='taskStartDate' required />
+												</div>
+												<div>
+													<label htmlFor='taskEndDate'>End Date</label>
+													<input type='datetime-local' id='taskEndDate' required />
+												</div>
+												<div>
+													<label htmlFor='taskLabel'>Label</label>
+													<input type='text' id='taskLabel' required />
+												</div>
+												<div>
+													<label htmlFor='taskProject'>Project</label>
+													<input type='text' id='taskProject' value={this.state.id} disabled />
+												</div>
+												<div>
+													<label htmlFor='taskChecklist'>Checklist</label>
+													<div>
+														<input type='text' id='taskChecklist' />
+														<button
+															type='button'
+															id='addChecklistButton'
+															onClick={() => {
+																const input = document.getElementById('taskChecklist');
+																const value = input.value.trim();
+																if (value) {
+																	const list = document.getElementById('checklistList');
+																	const item = document.createElement('p');
+																	item.innerHTML = value;
+																	list.appendChild(item);
+																	input.value = '';
+																};
+															}}
+														>
+															Add
+														</button>
+														<div id='checklistList'></div>
+													</div>
+												</div>
+												<div>
+													<label htmlFor='taskCollaborators'>Collaborators</label>
+													<div>
+														<select id='taskCollaborators'>
+															<option value=''>Select a collaborator</option>
+															{
+																this.state.project.collaborators.map((collaborator, i) => (
+																	<option key={i} value={collaborator._id}>{collaborator.name}</option>
+																))
+															}
+														</select>
+														<button
+															type='button'
+															id='addCollaboratorButton'
+															onClick={() => {
+																const input = document.getElementById('taskCollaborators');
+																const value = input.value.trim();
+																if (value) {
+																	const list = document.getElementById('collaboratorsList');
+																	const item = document.createElement('div');
+																	item.innerHTML = value;
+																	list.appendChild(item);
+																	input.value = '';
+																};
+															}}
+														>
+															Add
+														</button>
+														<div id='collaboratorsList'></div>
+													</div>
+												</div>
+											</form>
+										),
+										showClass: {
+											popup: `fadeIn`
+										},
+										hideClass: {
+											popup: `fadeOut`
+										},
+										showCancelButton: true,
+										confirmButtonText: <h6 style={{ color: 'var(--color-white)' }}>Create</h6>,
+										cancelButtonText: <h6 style={{ color: 'var(--color-white)' }}>Cancel</h6>,
+										preConfirm: async () => {
+											const form = document.getElementById('createTaskForm');
+											const title = form.querySelector('#taskTitle').value;
+											const description = form.querySelector('#taskDescription').value;
+											const startDate = form.querySelector('#taskStartDate').value;
+											const endDate = form.querySelector('#taskEndDate').value;
+											const label = form.querySelector('#taskLabel').value;
+											const projectId = form.querySelector('#taskProject').value;
+											const checklist = Array.from(form.querySelector('#checklistList').children).map(item => item.innerHTML);
+											const collaborators = Array.from(form.querySelector('#collaboratorsList').children).map(item => item.innerHTML);
+
+											if (!title || !description || !startDate || !endDate || !label) {
+												Swal.showValidationMessage('All fields are required');
+												return;
+											};
+
+											const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+
+											const response = await fetch(`${globals.API_URL}/tasks/`, {
+												method: 'PUT',
+												headers: {
+													'Content-Type': 'application/json'
+												},
+												body: JSON.stringify({
+													title,
+													description,
+													dates: {
+														start: startDate,
+														end: endDate
+													},
+													label,
+													projectId,
+													checklist,
+													collaborators,
+													creatorId: _id
+												})
+											});
+											if (response.ok) {
+												const data = await response.json();
+												console.log(data);
+												this.fetchProject();
+											} else {
+												const error = await response.json();
+												console.error(error);
+												Swal.fire({
+													icon: 'error',
+													title: '<h1>Error</h1>',
+													text: error.message,
+													showClass: {
+														popup: `fadeIn`
+													},
+													hideClass: {
+														popup: `fadeOut`
+													}
+												});
+											};
+										}
+									});
+								}}
+							/>
+						</div>
 					</header>
 					<div id='projectTasks'>
 						{
