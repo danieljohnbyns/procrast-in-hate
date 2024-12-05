@@ -499,7 +499,7 @@ sub, sup { font-size: 0.75em; }
 	border: 0.25rem solid var(--color-primary);
 	border-radius: 1rem;
 	font-size: unset;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 div:where(.swal2-container) button:where(.swal2-styled):not([disabled]) {
 	border-radius: 1rem;

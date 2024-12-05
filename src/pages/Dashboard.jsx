@@ -5,6 +5,8 @@ import {
 	Navigate
 } from 'react-router-dom';
 
+import Swal from 'sweetalert2';
+
 import '../styles/dashboard.css';
 
 import Sidebar from '../components/Sidebar';
@@ -68,6 +70,8 @@ export default class Dashboard extends React.Component {
 			tab.addEventListener('click', activateTab);
 		};
 		activateTab();
+
+		window.Swal = Swal;
 	};
 	render() {
 		return (

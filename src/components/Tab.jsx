@@ -10,7 +10,8 @@ import { Link } from 'react-router-dom';
  * 		active: Boolean,
  *		icon?: JSX.Element,
  *		minimized?: Boolean,
- * 		children: JSX.Element
+ * 		children: JSX.Element,
+ * 		onClick?: Function
  * }) => JSX.Element}
  */
 const Tab = ({
@@ -22,6 +23,7 @@ const Tab = ({
 	icon,
 	minimized,
 	children,
+	onClick,
 	...props
 }) => {
 	const tab = (
@@ -29,6 +31,8 @@ const Tab = ({
 			href={href}
 			to={href}
 			className={`tab ${className} ${theme === 'light' ? 'light' : 'dark'} ${active ? 'active' : ''} ${minimized ? 'minimized' : ''}`}
+			onClick={onClick}
+			{...props}
 		>
 			{icon}
 			<span>{children}</span>

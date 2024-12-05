@@ -797,6 +797,7 @@
 #taskDetails > #taskChecklists > #checklistList > div,
 #taskDetails > #taskCollaborators > #collaboratorsList > div {
 	position: relative;
+	height: 2rem;
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
@@ -806,8 +807,6 @@
 #taskDetails > #taskChecklists > #checklistList > div > button,
 #taskDetails > #taskCollaborators > #collaboratorsList > div > button {
 	display: none;
-	position: absolute;
-	right: 0;
 	padding: 0.25rem 0.25rem;
 	border: solid 0.25rem var(--color-primary);
 	border-radius: 0.5rem;

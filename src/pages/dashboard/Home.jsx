@@ -1,5 +1,6 @@
 import React from 'react';
 import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content'
 
 import '../../styles/dashboard/home.css';
 
@@ -102,7 +103,10 @@ export default class Home extends React.Component {
 		});
 
 		this.fetchTasks();
+
+		window.showTask = this.showTask;
 	};
+
 	fetchTasks = async () => {
 		if (!localStorage.getItem('authentication')) {
 			window.location.href = '/signIn';
@@ -121,7 +125,7 @@ export default class Home extends React.Component {
 			});
 	};
 
-	showTask = async (id) => {
+	showTask = async (id, silent) => {
 		const response = await fetch(`${globals.API_URL}/tasks/${id}`);
 		if (!response.ok) {
 			Swal.fire({
@@ -138,176 +142,46 @@ export default class Home extends React.Component {
 			console.error(response);
 			return;
 		};
+		/**
+		 * @type {{
+		 * 		title: String,
+		 * 		description: String,
+		 * 		dates: {
+		 * 			start: String,
+		 * 			end: String,
+		 * 			create: String
+		 * 		},
+		 * 		completed: Boolean,
+		 * 		label: String,
+		 * 		creatorId: String,
+		 * 		collaborators: {
+		 * 			_id: String,
+		 * 			accepted: Boolean
+		 * 		}[],
+		 * 		checklists: {
+		 * 			id: Number,
+		 * 			item: String,
+		 * 			completed: Boolean
+		 * 		}[],
+		 * 		project: String
+		 * }}
+		 */
 		const task = await response.json();
 
-		Swal.fire({
-			title: `<h1>${task.title}</h1>`,
-			html: `
-				<div id='taskDetails'>
-					<header>
-						<p>${task.description}</p>
-						<sub><i>${task.label}</i></sub>
-					</header>
-					<div id='taskChecklists'>
-						<header>
-							<h5>Checklist</h5>
-							<div>
-								<input type='text' id='addChecklistItem' placeholder='Add checklist item' />
-								<button
-									type='button'
-									id='addChecklistItemButton'
-									onclick="(() => {
-										const input = document.getElementById('addChecklistItem');
-										const value = input.value.trim();
-										if (value) {
-											const list = document.getElementById('checklistList');
-											if (list.children.length === 1) {
-												list.innerHTML = '';
-											};
-											const item = document.createElement('div');
-											const checkbox = document.createElement('input');
-											checkbox.type = 'checkbox';
-											checkbox.id = \`task${task.id}Checklist\${list.children.length}\`;
-											const label = document.createElement('label');
-											label.htmlFor = \`task${task.id}Checklist\${list.children.length}\`;
-											label.innerHTML = value;
-											item.appendChild(checkbox);
-											item.appendChild(label);
-											list.appendChild(item);
-											input.value = '';
-										};
-									})()"
-								>
-									Add
-								</button>
-							</div>
-						</header>
-						<div id='checklistList'>
-							${task.checklists?.map((item, j) => (`
-							<div id='task${task.id}Checklist${item.id}'>
-								<input type='checkbox' id='task${task.id}Checklist${item.id}' />
-								<label for='task${task.id}Checklist${item.id}'>${item.item}</label>
-								<button
-									type='button'
-									onclick="(() => {
-										const item = document.getElementById('task${task.id}Checklist${item.id}');
-										item.remove();
-									})()"
-								>
-									Remove
-								</button>
-							</div>`)).join('') || '<i>No checklist items</i>'}
-						</div>
-					</div>
-					<div id='taskCollaborators'>
-						<header>
-							<h5>Collaborators</h5>
-
-							<div>
-								<input type='text' id='addCollaborator' placeholder='Add collaborator Id' />
-								<button
-									type='button'
-									id='addCollaboratorButton'
-									onclick="(() => {
-										const input = document.getElementById('addCollaborator');
-										const value = input.value.trim();
-										if (value) {
-											const list = document.getElementById('collaboratorsList');
-											if (list.children.length === 1) {
-												list.innerHTML = '';
-											};
-											const item = document.createElement('div');
-											item.innerHTML = value;
-											list.appendChild(item);
-											input.value = '';
-										};
-									})()"
-								>
-									Add
-								</button>
-							</div>
-						</header>
-
-						<div id='collaboratorsList'>
-							${task.collaborators?.map((collaborator, j) => (`
-								<div>
-									<p>${collaborator}</p>
-									<button
-										type='button'
-										onclick="(() => {
-											const item = document.getElementById('collaboratorsList').children[${j}];
-											item.remove();
-										})()"
-									>
-										Remove
-									</button>
-								</div>
-							`)).join('') || '<i>No collaborators</i>'}
-						</div>
-					</div>
-					<div id='taskProject'>
-						<h5>Project</h5>
-						<div>${task.project || '<i>Not part of a project</i>'}</div>
-
-						${task.project ? `
-							<button
-								type='button'
-								id='viewProjectButton'
-								onclick="(() => {
-									const listView = document.getElementById('listView');
-									listView.click();
-								})()"
-							>
-								View Project
-							</button>
-						` : ''}
-					</div>
-					<div id='taskDates'>
-						<h5>Deadline</h5>
-						<div id='taskDatesDisplay'>
-						${(() => {
-					const today = new Date();
-					const taskStartDate = new Date(task.dates.start);
-					const taskEndDate = new Date(task.dates.end);
-
-					const dueDifference = taskEndDate - today;
-					return `
-						<progress value='${Math.floor((today - taskStartDate) / (taskEndDate - taskStartDate) * 100)}' max='100'></progress>
-						<h6>${dueDifference > 0 ? 'Due in' : 'Overdue by'} ${Math.floor(dueDifference / 86400000) < 1 ? 'today' : `${Math.floor(dueDifference / 86400000)} days`}</h6>
-						${
-							today.getTime() < taskStartDate.getTime()
-								? `<sub>Starts in ${Math.floor((taskStartDate - today) / 86400000) < 1 ? 'today' : `${Math.floor((taskStartDate - today) / 86400000)} days`}</sub>` :
-								`<sub>Started ${Math.floor((today - taskStartDate) / 86400000) < 1 ? 'today' : `${Math.floor((today - taskStartDate) / 86400000)} days ago`}</sub>`
-						}
-					`;
-				})()}
-						</div>
-
-						<div id='taskDatesEdit'>
-							<div>
-								<label for='editStartDate'>Start Date</label>
-								<input type='datetime-local' id='editStartDate' value='${task.dates.start.split('.')[0]}' />
-							</div>
-							<div>
-								<label for='editEndDate'>End Date</label>
-								<input type='datetime-local' id='editEndDate' value='${task.dates.end.split('.')[0]}' />
-							</div>
-						</div>
-					</div>
-				</div>
-			`,
-			confirmButtonText: '<h6 style="color: var(--color-white);">Mark as completed</h6>',
-			showConfirmButton: !task.completed,
-			denyButtonText: '<h6 style="color: var(--color-white);">Delete</h6>',
-			showDenyButton: !task.completed,
-			cancelButtonText: '<h6 style="color: var(--color-white);">Close</h6>',
-			showCancelButton: true,
+		withReactContent(Swal).fire({
+			title: <h1>{task.title}</h1>,
+			html: <TaskDetails task={task} id={id} />,
 			showClass: {
-				popup: `fadeIn`
+				popup: silent ? '' : `fadeIn`
 			},
 			hideClass: {
-				popup: `fadeOut`
-			}
+				popup: silent ? '' : `fadeOut`
+			},
+			confirmButtonText: <h6 style={{ color: 'var(--color-white)' }}>Mark as Done</h6>,
+			denyButtonText: <h6 style={{ color: 'var(--color-white)' }}>Delete</h6>,
+			cancelButtonText: <h6 style={{ color: 'var(--color-white)' }}>Close</h6>,
+			showDenyButton: true,
+			showCancelButton: true
 		});
 	};
 	render() {
@@ -367,42 +241,42 @@ export default class Home extends React.Component {
 						<div
 							id='createButton'
 							onClick={() => {
-								Swal.fire({
-									title: '<h1>Create Task</h1>',
-									html: `
+								withReactContent(Swal).fire({
+									title: <h1>Create Task</h1>,
+									html: (
 										<form id='createTaskForm'>
 											<div>
-												<label for='taskTitle'>Title</label>
+												<label htmlFor='taskTitle'>Title</label>
 												<input type='text' id='taskTitle' required />
 											</div>
 											<div>
-												<label for='taskDescription'>Description</label>
+												<label htmlFor='taskDescription'>Description</label>
 												<textarea id='taskDescription' required></textarea>
 											</div>
 											<div>
-												<label for='taskStartDate'>Start Date</label>
+												<label htmlFor='taskStartDate'>Start Date</label>
 												<input type='datetime-local' id='taskStartDate' required />
 											</div>
 											<div>
-												<label for='taskEndDate'>End Date</label>
+												<label htmlFor='taskEndDate'>End Date</label>
 												<input type='datetime-local' id='taskEndDate' required />
 											</div>
 											<div>
-												<label for='taskLabel'>Label</label>
+												<label htmlFor='taskLabel'>Label</label>
 												<input type='text' id='taskLabel' required />
 											</div>
 											<div>
-												<label for='taskProject'>Project</label>
+												<label htmlFor='taskProject'>Project</label>
 												<input type='text' id='taskProject' />
 											</div>
 											<div>
-												<label for='taskChecklist'>Checklist</label>
+												<label htmlFor='taskChecklist'>Checklist</label>
 												<div>
 													<input type='text' id='taskChecklist' />
 													<button
 														type='button'
 														id='addChecklistButton'
-														onclick="(() => {
+														onClick={() => {
 															const input = document.getElementById('taskChecklist');
 															const value = input.value.trim();
 															if (value) {
@@ -412,7 +286,7 @@ export default class Home extends React.Component {
 																list.appendChild(item);
 																input.value = '';
 															};
-														})()"
+														}}
 													>
 														Add
 													</button>
@@ -420,13 +294,13 @@ export default class Home extends React.Component {
 												</div>
 											</div>
 											<div>
-												<label for='taskCollaborators'>Collaborators</label>
+												<label htmlFor='taskCollaborators'>Collaborators</label>
 												<div>
 													<input type='text' id='taskCollaborators' />
 													<button
 														type='button'
 														id='addCollaboratorButton'
-														onclick="(() => {
+														onClick={() => {
 															const input = document.getElementById('taskCollaborators');
 															const value = input.value.trim();
 															if (value) {
@@ -436,7 +310,7 @@ export default class Home extends React.Component {
 																list.appendChild(item);
 																input.value = '';
 															};
-														})()"
+														}}
 													>
 														Add
 													</button>
@@ -444,7 +318,7 @@ export default class Home extends React.Component {
 												</div>
 											</div>
 										</form>
-									`,
+									),
 									showClass: {
 										popup: `fadeIn`
 									},
@@ -452,8 +326,8 @@ export default class Home extends React.Component {
 										popup: `fadeOut`
 									},
 									showCancelButton: true,
-									confirmButtonText: '<h6 style="color: var(--color-white);">Create</h6>',
-									cancelButtonText: '<h6 style="color: var(--color-white);">Cancel</h6>',
+									confirmButtonText: <h6 style={{ color: 'var(--color-white)' }}>Create</h6>,
+									cancelButtonText: <h6 style={{ color: 'var(--color-white)' }}>Cancel</h6>,
 									preConfirm: async () => {
 										const form = document.getElementById('createTaskForm');
 										const title = form.querySelector('#taskTitle').value;
@@ -648,11 +522,11 @@ export default class Home extends React.Component {
 												<div>
 													<input
 														type='checkbox'
-														id={`task${task.id}`}
+														id={`task${task._id}`}
 														disabled
 														defaultChecked={task.completed}
 													/>
-													<label htmlFor={`task${task.id}`}>{task.title}</label>
+													<label htmlFor={`task${task._id}`}>{task.title}</label>
 												</div>
 
 												<div>
@@ -920,11 +794,11 @@ export default class Home extends React.Component {
 													<div>
 														<input
 															type='checkbox'
-															id={`task${task.id}`}
+															id={`task${task._id}`}
 															defaultChecked={task.completed}
 															disabled
 														/>
-														<label htmlFor={`task${task.id}`}><h6>{task.title}</h6></label>
+														<label htmlFor={`task${task._id}`}><h6>{task.title}</h6></label>
 													</div>
 
 													<div>
@@ -976,11 +850,11 @@ export default class Home extends React.Component {
 															<div key={j}>
 																<input
 																	type='checkbox'
-																	id={`task${task.id}Checklist${item.id}`}
+																	id={`task${task._id}Checklist${item.id}`}
 																	defaultChecked={item.completed}
 																	disabled
 																/>
-																<label htmlFor={`task${task.id}Checklist${item.id}`}>{item.item}</label>
+																<label htmlFor={`task${task._id}Checklist${item.id}`}>{item.item}</label>
 															</div>
 														))
 													}
@@ -1015,5 +889,427 @@ export default class Home extends React.Component {
 				}
 			</div>
 		);
+	};
+};
+
+class TaskDetails extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			
+			/**
+			 * @type {{
+			 * 		title: String,
+			 * 		description: String,
+			 * 		dates: {
+			 * 			start: String,
+			 * 			end: String,
+			 * 			create: String
+			 * 		},
+			 * 		completed: Boolean,
+			 * 		label: String,
+			 * 		creatorId: String,
+			 * 		collaborators: {
+			 * 			_id: String,
+			 * 			accepted: Boolean
+			 * 		}[],
+			 * 		checklists: {
+			 * 			id: Number,
+			 * 			item: String,
+			 * 			completed: Boolean
+			 * 		}[],
+			 * 		project: String
+			 * }}
+			 */
+			task: {
+				title: null,
+				description: null,
+				dates: {
+					start: null,
+					end: null,
+					create: null
+				},
+				completed: null,
+				label: null,
+				creatorId: null,
+				collaborators: [],
+				checklists: [],
+				project: null
+			},
+			id: props.id
+		};
+	};
+
+	async componentDidMount() {
+		this.fetchTask();
+	};
+
+	fetchTask = async () => {
+		const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}`);
+		if (!response.ok) {
+			Swal.fire({
+				icon: 'error',
+				title: '<h1>Error</h1>',
+				text: 'An error occurred while fetching the task',
+				showClass: {
+					popup: `fadeIn`
+				},
+				hideClass: {
+					popup: `fadeOut`
+				}
+			});
+			console.error(response);
+			return;
+		};
+
+		this.setState({
+			task: await response.json()
+		});
+	};
+
+	render() {
+		return (
+			<article id='taskDetails'>
+				<header>
+					<p>{this.state.task.description}</p>
+					<sub>{this.state.task.label}</sub>
+				</header>
+
+				<div id='taskChecklists'>
+					<header>
+						<h6>Checklist</h6>
+
+						<div>
+							<input type='text' id='taskChecklistInput' placeholder='Add item' />
+							<button
+								type='button'
+								id='taskChecklistButton'
+								onClick={async () => {
+									const input = document.getElementById('taskChecklistInput');
+									const value = input.value.trim();
+									if (!value) return;
+
+									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists`, {
+										method: 'PUT',
+										headers: {
+											'Content-Type': 'application/json'
+										},
+										body: JSON.stringify({
+											item: value
+										})
+									});
+									if (!response.ok) {
+										const error = await response.json();
+										console.error(error);
+										Swal.fire({
+											icon: 'error',
+											title: '<h1>Error</h1>',
+											text: error.message,
+											showClass: {
+												popup: `fadeIn`
+											},
+											hideClass: {
+												popup: `fadeOut`
+											}
+										});
+										return;
+									};
+									await this.fetchTask();
+									input.value = '';
+								}}
+							>
+								Add
+							</button>
+						</div>
+					</header>
+					<div id='checklistList'>
+						{
+							this.state.task.checklists.length ? this.state.task.checklists.map((item, i) => (
+								<div key={i}>
+									<input
+										type='checkbox'
+										id={`checklistItem${item.id}`}
+										defaultChecked={item.completed}
+										onChange={async () => {
+											const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists/${item.id}`, {
+												method: 'PATCH',
+												headers: {
+													'Content-Type': 'application/json'
+												},
+												body: JSON.stringify({
+													completed: document.getElementById(`checklistItem${item.id}`).checked
+												})
+											});
+											if (!response.ok) {
+												const error = await response.json();
+												console.error(error);
+												Swal.fire({
+													icon: 'error',
+													title: '<h1>Error</h1>',
+													text: error.message,
+													showClass: {
+														popup: `fadeIn`
+													},
+													hideClass: {
+														popup: `fadeOut`
+													}
+												});
+												return;
+											};
+
+											await this.fetchTask();
+										}}
+									/>
+									<label htmlFor={`checklistItem${item.id}`}><p>{item.item}</p></label>
+									<button
+										type='button'
+										onClick={async () => {
+											const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists/${item.id}`, {
+												method: 'DELETE'
+											});
+											if (!response.ok) {
+												const error = await response.json();
+												console.error(error);
+												Swal.fire({
+													icon: 'error',
+													title: '<h1>Error</h1>',
+													text: error.message,
+													showClass: {
+														popup: `fadeIn`
+													},
+													hideClass: {
+														popup: `fadeOut`
+													}
+												});
+												return;
+											};
+
+											await this.fetchTask();
+										}}
+									>
+										Remove
+									</button>
+								</div>
+							)) : <i>No items</i>
+						}
+					</div>
+				</div>
+				<div id='taskCollaborators'>
+					<header>
+						<h6>Collaborators</h6>
+
+						<div>
+							<input type='text' id='taskCollaboratorInput' placeholder='Add collaborator' />
+							<button
+								type='button'
+								id='taskCollaboratorButton'
+								onClick={async () => {
+									const input = document.getElementById('taskCollaboratorInput');
+									const value = input.value.trim();
+									if (!value) return;
+
+									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/collaborators`, {
+										method: 'PUT',
+										headers: {
+											'Content-Type': 'application/json'
+										},
+										body: JSON.stringify({
+											collaboratorId: value
+										})
+									});
+									if (!response.ok) {
+										const error = await response.json();
+										console.error(error);
+										Swal.fire({
+											icon: 'error',
+											title: '<h1>Error</h1>',
+											text: error.message,
+											showClass: {
+												popup: `fadeIn`
+											},
+											hideClass: {
+												popup: `fadeOut`
+											}
+										});
+										return;
+									};
+
+									await this.fetchTask();
+									input.value = '';
+								}}
+							>
+								Add
+							</button>
+						</div>
+					</header>
+					<div id='collaboratorsList'>
+						{
+							this.state.task.collaborators.length ? this.state.task.collaborators.map((collaborator, i) => (
+								<div key={i}>
+									<p>{collaborator.name}</p>
+									<sub>{collaborator._id}</sub>
+									<button
+										type='button'
+										onClick={async () => {
+											const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/collaborators/${collaborator._id}`, {
+												method: 'DELETE'
+											});
+											if (!response.ok) {
+												const error = await response.json();
+												console.error(error);
+												Swal.fire({
+													icon: 'error',
+													title: '<h1>Error</h1>',
+													text: error.message,
+													showClass: {
+														popup: `fadeIn`
+													},
+													hideClass: {
+														popup: `fadeOut`
+													}
+												});
+												return;
+											};
+
+											await this.fetchTask();
+										}}
+									>
+										Remove
+									</button>
+								</div>
+							)) : <i>No collaborators</i>
+						}
+					</div>
+				</div>
+				<footer id='taskDates'>
+					<header><h6>Time Frame</h6></header>
+					<div id='taskDatesDisplay'>
+						{(() => {
+							const today = new Date();
+							const taskStartDate = new Date(this.state.task.dates.start);
+							const taskEndDate = new Date(this.state.task.dates.end);
+
+							today.setSeconds(0);
+							taskStartDate.setSeconds(0);
+							taskEndDate.setSeconds(0);
+
+							const difference = taskEndDate.getTime() - taskStartDate.getTime();
+							return <>
+								<progress value={today.getTime() - taskStartDate.getTime()} max={difference} />
+								<h6>
+									{(() => {
+										const remaining = taskEndDate.getTime() - today.getTime();
+										const remainingDays = Math.floor(remaining / 86400000);
+										const remainingHours = Math.floor(remaining / 3600000);
+										const remainingWeeks = Math.floor(remaining / 604800000);
+
+										if (today.getTime() > taskEndDate.getTime()) {
+											if (remainingWeeks > 0) {
+												return `${remainingWeeks} ${remainingWeeks === 1 ? 'week' : 'weeks'} overdue`;
+											} else if (remainingDays > 0) {
+												return `${remainingDays} ${remainingDays === 1 ? 'day' : 'days'} overdue`;
+											} else if (remainingHours > 0) {
+												return `${remainingHours} ${remainingHours === 1 ? 'hour' : 'hours'} overdue`;
+											};
+										} else {
+											if (remainingWeeks > 0) {
+												return `${remainingWeeks} ${remainingWeeks === 1 ? 'week' : 'weeks'} remaining`;
+											} else if (remainingDays > 0) {
+												return `${remainingDays} ${remainingDays === 1 ? 'day' : 'days'} remaining`;
+											} else if (remainingHours > 0) {
+												return `${remainingHours} ${remainingHours === 1 ? 'hour' : 'hours'} remaining`;
+											};
+										};
+									})()}
+								</h6>
+							</>;
+						})()}
+					</div>
+					<div id='taskDatesEdit'>
+						<div>
+							<label htmlFor='taskStartDate'>Start Date</label>
+							<input
+								type='datetime-local'
+								id='taskStartDate'
+								defaultValue={this.state.task.dates.start?.split('.')[0]}
+								onBlur={async () => {
+									const input = document.getElementById('taskStartDate');
+									const value = input.value;
+
+									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/dates/start`, {
+										method: 'PATCH',
+										headers: {
+											'Content-Type': 'application/json'
+										},
+										body: JSON.stringify({
+											date: value
+										})
+									});
+									if (!response.ok) {
+										const error = await response.json();
+										console.error(error);
+										Swal.fire({
+											icon: 'error',
+											title: '<h1>Error</h1>',
+											text: error.message,
+											showClass: {
+												popup: `fadeIn`
+											},
+											hideClass: {
+												popup: `fadeOut`
+											}
+										});
+										return;
+									};
+
+									await this.fetchTask();
+								}}
+							/>
+						</div>
+						<div>
+							<label htmlFor='taskEndDate'>End Date</label>
+							<input
+								type='datetime-local'
+								id='taskEndDate'
+								defaultValue={this.state.task.dates.end?.split('.')[0]}
+								onBlur={async () => {
+									const input = document.getElementById('taskEndDate');
+									const value = input.value;
+
+									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/dates/end`, {
+										method: 'PATCH',
+										headers: {
+											'Content-Type': 'application/json'
+										},
+										body: JSON.stringify({
+											date: value
+										})
+									});
+									if (!response.ok) {
+										const error = await response.json();
+										console.error(error);
+										Swal.fire({
+											icon: 'error',
+											title: '<h1>Error</h1>',
+											text: error.message,
+											showClass: {
+												popup: `fadeIn`
+											},
+											hideClass: {
+												popup: `fadeOut`
+											}
+										});
+										return;
+									};
+
+									await this.fetchTask();
+								}}
+							/>
+						</div>
+					</div>
+				</footer>
+			</article>
+		)
 	};
 };
