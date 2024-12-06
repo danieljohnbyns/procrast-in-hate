@@ -210,8 +210,8 @@ export default class Projects extends React.Component {
 										popup: `fadeOut`
 									},
 									showCancelButton: true,
-									confirmButtonText: '<h6 style="color: var(--color-white);">Create</h6>',
-									cancelButtonText: '<h6 style="color: var(--color-white);">Cancel</h6>',
+									confirmButtonText: <h6 style={{ color: 'var(--color - white);' }}>Create</h6>,
+									cancelButtonText: <h6 style={{ color: 'var(--color-white);' }}>Cancel</h6>,
 									preConfirm: async () => {
 										const title = document.getElementById('projectTitle').value.trim();
 										const description = document.getElementById('projectDescription').value.trim();
@@ -975,7 +975,7 @@ class ProjectDetails extends React.Component {
 														const today = new Date();
 														const taskDate = new Date(task.dates.end);
 
-														// Label with "Today" "Tomorrow" "Yesterday" "This week" "Next week" "Last week" "This month" "Next month" "Last month" "Long time ago" "Soon"
+														// Label with 'Today' 'Tomorrow' 'Yesterday' 'This week' 'Next week' 'Last week' 'This month' 'Next month' 'Last month' 'Long time ago' 'Soon'
 														if (today.toDateString() === taskDate.toDateString()) {
 															return 'today';
 														} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {

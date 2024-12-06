@@ -78,7 +78,7 @@
 #projects > header > div > #createButton::before,
 #projects > header > div > #createButton::after {
 	position: absolute;
-	content: "";
+	content: '';
 	border-radius: 0.5rem;
 	background-color: var(--color-primary);
 	transition: background-color var(--transition);
@@ -131,7 +131,7 @@
 }
 #projects > main > .project::before,
 #projects > main > .project::after {
-	content: "";
+	content: '';
 	position: absolute;
 	width: 100%;
 	height: 100%;
@@ -241,7 +241,7 @@
 }
 #createProjectForm > div > label:has(~ input[required])::after,
 #createProjectForm > div > label:has(~ textarea[required])::after {
-	content: "*";
+	content: '*';
 	color: var(--color-primary);
 }
 #createProjectForm > div > input,
@@ -529,7 +529,7 @@
 #projectDetails > main > header > div > #createTaskButton::before,
 #projectDetails > main > header > div > #createTaskButton::after {
 	position: absolute;
-	content: "";
+	content: '';
 	border-radius: 0.5rem;
 	background-color: var(--color-primary);
 	transition: background-color var(--transition);
@@ -579,7 +579,7 @@
 }
 #projectDetails > main > div > .taskCard::before,
 #projectDetails > main > div > .taskCard::after {
-	content: "";
+	content: '';
 	position: absolute;
 	width: 100%;
 	height: 100%;

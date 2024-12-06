@@ -29,10 +29,6 @@ const Anchor = ({
 			target={target}
 			rel={rel}
 			className={`anchor ${className} ${theme === 'light' ? 'light' : 'dark'} ${active ? 'active' : ''}`}
-
-			style={{
-				fontFamily: active ? 'Montserrat, sans-serif !important' : 'inhert'
-			}}
 		>
 			{children}
 		</Link>

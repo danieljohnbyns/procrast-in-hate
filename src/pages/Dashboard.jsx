@@ -13,6 +13,7 @@ import Sidebar from '../components/Sidebar';
 import Tab from '../components/Tab';
 
 import Home from './dashboard/Home';
+import Invitations from './dashboard/Invitations';
 import Projects from './dashboard/Projects';
 
 export default class Dashboard extends React.Component {
@@ -132,11 +133,7 @@ export default class Dashboard extends React.Component {
 						/>
 						<Route
 							path='/invitations'
-							element={
-								<div>
-									<h1>Invitations</h1>
-								</div>
-							}
+							element={<Invitations />}
 						/>
 						<Route
 							path='/projects'

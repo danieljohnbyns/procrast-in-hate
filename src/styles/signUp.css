@@ -1,9 +1,9 @@
 
-body:has(> #root[page="signUp"]) {
+body:has(> #root[page='signUp']) {
 	background-color: var(--color-tertiary);
 }
 
-#root[page="signUp"] {
+#root[page='signUp'] {
 	position: relative;
 	height: 100vh;
 	display: flex;
@@ -49,7 +49,7 @@ body:has(> #root[page="signUp"]) {
 	z-index: 0;
 }
 
-#root[page="signUp"] > svg {
+#root[page='signUp'] > svg {
 	position: absolute;
 	bottom: -10rem;
 	left: -10rem;
@@ -57,10 +57,10 @@ body:has(> #root[page="signUp"]) {
 }
 
 @media screen and (max-width: 60rem) {
-	#root[page="signUp"] {
+	#root[page='signUp'] {
 		flex-direction: column;
 	}
-	#root[page="signUp"] > *:not(#signUp) {
+	#root[page='signUp'] > *:not(#signUp) {
 		display: none;
 	}
 	#signUp {

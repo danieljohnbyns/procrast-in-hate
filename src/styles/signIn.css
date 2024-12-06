@@ -1,9 +1,9 @@
 
-body:has(> #root[page="signIn"]) {
+body:has(> #root[page='signIn']) {
 	background-color: var(--color-tertiary);
 }
 
-#root[page="signIn"] {
+#root[page='signIn'] {
 	position: relative;
 	height: 100vh;
 	display: flex;
@@ -56,7 +56,7 @@ body:has(> #root[page="signIn"]) {
 	z-index: 0;
 }
 
-#root[page="signIn"] > svg {
+#root[page='signIn'] > svg {
 	position: absolute;
 	bottom: -10rem;
 	left: -10rem;
@@ -64,10 +64,10 @@ body:has(> #root[page="signIn"]) {
 }
 
 @media screen and (max-width: 60rem) {
-	#root[page="signIn"] {
+	#root[page='signIn'] {
 		flex-direction: column;
 	}
-	#root[page="signIn"] > *:not(#signIn) {
+	#root[page='signIn'] > *:not(#signIn) {
 		display: none;
 	}
 	#signIn {

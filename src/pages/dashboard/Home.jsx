@@ -664,7 +664,7 @@ export default class Home extends React.Component {
 																const today = new Date();
 																const taskDate = new Date(task.dates.end);
 
-																// Label with "Today" "Tomorrow" "Yesterday" "This week" "Next week" "Last week" "This month" "Next month" "Last month" "Long time ago" "Soon"
+																// Label with 'Today' 'Tomorrow' 'Yesterday' 'This week' 'Next week' 'Last week' 'This month' 'Next month' 'Last month' 'Long time ago' 'Soon'
 																if (today.toDateString() === taskDate.toDateString()) {
 																	return 'Today';
 																} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
@@ -914,7 +914,7 @@ export default class Home extends React.Component {
 																	const today = new Date();
 																	const taskDate = new Date(task.dates.end);
 
-																	// Label with "Today" "Tomorrow" "Yesterday" "This week" "Next week" "Last week" "This month" "Next month" "Last month" "Long time ago" "Soon"
+																	// Label with 'Today' 'Tomorrow' 'Yesterday' 'This week' 'Next week' 'Last week' 'This month' 'Next month' 'Last month' 'Long time ago' 'Soon'
 																	if (today.toDateString() === taskDate.toDateString()) {
 																		return 'today';
 																	} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
@@ -2111,7 +2111,7 @@ class ProjectDetails extends React.Component {
 														const today = new Date();
 														const taskDate = new Date(task.dates.end);
 
-														// Label with "Today" "Tomorrow" "Yesterday" "This week" "Next week" "Last week" "This month" "Next month" "Last month" "Long time ago" "Soon"
+														// Label with 'Today' 'Tomorrow' 'Yesterday' 'This week' 'Next week' 'Last week' 'This month' 'Next month' 'Last month' 'Long time ago' 'Soon'
 														if (today.toDateString() === taskDate.toDateString()) {
 															return 'today';
 														} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {

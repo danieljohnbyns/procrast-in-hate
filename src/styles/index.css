@@ -546,4 +546,4 @@ div:where(.swal2-container) button:where(.swal2-styled):not([disabled]) {
 .fadeOut {
 	animation: fadeOut var(--transition);
 }
-.swal2-timer-progress-bar-container:has(> .swal2-timer-progress-bar[style="display: none;"]) { display: none; }
+.swal2-timer-progress-bar-container:has(> .swal2-timer-progress-bar[style='display: none;']) { display: none; }
