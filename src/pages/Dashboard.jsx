@@ -87,13 +87,13 @@ export default class Dashboard extends React.Component {
 						active
 					>Home</Tab>
 					<Tab
-						href='/dashboard/notification'
+						href='/dashboard/invitations'
 						icon={
 							<svg viewBox='0 0 800 800' fill='transparent'>
 								<path d='M300.065 566.667H186.879C144.931 566.667 123.957 566.667 119.544 563.41C114.587 559.75 113.375 557.59 112.838 551.453C112.361 545.99 125.215 524.953 150.925 482.887C177.47 439.45 200.01 376.207 200.01 286.667C200.01 237.16 221.082 189.68 258.589 154.673C296.096 119.667 346.967 100 400.01 100C453.053 100 503.923 119.667 541.43 154.673C578.94 189.68 600.01 237.16 600.01 286.667C600.01 376.207 622.55 439.45 649.097 482.887C674.803 524.953 687.66 545.99 687.183 551.453C686.647 557.59 685.433 559.75 680.477 563.41C676.063 566.667 655.09 566.667 613.143 566.667H500.01M300.065 566.667L300.01 600C300.01 655.23 344.783 700 400.01 700C455.24 700 500.01 655.23 500.01 600V566.667M300.065 566.667H500.01' stroke='var(--color-primary)' strokeWidth='40' strokeLinecap='round' strokeLinejoin='round' />
 							</svg>
 						}
-					>Notification</Tab>
+					>Invitations</Tab>
 					<Tab
 						href='/dashboard/projects'
 						icon={
@@ -131,10 +131,10 @@ export default class Dashboard extends React.Component {
 							element={<Home />}
 						/>
 						<Route
-							path='/notification'
+							path='/invitations'
 							element={
 								<div>
-									<h1>Notification</h1>
+									<h1>Invitations</h1>
 								</div>
 							}
 						/>
