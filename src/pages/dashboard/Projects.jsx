@@ -244,6 +244,8 @@ export default class Projects extends React.Component {
 					return;
 				};
 			}
+		}).then((result) => {
+			this.fetchProjects();
 		});
 	};
 
@@ -438,7 +440,8 @@ class ProjectDetails extends React.Component {
 			 * 			_id: String,
 			 * 			name: String
 			 * 		}[],
-			 * 		completed: Boolean
+			 * 		completed: Boolean,
+			 * 		progress?: Number
 			 * }}
 			 */
 			project: {
@@ -453,7 +456,8 @@ class ProjectDetails extends React.Component {
 				label: '',
 				creatorId: '',
 				collaborators: [],
-				completed: false
+				completed: false,
+				progress: 0
 			},
 			tasks: [],
 			id: this.props.id
@@ -464,9 +468,9 @@ class ProjectDetails extends React.Component {
 		this.fetchTask();
 	};
 	fetchProject = async () => {
-		const response = await fetch(`${globals.API_URL}/projects/${this.state.id}`);
+		const projectResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}`);
 
-		if (!response.ok) {
+		if (!projectResponse.ok) {
 			Swal.fire({
 				icon: 'error',
 				title: '<h1>Error</h1>',
@@ -481,7 +485,27 @@ class ProjectDetails extends React.Component {
 			return;
 		};
 
-		const project = await response.json();
+		const project = await projectResponse.json();
+
+		const progressResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}/progress`);
+
+		if (!progressResponse.ok) {
+			Swal.fire({
+				icon: 'error',
+				title: '<h1>Error</h1>',
+				text: 'An error occurred',
+				showClass: {
+					popup: `fadeIn`
+				},
+				hideClass: {
+					popup: `fadeOut`
+				}
+			});
+			return;
+		};
+
+		const progress = (await progressResponse.json()).progress;
+		project.progress = progress;
 
 		this.setState({
 			project: project
@@ -520,6 +544,11 @@ class ProjectDetails extends React.Component {
 						<p>{this.state.project.description}</p>
 						<sub>{this.state.project.label}</sub>
 					</header>
+
+					<div id='projectProgress'>
+						<progress value={this.state.project.progress} max='100' />
+						<h6>{this.state.project.progress}%</h6>
+					</div>
 
 					<div id='projectCollaborators'>
 						<header>
@@ -909,17 +938,7 @@ class ProjectDetails extends React.Component {
 											} else {
 												const error = await response.json();
 												console.error(error);
-												Swal.fire({
-													icon: 'error',
-													title: '<h1>Error</h1>',
-													text: error.message,
-													showClass: {
-														popup: `fadeIn`
-													},
-													hideClass: {
-														popup: `fadeOut`
-													}
-												});
+												Swal.showValidationMessage(error.message);
 											};
 										}
 									});
