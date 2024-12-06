@@ -26,6 +26,7 @@ const Anchor = ({
 	const anchor = (
 		<Link
 			href={href}
+			to={href}
 			target={target}
 			rel={rel}
 			className={`anchor ${className} ${theme === 'light' ? 'light' : 'dark'} ${active ? 'active' : ''}`}

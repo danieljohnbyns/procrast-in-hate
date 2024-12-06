@@ -20,7 +20,9 @@ const Navbar = (props) => {
 				</menu>
 
 				<menu>
-					<Anchor href='/signIn'>
+					<Anchor
+						href='/signIn'
+					>
 						Sign In
 					</Anchor>
 					<Button
