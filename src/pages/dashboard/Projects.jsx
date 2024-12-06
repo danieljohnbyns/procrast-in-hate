@@ -34,7 +34,7 @@ export default class Projects extends React.Component {
 
 		this.fetchProjects();
 
-		window.showTask = this.showTask;
+		window.showProject = this.showProject;
 	};
 	fetchProjects = async () => {
 		const _id = JSON.parse(localStorage.getItem('authentication'))._id;
@@ -67,112 +67,6 @@ export default class Projects extends React.Component {
 			data: {
 				projects: projects
 			}
-		});
-	};
-
-	showTask = async (id, projectId) => {
-		const response = await fetch(`${globals.API_URL}/tasks/${id}`);
-		if (!response.ok) {
-			Swal.fire({
-				icon: 'error',
-				title: '<h1>Error</h1>',
-				text: 'An error occurred while fetching the task',
-				showClass: {
-					popup: `fadeIn`
-				},
-				hideClass: {
-					popup: `fadeOut`
-				}
-			});
-			console.error(response);
-			return;
-		};
-		/**
-		 * @type {{
-		 * 		title: String,
-		 * 		description: String,
-		 * 		dates: {
-		 * 			start: String,
-		 * 			end: String,
-		 * 			create: String
-		 * 		},
-		 * 		completed: Boolean,
-		 * 		label: String,
-		 * 		creatorId: String,
-		 * 		collaborators: {
-		 * 			_id: String,
-		 * 			accepted: Boolean
-		 * 		}[],
-		 * 		checklists: {
-		 * 			id: Number,
-		 * 			item: String,
-		 * 			completed: Boolean
-		 * 		}[],
-		 * 		projectId: String
-		 * }}
-		 */
-		const task = await response.json();
-
-		withReactContent(Swal).fire({
-			title: <h1>{task.title}</h1>,
-			html: <TaskDetails task={task} id={id} />,
-			showClass: {
-				popup: `fadeIn`
-			},
-			hideClass: {
-				popup: `fadeOut`
-			},
-			confirmButtonText: !task.completed ? <h6 style={{ color: 'var(--color-white)' }}>Mark as Complete</h6> : <h6 style={{ color: 'var(--color-white)' }}>Mark as Incomplete</h6>,
-			denyButtonText: <h6 style={{ color: 'var(--color-white)' }}>Delete</h6>,
-			cancelButtonText: <h6 style={{ color: 'var(--color-white)' }}>Close</h6>,
-			showDenyButton: true,
-			showCancelButton: true,
-			preDeny: async () => {
-				const response = await fetch(`${globals.API_URL}/tasks/${id}`, {
-					method: 'DELETE'
-				});
-				if (response.ok) {
-					Swal.fire({
-						icon: 'success',
-						title: '<h1>Success</h1>',
-						text: 'Task deleted',
-						showClass: {
-							popup: `fadeIn`
-						},
-						hideClass: {
-							popup: `fadeOut`
-						},
-						timer: 2000,
-						timerProgressBar: true
-					});
-				} else {
-					const error = await response.json();
-					console.error(error);
-					Swal.fire({
-						icon: 'error',
-						title: '<h1>Error</h1>',
-						text: error.message,
-						showClass: {
-							popup: `fadeIn`
-						},
-						hideClass: {
-							popup: `fadeOut`
-						}
-					});
-				};
-			},
-			preConfirm: async () => {
-				const response = await fetch(`${globals.API_URL}/tasks/${id}/${task.completed ? 'false' : 'true'}`, {
-					method: 'PATCH'
-				});
-
-				if (!response.ok) {
-					Swal.showValidationMessage('An error occurred');
-					return;
-				};
-			}
-		}).then((result) => {
-			this.showProject(projectId);
 		});
 	};
 
@@ -375,44 +269,46 @@ export default class Projects extends React.Component {
 				</header>
 
 				<main>
-					{this.state.data.projects.map((project, index) => (
-						<div
-							key={index}
-							className='project'
-							onClick={() => {
-								this.showProject(project._id);
-							}}
-						>
-							<header>
-								<h6>{project.title}</h6>
-								<span>{project.completed ? 'Completed' : 'In Progress'}</span>
-							</header>
+					{
+						this.state.data.projects.map((project, index) => (
+							<div
+								key={index}
+								className='project'
+								onClick={() => {
+									window.showProject(project._id);
+								}}
+							>
+								<header>
+									<h6>{project.title}</h6>
+									<span>{project.completed ? 'Completed' : 'In Progress'}</span>
+								</header>
 
-							<main>
-								<p>{project.description}</p>
-							</main>
+								<main>
+									<p>{project.description}</p>
+								</main>
 
-							<footer>
-								<div>
-									<sub>Start: {new Date(project.dates.start).toDateString()}</sub>
-									<sub>End: {new Date(project.dates.end).toDateString()}</sub>
-								</div>
+								<footer>
+									<div>
+										<sub>Start: {new Date(project.dates.start).toDateString()}</sub>
+										<sub>End: {new Date(project.dates.end).toDateString()}</sub>
+									</div>
 
-								<div>
-									{
-										project.collaborators.slice(0, 3).map((collaborator, j) => (
-											<img key={j} src={`https://randomuser.me/api/portraits/${Math.floor(Math.random() * 2) % 2 === 1 ? 'men' : 'women'}/${collaborator + Math.floor(Math.random() * 50)}.jpg`} alt='Collaborator' />
-										))
-									}
-									{
-										project.collaborators.length > 3 ? (
-											<span>+{project.collaborators.length - 3}</span>
-										) : null
-									}
-								</div>
-							</footer>
-						</div>
-					))}
+									<div>
+										{
+											project.collaborators.slice(0, 3).map((collaborator, j) => (
+												<img key={j} src={`https://randomuser.me/api/portraits/${Math.floor(Math.random() * 2) % 2 === 1 ? 'men' : 'women'}/${collaborator + Math.floor(Math.random() * 50)}.jpg`} alt='Collaborator' />
+											))
+										}
+										{
+											project.collaborators.length > 3 ? (
+												<span>+{project.collaborators.length - 3}</span>
+											) : null
+										}
+									</div>
+								</footer>
+							</div>
+						))
+					}
 				</main>
 			</div>
 		);
@@ -533,6 +429,113 @@ class ProjectDetails extends React.Component {
 
 		this.setState({
 			tasks: tasks
+		});
+	};
+
+	
+	showTask = async (id, projectId) => {
+		const response = await fetch(`${globals.API_URL}/tasks/${id}`);
+		if (!response.ok) {
+			Swal.fire({
+				icon: 'error',
+				title: '<h1>Error</h1>',
+				text: 'An error occurred while fetching the task',
+				showClass: {
+					popup: `fadeIn`
+				},
+				hideClass: {
+					popup: `fadeOut`
+				}
+			});
+			console.error(response);
+			return;
+		};
+		/**
+		 * @type {{
+		 * 		title: String,
+		 * 		description: String,
+		 * 		dates: {
+		 * 			start: String,
+		 * 			end: String,
+		 * 			create: String
+		 * 		},
+		 * 		completed: Boolean,
+		 * 		label: String,
+		 * 		creatorId: String,
+		 * 		collaborators: {
+		 * 			_id: String,
+		 * 			accepted: Boolean
+		 * 		}[],
+		 * 		checklists: {
+		 * 			id: Number,
+		 * 			item: String,
+		 * 			completed: Boolean
+		 * 		}[],
+		 * 		projectId: String
+		 * }}
+		 */
+		const task = await response.json();
+
+		withReactContent(Swal).fire({
+			title: <h1>{task.title}</h1>,
+			html: <TaskDetails task={task} id={id} />,
+			showClass: {
+				popup: `fadeIn`
+			},
+			hideClass: {
+				popup: `fadeOut`
+			},
+			confirmButtonText: !task.completed ? <h6 style={{ color: 'var(--color-white)' }}>Mark as Complete</h6> : <h6 style={{ color: 'var(--color-white)' }}>Mark as Incomplete</h6>,
+			denyButtonText: <h6 style={{ color: 'var(--color-white)' }}>Delete</h6>,
+			cancelButtonText: <h6 style={{ color: 'var(--color-white)' }}>Close</h6>,
+			showDenyButton: true,
+			showCancelButton: true,
+			preDeny: async () => {
+				const response = await fetch(`${globals.API_URL}/tasks/${id}`, {
+					method: 'DELETE'
+				});
+				if (response.ok) {
+					Swal.fire({
+						icon: 'success',
+						title: '<h1>Success</h1>',
+						text: 'Task deleted',
+						showClass: {
+							popup: `fadeIn`
+						},
+						hideClass: {
+							popup: `fadeOut`
+						},
+						timer: 2000,
+						timerProgressBar: true
+					});
+				} else {
+					const error = await response.json();
+					console.error(error);
+					Swal.fire({
+						icon: 'error',
+						title: '<h1>Error</h1>',
+						text: error.message,
+						showClass: {
+							popup: `fadeIn`
+						},
+						hideClass: {
+							popup: `fadeOut`
+						}
+					});
+				};
+			},
+			preConfirm: async () => {
+				const response = await fetch(`${globals.API_URL}/tasks/${id}/${task.completed ? 'false' : 'true'}`, {
+					method: 'PATCH'
+				});
+
+				if (!response.ok) {
+					Swal.showValidationMessage('An error occurred');
+					return;
+				};
+			}
+		}).then((result) => {
+			window.showProject(projectId);
 		});
 	};
 
@@ -952,7 +955,7 @@ class ProjectDetails extends React.Component {
 								<div
 									key={i}
 									className='taskCard'
-									onClick={() => window.showTask(task._id, this.state.id)}
+									onClick={() => this.showTask(task._id, this.state.id)}
 								>
 									<header>
 										<div>

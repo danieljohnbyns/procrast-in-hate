@@ -313,27 +313,24 @@
 #home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList {
 	width: 100%;
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(3, 1fr);
 	grid-auto-rows: auto;
 	gap: 2rem;
 }
-#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article {
-	position: relative;
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 2rem;
 	padding: 2rem;
 	border: solid 0.25rem var(--color-primary);
 	border-radius: 1rem;
 	background-color: var(--color-white);
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	align-items: stretch;
-	gap: 2rem;
 	transition: transform var(--transition);
-	z-index: 1;
-	cursor: pointer;
 }
-#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article::before,
-#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article::after {
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project::before,
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project::after {
 	content: "";
 	position: absolute;
 	width: 100%;
@@ -345,56 +342,73 @@
 	transition: transform var(--transition);
 	z-index: -2;
 }
-#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article::after {
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project::after {
 	background-color: var(--color-white);
 	z-index: -1;
 }
-#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article:hover {
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project:hover {
 	transform: translateY(-0.5rem);
 }
-#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article:hover::before {
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project:hover::before {
 	transform: translateY(0.5rem);
 }
-#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > header {
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project > header {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
 }
-#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > header > span {
-	padding: 0.5rem;
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project > header > span {
+	background-color: var(--color-white);
+	color: var(--color-primary);
 	border: solid 0.25rem var(--color-primary);
 	border-radius: 2rem;
-	font-size: 1.5rem;
+	padding: 0.5rem 1.5rem;
 }
-#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > div {
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project > main {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: stretch;
 	gap: 1rem;
 }
-#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > div > div {
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project > main > div {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: stretch;
 }
-#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > div > div > * {
-	width: 100%;
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project > main > div > * { width: 100%; }
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project > main > div > h6 { font-size: 1.5rem; }
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project > footer {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
 }
-#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article > div > div > h6 {
-	font-size: 1.5rem;
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project > footer > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
 }
-@media screen and (max-width: 60rem) {
-	#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList {
-		grid-template-columns: 1fr;
-		grid-auto-rows: auto;
-		gap: 2rem;
-	}
-	#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > article {
-		width: 100%;
-	}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project > footer > div:last-of-type {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+}
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project > footer > div:last-of-type > img,
+#home > #summaryViewPanel > #summaryProjectPanel > #summaryProjectList > .project > footer > div:last-of-type > span {
+	width: 4rem;
+	height: 4rem;
+	margin-left: -2rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 4rem;
+	background-color: var(--color-white);
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
 }
 
 #home > #calendarViewPanel {
