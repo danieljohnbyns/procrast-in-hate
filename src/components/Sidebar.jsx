@@ -13,7 +13,7 @@ const Sidebar = ({
 	children,
 	...props
 }) => {
-	const [profile, setProfile] = React.useState();
+	const [profile, setProfile] = React.useState('https://via.placeholder.com/200');
 	const [name, setName] = React.useState();
 	const [email, setEmail] = React.useState();
 
