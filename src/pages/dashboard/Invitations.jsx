@@ -1,6 +1,6 @@
 import React from 'react';
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content'
+import withReactContent from 'sweetalert2-react-content';
 
 import '../../styles/dashboard/invitations.css';
 
@@ -108,7 +108,7 @@ export default class Invitations extends React.Component {
 				</header>
 
 				<main>
-					{this.state.data.invitations.map((invitation, index) => {
+					{this.state.data.invitations.length > 0 ? (this.state.data.invitations.map((invitation, index) => {
 						return (
 							<article key={index}>
 								<header>
@@ -118,50 +118,70 @@ export default class Invitations extends React.Component {
 
 								<main>
 									<button onClick={async () => {
-										const _id = JSON.parse(localStorage.getItem('authentication'))._id;
-										const response = await fetch(`${globals.API_URL}/users/${_id}/invitations/${invitation.type}/${invitation._id}`, {
-											method: 'POST'
-										});
+										withReactContent(Swal).fire({
+											title: 'Accept Invitation',
+											html: <p>Are you sure you want to accept the invitation to <strong>{invitation.title}</strong>?</p>,
+											icon: 'question',
+											showCancelButton: true,
+											confirmButtonText: 'Accept',
+											cancelButtonText: 'Cancel'
+										}).then(async (result) => {
+											if (!result.isConfirmed) return;
 
-										if (!response.ok) {
-											Swal.fire({
-												icon: 'error',
-												title: 'Error',
-												text: 'An error occurred while accepting the invitation.'
+											const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+											const response = await fetch(`${globals.API_URL}/users/${_id}/invitations/${invitation.type}/${invitation._id}`, {
+												method: 'POST'
 											});
-											return;
-										};
-
-										Swal.fire({
-											icon: 'success',
-											title: 'Success',
-											text: 'The invitation has been accepted.'
+	
+											if (!response.ok) {
+												Swal.fire({
+													icon: 'error',
+													title: 'Error',
+													text: 'An error occurred while accepting the invitation.'
+												});
+												return;
+											};
+	
+											Swal.fire({
+												icon: 'success',
+												title: 'Success',
+												text: 'The invitation has been accepted.'
+											});
+	
+											this.fetchInvitations();
 										});
-
-										this.fetchInvitations();
 									}}>Accept</button>
 									<button onClick={async () => {
-										const _id = JSON.parse(localStorage.getItem('authentication'))._id;
-										const response = await fetch(`${globals.API_URL}/users/${_id}/invitations/${invitation.type}/${invitation._id}`, {
-											method: 'DELETE'
-										});
-
-										if (!response.ok) {
-											Swal.fire({
-												icon: 'error',
-												title: 'Error',
-												text: 'An error occurred while rejecting the invitation.'
+										withReactContent(Swal).fire({
+											title: 'Reject Invitation',
+											html: <p>Are you sure you want to reject the invitation to <strong>{invitation.title}</strong>?</p>,
+											icon: 'question',
+											showCancelButton: true,
+											confirmButtonText: 'Reject',
+											cancelButtonText: 'Cancel'
+										}).then(async (result) => {
+											const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+											const response = await fetch(`${globals.API_URL}/users/${_id}/invitations/${invitation.type}/${invitation._id}`, {
+												method: 'DELETE'
 											});
-											return;
-										};
-
-										Swal.fire({
-											icon: 'success',
-											title: 'Success',
-											text: 'The invitation has been rejected.'
+	
+											if (!response.ok) {
+												Swal.fire({
+													icon: 'error',
+													title: 'Error',
+													text: 'An error occurred while rejecting the invitation.'
+												});
+												return;
+											};
+	
+											Swal.fire({
+												icon: 'success',
+												title: 'Success',
+												text: 'The invitation has been rejected.'
+											});
+	
+											this.fetchInvitations();
 										});
-
-										this.fetchInvitations();
 									}}>Reject</button>
 								</main>
 
@@ -171,7 +191,7 @@ export default class Invitations extends React.Component {
 								</footer>
 							</article>
 						);
-					})}
+					})) : <i>No invitations found</i>}
 				</main>
 			</div>
 		);
