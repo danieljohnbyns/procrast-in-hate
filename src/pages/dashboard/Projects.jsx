@@ -269,8 +269,7 @@ export default class Projects extends React.Component {
 				</header>
 
 				<main>
-					{
-						this.state.data.projects.map((project, index) => (
+					{this.state.data.projects.length > 0 ? this.state.data.projects.map((project, index) => (
 							<div
 								key={index}
 								className='project'
@@ -307,8 +306,7 @@ export default class Projects extends React.Component {
 									</div>
 								</footer>
 							</div>
-						))
-					}
+						)) : <i>No projects found</i>}
 				</main>
 			</div>
 		);

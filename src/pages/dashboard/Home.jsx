@@ -635,8 +635,7 @@ export default class Home extends React.Component {
 								</header>
 
 								<div id='summaryListTasks'>
-									{
-										this.state.data.tasks?.slice(0, 6).map((task, i) => (
+									{this.state.data.tasks?.length > 0 ? this.state.data.tasks?.slice(0, 6).map((task, i) => (
 											<div
 												key={i}
 												data-start={new Date(task.dates.start).toDateString()}
@@ -693,8 +692,7 @@ export default class Home extends React.Component {
 													</span>
 												</div>
 											</div>
-										))
-									}
+										)) : <i>No tasks found</i>}
 								</div>
 
 								<div
@@ -704,10 +702,10 @@ export default class Home extends React.Component {
 										style={{ cursor: 'pointer' }}
 										onClick={() => {
 											const listView = document.getElementById('listView');
-											listView.click()
+											listView.click();
 										}}
 									>
-										View ALl Tasks
+										View All Tasks
 									</h6>
 								</div>
 							</div>
@@ -720,8 +718,7 @@ export default class Home extends React.Component {
 								</header>
 
 								<div id='summaryProjectList'>
-									{
-										this.state.data.projects.map((project, index) => (
+									{this.state.data.projects.length > 0 ? this.state.data.projects.map((project, index) => (
 											<div
 												key={index}
 												className='project'
@@ -758,8 +755,7 @@ export default class Home extends React.Component {
 													</div>
 												</footer>
 											</div>
-										))
-									}
+										)) : <i>No Projects found</i>}
 								</div>
 							</div>
 						</main>
@@ -889,8 +885,7 @@ export default class Home extends React.Component {
 								</header>
 
 								<div id='listViewTasks'>
-									{
-										this.state.data.tasks.map((task, i) => (
+									{this.state.data.tasks > 0 ? this.state.data.tasks.map((task, i) => (
 											<div
 												key={i}
 												className='taskCard'
@@ -986,8 +981,7 @@ export default class Home extends React.Component {
 													</div>
 												</footer>
 											</div>
-										))
-									}
+									)) : <i>No tasks found</i>}
 								</div>
 							</div>
 						</main>
