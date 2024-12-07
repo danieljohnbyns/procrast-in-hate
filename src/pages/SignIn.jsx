@@ -71,9 +71,6 @@ export default class SignIn extends React.Component {
 
 									const response = await fetch(`${globals.API_URL}/users`, {
 										method: 'POST',
-										headers: {
-											'Content-Type': 'application/json'
-										},
 										body: JSON.stringify(this.state.form)
 									});
 

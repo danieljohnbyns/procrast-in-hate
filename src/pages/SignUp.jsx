@@ -87,9 +87,6 @@ export default class SignUp extends React.Component {
 
 								const response = await fetch(`${globals.API_URL}/users`, {
 									method: 'PUT',
-									headers: {
-										'Content-Type': 'application/json'
-									},
 									body: JSON.stringify({
 										name: this.state.form.name,
 										email: this.state.form.email,

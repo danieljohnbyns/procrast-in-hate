@@ -73,6 +73,25 @@ export default class Dashboard extends React.Component {
 		activateTab();
 
 		window.Swal = Swal;
+
+		const originalFetch = window.fetch;
+		window.fetch = async (url, options = {}) => {
+			const defaultHeaders = {
+				'Content-Type': 'application/json',
+				'Authentication': localStorage.getItem('authentication')
+			};
+
+			if (options.headers) {
+				options.headers = {
+					...defaultHeaders,
+					...options.headers
+				};
+			} else {
+				options.headers = defaultHeaders;
+			};
+
+			return originalFetch(url, options);
+		};
 	};
 	render() {
 		return (

@@ -473,9 +473,6 @@ export default class Home extends React.Component {
 
 										const response = await fetch(`${globals.API_URL}/tasks/`, {
 											method: 'PUT',
-											headers: {
-												'Content-Type': 'application/json'
-											},
 											body: JSON.stringify({
 												title,
 												description,
@@ -1093,9 +1090,6 @@ class TaskDetails extends React.Component {
 
 									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists`, {
 										method: 'PUT',
-										headers: {
-											'Content-Type': 'application/json'
-										},
 										body: JSON.stringify({
 											item: value
 										})
@@ -1136,9 +1130,6 @@ class TaskDetails extends React.Component {
 										onChange={async () => {
 											const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists/${item.id}`, {
 												method: 'PATCH',
-												headers: {
-													'Content-Type': 'application/json'
-												},
 												body: JSON.stringify({
 													completed: document.getElementById(`checklistItem${item.id}`).checked
 												})
@@ -1215,9 +1206,6 @@ class TaskDetails extends React.Component {
 
 									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/collaborators`, {
 										method: 'PUT',
-										headers: {
-											'Content-Type': 'application/json'
-										},
 										body: JSON.stringify({
 											collaboratorId: value
 										})
@@ -1361,9 +1349,6 @@ class TaskDetails extends React.Component {
 
 									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/dates/start`, {
 										method: 'PATCH',
-										headers: {
-											'Content-Type': 'application/json'
-										},
 										body: JSON.stringify({
 											date: value
 										})
@@ -1410,9 +1395,6 @@ class TaskDetails extends React.Component {
 
 									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/dates/end`, {
 										method: 'PATCH',
-										headers: {
-											'Content-Type': 'application/json'
-										},
 										body: JSON.stringify({
 											date: value
 										})
@@ -1700,9 +1682,6 @@ class ProjectDetails extends React.Component {
 
 										const response = await fetch(`${globals.API_URL}/projects/${this.state.id}/collaborators`, {
 											method: 'PUT',
-											headers: {
-												'Content-Type': 'application/json'
-											},
 											body: JSON.stringify({
 												collaboratorId: value
 											})
@@ -1846,9 +1825,6 @@ class ProjectDetails extends React.Component {
 
 										const response = await fetch(`${globals.API_URL}/projects/${this.state.id}/dates/start`, {
 											method: 'PATCH',
-											headers: {
-												'Content-Type': 'application/json'
-											},
 											body: JSON.stringify({
 												date: value
 											})
@@ -1895,9 +1871,6 @@ class ProjectDetails extends React.Component {
 
 										const response = await fetch(`${globals.API_URL}/projects/${this.state.id}/dates/end`, {
 											method: 'PATCH',
-											headers: {
-												'Content-Type': 'application/json'
-											},
 											body: JSON.stringify({
 												date: value
 											})
@@ -2047,9 +2020,6 @@ class ProjectDetails extends React.Component {
 
 											const response = await fetch(`${globals.API_URL}/tasks/`, {
 												method: 'PUT',
-												headers: {
-													'Content-Type': 'application/json'
-												},
 												body: JSON.stringify({
 													title,
 													description,
