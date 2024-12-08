@@ -1,4 +1,5 @@
 import React from 'react';
+import Swal from 'sweetalert2';
 
 import '../styles/signUp.css';
 
@@ -86,7 +87,10 @@ export default class SignUp extends React.Component {
 								};
 
 								const response = await fetch(`${globals.API_URL}/users`, {
-									method: 'PUT',
+									method: 'POST',
+									headers: {
+										'Content-Type': 'application/json'
+									},
 									body: JSON.stringify({
 										name: this.state.form.name,
 										email: this.state.form.email,
@@ -94,13 +98,23 @@ export default class SignUp extends React.Component {
 									})
 								});
 
-								if (response.status !== 200) {
+								if (!response.ok) {
 									const data = await response.json();
-									alert(data.message);
+									Swal.fire({
+										title: 'Error',
+										text: data.message || 'An error occurred',
+										icon: 'error'
+									});
 									return;
-								} else {
-									window.location.href = '/signIn';
 								};
+
+								Swal.fire({
+									title: 'Success',
+									text: 'Account created successfully',
+									icon: 'success'
+								}).then(() => {
+									window.location.href = '/signIn';
+								});
 							}}
 						/>
 

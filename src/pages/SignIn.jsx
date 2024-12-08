@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Swal from 'sweetalert2';
+
 import '../styles/signIn.css';
 
 import Input from '../components/Input';
@@ -70,19 +72,26 @@ export default class SignIn extends React.Component {
 									};
 
 									const response = await fetch(`${globals.API_URL}/users`, {
-										method: 'POST',
+										method: 'PUT',
+										headers: {
+											'Content-Type': 'application/json'
+										},
 										body: JSON.stringify(this.state.form)
 									});
 
-									if (response.status === 200) {
+									if (!response.ok) {
 										const data = await response.json();
-										const authentication = data.authentication;
-
-										localStorage.setItem('authentication', JSON.stringify(authentication));
-										window.location.href = '/dashboard/';
-									} else {
-										alert('Invalid email or password');
+										Swal.fire({
+											title: 'Error',
+											text: data.message || 'An error occurred',
+											icon: 'error'
+										});
+										return;
 									};
+
+									const data = await response.json();
+									localStorage.setItem('authentication', JSON.stringify(data.authentication));
+									window.location.href = '/dashboard/';
 								}}
 							/>
 							<p><a href='/forgotPassword'>Forgot your password?</a></p>

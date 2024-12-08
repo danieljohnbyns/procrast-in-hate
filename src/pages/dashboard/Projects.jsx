@@ -210,8 +210,8 @@ export default class Projects extends React.Component {
 										popup: `fadeOut`
 									},
 									showCancelButton: true,
-									confirmButtonText: <h6 style={{ color: 'var(--color - white);' }}>Create</h6>,
-									cancelButtonText: <h6 style={{ color: 'var(--color-white);' }}>Cancel</h6>,
+									confirmButtonText: <h6 style={{ color: 'var(--color-white)' }}>Create</h6>,
+									cancelButtonText: <h6 style={{ color: 'var(--color-white)' }}>Cancel</h6>,
 									preConfirm: async () => {
 										const title = document.getElementById('projectTitle').value.trim();
 										const description = document.getElementById('projectDescription').value.trim();
@@ -253,7 +253,8 @@ export default class Projects extends React.Component {
 										});
 
 										if (!response.ok) {
-											Swal.showValidationMessage('An error occurred');
+											const data = await response.json();
+											Swal.showValidationMessage(data.message || 'An error occurred');
 											return;
 										};
 
@@ -350,17 +351,33 @@ class ProjectDetails extends React.Component {
 				completed: false,
 				progress: 0
 			},
-			tasks: [],
+			tasks: [{
+				_id: '',
+				title: '',
+				description: '',
+				dates: {
+					start: '',
+					end: '',
+					create: ''
+				},
+				label: '',
+				creatorId: '',
+				collaborators: [],
+				completed: false,
+				checklists: [{
+					id: 0,
+					item: '',
+					completed: false
+				}]
+			}],
 			id: this.props.id
 		};
 	};
-	componentDidMount() {
-		this.fetchProject();
-		this.fetchTask();
+	async componentDidMount() {
+		await this.fetchProject();
 	};
 	fetchProject = async () => {
 		const projectResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}`);
-
 		if (!projectResponse.ok) {
 			Swal.fire({
 				icon: 'error',
@@ -375,11 +392,8 @@ class ProjectDetails extends React.Component {
 			});
 			return;
 		};
-
 		const project = await projectResponse.json();
-
 		const progressResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}/progress`);
-
 		if (!progressResponse.ok) {
 			Swal.fire({
 				icon: 'error',
@@ -394,17 +408,11 @@ class ProjectDetails extends React.Component {
 			});
 			return;
 		};
-
 		const progress = (await progressResponse.json()).progress;
 		project.progress = progress;
 
-		this.setState({
-			project: project
-		});
-	};
-	fetchTask = async () => {
-		const response = await fetch(`${globals.API_URL}/projects/${this.state.id}/tasks`);
-
+		const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+		const response = await fetch(`${globals.API_URL}/projects/${this.state.id}/tasks/${_id}`);
 		if (!response.ok) {
 			Swal.fire({
 				icon: 'error',
@@ -419,10 +427,11 @@ class ProjectDetails extends React.Component {
 			});
 			return;
 		};
-
 		const tasks = await response.json();
+		console.log(JSON.stringify(tasks, null, 2));
 
 		this.setState({
+			project: project,
 			tasks: tasks
 		});
 	};
@@ -933,105 +942,103 @@ class ProjectDetails extends React.Component {
 						</div>
 					</header>
 					<div id='projectTasks'>
-						{
-							this.state.tasks.map((task, i) => (
-								<div
-									key={i}
-									className='taskCard'
-									onClick={() => this.showTask(task._id, this.state.id)}
-								>
-									<header>
-										<div>
-											<input
-												type='checkbox'
-												id={`task${task._id}`}
-												defaultChecked={task.completed}
-												disabled
-											/>
-											<label htmlFor={`task${task._id}`}><h6>{task.title}</h6></label>
-										</div>
-
-										<div>
-											<span>
-												<b>
-													Due {(() => {
-														const today = new Date();
-														const taskDate = new Date(task.dates.end);
-
-														// Label with 'Today' 'Tomorrow' 'Yesterday' 'This week' 'Next week' 'Last week' 'This month' 'Next month' 'Last month' 'Long time ago' 'Soon'
-														if (today.toDateString() === taskDate.toDateString()) {
-															return 'today';
-														} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
-															return 'yesterday';
-														} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
-															return 'tomorrow';
-														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
-															return 'this week';
-														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
-															return 'last week';
-														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
-															return 'next week';
-														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
-															return 'this month';
-														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
-															return 'last month';
-														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
-															return 'next month';
-														} else if (today.getFullYear() === taskDate.getFullYear()) {
-															return 'soon';
-														} else {
-															return 'long time ago';
-														};
-													})()}
-												</b>
-											</span>
-										</div>
-									</header>
-
+						{this.state.tasks.length > 0 ? this.state.tasks.map((task, i) => (
+							<div
+								key={i}
+								className='taskCard'
+								onClick={() => this.showTask(task._id, this.state.id)}
+							>
+								<header>
 									<div>
-										<p>{task.description}</p>
+										<input
+											type='checkbox'
+											id={`task${task._id}`}
+											defaultChecked={task.completed}
+											disabled
+										/>
+										<label htmlFor={`task${task._id}`}><h6>{task.title}</h6></label>
 									</div>
 
 									<div>
-										<h6>Checklist</h6>
+										<span>
+											<b>
+												Due {(() => {
+													const today = new Date();
+													const taskDate = new Date(task.dates.end);
 
+													// Label with 'Today' 'Tomorrow' 'Yesterday' 'This week' 'Next week' 'Last week' 'This month' 'Next month' 'Last month' 'Long time ago' 'Soon'
+													if (today.toDateString() === taskDate.toDateString()) {
+														return 'today';
+													} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
+														return 'yesterday';
+													} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
+														return 'tomorrow';
+													} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
+														return 'this week';
+													} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
+														return 'last week';
+													} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
+														return 'next week';
+													} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
+														return 'this month';
+													} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
+														return 'last month';
+													} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
+														return 'next month';
+													} else if (today.getFullYear() === taskDate.getFullYear()) {
+														return 'soon';
+													} else {
+														return 'long time ago';
+													};
+												})()}
+											</b>
+										</span>
+									</div>
+								</header>
+
+								<div>
+									<p>{task.description}</p>
+								</div>
+
+								<div>
+									<h6>Checklist</h6>
+
+									{
+										task.checklists?.map((item, j) => (
+											<div key={j}>
+												<input
+													type='checkbox'
+													id={`task${task._id}Checklist${item.id}`}
+													defaultChecked={item.completed}
+													disabled
+												/>
+												<label htmlFor={`task${task._id}Checklist${item.id}`}>{item.item}</label>
+											</div>
+										))
+									}
+								</div>
+
+								<footer>
+									<div>
+										<sub>Start: {new Date(task.dates.start).toDateString()}</sub>
+										<sub>End: {new Date(task.dates.end).toDateString()}</sub>
+									</div>
+
+									<div>
 										{
-											task.checklists?.map((item, j) => (
-												<div key={j}>
-													<input
-														type='checkbox'
-														id={`task${task._id}Checklist${item.id}`}
-														defaultChecked={item.completed}
-														disabled
-													/>
-													<label htmlFor={`task${task._id}Checklist${item.id}`}>{item.item}</label>
-												</div>
+											task.collaborators?.slice(0, 3).map((collaborator, j) => (
+												<img key={j} src={`https://randomuser.me/api/portraits/${Math.floor(Math.random() * 2) % 2 === 1 ? 'men' : 'women'}/${collaborator + Math.floor(Math.random() * 50)}.jpg`} alt='Collaborator' />
 											))
 										}
+										{
+											task.collaborators.length > 3 ? (
+												<span>+{task.collaborators.length - 3}</span>
+											) : null
+										}
 									</div>
-
-									<footer>
-										<div>
-											<sub>Start: {new Date(task.dates.start).toDateString()}</sub>
-											<sub>End: {new Date(task.dates.end).toDateString()}</sub>
-										</div>
-
-										<div>
-											{
-												task.collaborators?.slice(0, 3).map((collaborator, j) => (
-													<img key={j} src={`https://randomuser.me/api/portraits/${Math.floor(Math.random() * 2) % 2 === 1 ? 'men' : 'women'}/${collaborator + Math.floor(Math.random() * 50)}.jpg`} alt='Collaborator' />
-												))
-											}
-											{
-												task.collaborators.length > 3 ? (
-													<span>+{task.collaborators.length - 3}</span>
-												) : null
-											}
-										</div>
-									</footer>
-								</div>
-							))
-						}
+								</footer>
+							</div>
+						)) : <i>No tasks found</i>}
 					</div>
 				</main>
 			</article>

@@ -75,19 +75,21 @@ export default class Dashboard extends React.Component {
 		window.Swal = Swal;
 
 		const originalFetch = window.fetch;
-		window.fetch = async (url, options = {}) => {
+		window.fetch = async (url, options) => {
 			const defaultHeaders = {
 				'Content-Type': 'application/json',
 				'Authentication': localStorage.getItem('authentication')
 			};
-
-			if (options.headers) {
+			
+			if (options) {
 				options.headers = {
 					...defaultHeaders,
 					...options.headers
 				};
 			} else {
-				options.headers = defaultHeaders;
+				options = {
+					headers: defaultHeaders
+				};
 			};
 
 			return originalFetch(url, options);
