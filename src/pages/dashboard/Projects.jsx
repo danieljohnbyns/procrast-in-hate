@@ -189,8 +189,17 @@ export default class Projects extends React.Component {
 															const value = input.value.trim();
 															if (value) {
 																const list = document.getElementById('collaboratorsList');
-																const item = document.createElement('p');
-																item.innerHTML = value;
+																const item = document.createElement('div');
+																const itemText = document.createElement('p');
+																itemText.innerHTML = value;
+																const itemButton = document.createElement('button');
+																itemButton.innerHTML = 'Remove';
+																itemButton.type = 'button';
+																itemButton.onclick = () => {
+																	item.remove();
+																};
+																item.appendChild(itemText);
+																item.appendChild(itemButton);
 																list.appendChild(item);
 																input.value = '';
 															};
@@ -218,7 +227,7 @@ export default class Projects extends React.Component {
 										const startDate = document.getElementById('projectStartDate').value.trim();
 										const endDate = document.getElementById('projectEndDate').value.trim();
 										const label = document.getElementById('projectLabel').value.trim();
-										const collaborators = Array.from(document.getElementById('collaboratorsList').children).map(collaborator => collaborator.innerHTML);
+										const collaborators = Array.from(document.querySelectorAll('#collaboratorsList > div > p')).map((item) => item.innerHTML);
 
 										if (!(title && description && startDate && endDate && label)) {
 											Swal.showValidationMessage('All fields are required');
@@ -370,6 +379,25 @@ class ProjectDetails extends React.Component {
 					completed: false
 				}]
 			}],
+			memberTasks: [{
+				_id: '',
+				title: '',
+				description: '',
+				dates: {
+					start: '',
+					end: '',
+					create: ''
+				},
+				label: '',
+				creatorId: '',
+				collaborators: [],
+				completed: false,
+				checklists: [{
+					id: 0,
+					item: '',
+					completed: false
+				}]
+			}],
 			id: this.props.id
 		};
 	};
@@ -412,8 +440,9 @@ class ProjectDetails extends React.Component {
 		project.progress = progress;
 
 		const _id = JSON.parse(localStorage.getItem('authentication'))._id;
-		const response = await fetch(`${globals.API_URL}/projects/${this.state.id}/tasks/${_id}`);
-		if (!response.ok) {
+
+		const userTaskResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}/tasks/${_id}`);
+		if (!userTaskResponse.ok) {
 			Swal.fire({
 				icon: 'error',
 				title: '<h1>Error</h1>',
@@ -427,12 +456,38 @@ class ProjectDetails extends React.Component {
 			});
 			return;
 		};
-		const tasks = await response.json();
-		console.log(JSON.stringify(tasks, null, 2));
+		const userTasks = await userTaskResponse.json();
+		const memberTasks = [];
+
+		if (project.creatorId === _id) {
+			const memberTasksResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}/tasks/`);
+			if (!memberTasksResponse.ok) {
+				Swal.fire({
+					icon: 'error',
+					title: '<h1>Error</h1>',
+					text: 'An error occurred',
+					showClass: {
+						popup: `fadeIn`
+					},
+					hideClass: {
+						popup: `fadeOut`
+					}
+				});
+				return;
+			};
+			const filteredMemberTasks = (await memberTasksResponse.json()).filter((task) => {
+				return task.creatorId !== _id
+			});
+
+			for (const task of filteredMemberTasks) {
+				memberTasks.push(task);
+			};
+		};
 
 		this.setState({
 			project: project,
-			tasks: tasks
+			tasks: userTasks,
+			memberTasks: memberTasks
 		});
 	};
 
@@ -561,11 +616,11 @@ class ProjectDetails extends React.Component {
 						<header>
 							<h6>Collaborators</h6>
 
-							<div>
-								<input type='text' disabled={this.state.project.completed} id='projectCollaboratorInput' placeholder='Add collaborator' />
+							{JSON.parse(localStorage.getItem('authentication'))._id === this.state.project.creatorId ? <div>
+								<input type='text' disabled={this.state.project.completed || JSON.parse(localStorage.getItem('authentication'))._id !== this.state.project.creatorId} id='projectCollaboratorInput' placeholder='Add collaborator' />
 								<button
 									type='button'
-									disabled={this.state.project.completed}
+									disabled={this.state.project.completed || JSON.parse(localStorage.getItem('authentication'))._id !== this.state.project.creatorId}
 									id='projectCollaboratorButton'
 									onClick={async () => {
 										const input = document.getElementById('projectCollaboratorInput');
@@ -601,22 +656,27 @@ class ProjectDetails extends React.Component {
 								>
 									Add
 								</button>
-							</div>
+							</div> : null}
 						</header>
 						<div id='collaboratorsList'>
 							{
-								this.state.project.collaborators?.length ? this.state.project.collaborators?.map((collaborator, i) => (
+								this.state.project.collaborators?.filter((collaborator) => {
+									return collaborator._id !== this.state.project.creatorId
+								}).length ? this.state.project.collaborators
+									?.filter((collaborator) => {
+										return collaborator._id !== this.state.project.creatorId
+									}).map((collaborator, i) => (
 									<div key={i}>
 										<p>{collaborator.name}</p>
 										<sub>{collaborator._id}</sub>
 										{(() => {
 											const _id = JSON.parse(localStorage.getItem('authentication'))._id;
 
-											if (!this.state.project.collaborators?.find(collab => collab._id === _id)) {
+											if (this.state.project.creatorId === _id) {
 												return (
 													<button
 														type='button'
-														disabled={this.state.project.completed}
+														disabled={this.state.project.completed || JSON.parse(localStorage.getItem('authentication'))._id !== this.state.project.creatorId}
 														onClick={async () => {
 															const response = await fetch(`${globals.API_URL}/projects/${this.state.id}/collaborators/${collaborator._id}`, {
 																method: 'DELETE'
@@ -700,7 +760,7 @@ class ProjectDetails extends React.Component {
 								<label htmlFor='projectStartDate'>Start Date</label>
 								<input
 									type='datetime-local'
-									disabled={this.state.project.completed}
+									disabled={this.state.project.completed || JSON.parse(localStorage.getItem('authentication'))._id !== this.state.project.creatorId}
 									id='projectStartDate'
 									defaultValue={this.state.project.dates.start?.split('.')[0]}
 									onBlur={async (e) => {
@@ -746,7 +806,7 @@ class ProjectDetails extends React.Component {
 								<label htmlFor='projectEndDate'>End Date</label>
 								<input
 									type='datetime-local'
-									disabled={this.state.project.completed}
+									disabled={this.state.project.completed || JSON.parse(localStorage.getItem('authentication'))._id !== this.state.project.creatorId}
 									id='projectEndDate'
 									defaultValue={this.state.project.dates.end?.split('.')[0]}
 									onBlur={async (e) => {
@@ -789,6 +849,7 @@ class ProjectDetails extends React.Component {
 								/>
 							</div>
 						</div>
+						<div>Creator ID:<br /><sub>{this.state.project.creatorId}</sub></div>
 					</footer>
 				</aside>
 				<main>
@@ -855,11 +916,14 @@ class ProjectDetails extends React.Component {
 													<div>
 														<select id='taskCollaborators'>
 															<option value=''>Select a collaborator</option>
-															{
-																this.state.project.collaborators.map((collaborator, i) => (
+															{(() => {
+																const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+																return this.state.project.collaborators.filter((collaborator) => {
+																	return collaborator._id !== _id
+																}).map((collaborator, i) => (
 																	<option key={i} value={collaborator._id}>{collaborator.name}</option>
 																))
-															}
+															})()}
 														</select>
 														<button
 															type='button'
@@ -870,7 +934,16 @@ class ProjectDetails extends React.Component {
 																if (value) {
 																	const list = document.getElementById('collaboratorsList');
 																	const item = document.createElement('div');
-																	item.innerHTML = value;
+																	const itemText = document.createElement('p');
+																	itemText.innerHTML = value;
+																	const itemButton = document.createElement('button');
+																	itemButton.innerHTML = 'Remove';
+																	itemButton.type = 'button';
+																	itemButton.onclick = () => {
+																		item.remove();
+																	};
+																	item.appendChild(itemText);
+																	item.appendChild(itemButton);
 																	list.appendChild(item);
 																	input.value = '';
 																};
@@ -953,7 +1026,7 @@ class ProjectDetails extends React.Component {
 										<input
 											type='checkbox'
 											id={`task${task._id}`}
-											defaultChecked={task.completed}
+											checked={task.completed}
 											disabled
 										/>
 										<label htmlFor={`task${task._id}`}><h6>{task.title}</h6></label>
@@ -1009,7 +1082,7 @@ class ProjectDetails extends React.Component {
 												<input
 													type='checkbox'
 													id={`task${task._id}Checklist${item.id}`}
-													defaultChecked={item.completed}
+													checked={item.completed}
 													disabled
 												/>
 												<label htmlFor={`task${task._id}Checklist${item.id}`}>{item.item}</label>
@@ -1040,6 +1113,111 @@ class ProjectDetails extends React.Component {
 							</div>
 						)) : <i>No tasks found</i>}
 					</div>
+
+					{(JSON.parse(localStorage.getItem('authentication'))._id === this.state.project.creatorId) ? <>
+						<header>
+							<h6>Tasks made by members</h6>
+						</header>
+						<div id='projectTasks'>
+							{this.state.memberTasks.length > 0 ? this.state.memberTasks.map((task, i) => (
+								<div
+									key={i}
+									className='taskCard'
+									onClick={() => this.showTask(task._id, this.state.id)}
+								>
+									<header>
+										<div>
+											<input
+												type='checkbox'
+												id={`task${task._id}`}
+												defaultChecked={task.completed}
+												disabled
+											/>
+											<label htmlFor={`task${task._id}`}><h6>{task.title}</h6></label>
+										</div>
+
+										<div>
+											<span>
+												<b>
+													Due {(() => {
+														const today = new Date();
+														const taskDate = new Date(task.dates.end);
+
+														// Label with 'Today' 'Tomorrow' 'Yesterday' 'This week' 'Next week' 'Last week' 'This month' 'Next month' 'Last month' 'Long time ago' 'Soon'
+														if (today.toDateString() === taskDate.toDateString()) {
+															return 'today';
+														} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
+															return 'yesterday';
+														} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
+															return 'tomorrow';
+														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
+															return 'this week';
+														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
+															return 'last week';
+														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
+															return 'next week';
+														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
+															return 'this month';
+														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
+															return 'last month';
+														} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
+															return 'next month';
+														} else if (today.getFullYear() === taskDate.getFullYear()) {
+															return 'soon';
+														} else {
+															return 'long time ago';
+														};
+													})()}
+												</b>
+											</span>
+										</div>
+									</header>
+
+									<div>
+										<p>{task.description}</p>
+									</div>
+
+									<div>
+										<h6>Checklist</h6>
+
+										{
+											task.checklists?.map((item, j) => (
+												<div key={j}>
+													<input
+														type='checkbox'
+														id={`task${task._id}Checklist${item.id}`}
+														defaultChecked={item.completed}
+														disabled
+													/>
+													<label htmlFor={`task${task._id}Checklist${item.id}`}>{item.item}</label>
+												</div>
+											))
+										}
+									</div>
+
+									<footer>
+										<div>
+											<sub>Start: {new Date(task.dates.start).toDateString()}</sub>
+											<sub>End: {new Date(task.dates.end).toDateString()}</sub>
+										</div>
+
+										<div>
+											{
+												task.collaborators?.slice(0, 3).map((collaborator, j) => (
+													<img key={j} src={`https://randomuser.me/api/portraits/${Math.floor(Math.random() * 2) % 2 === 1 ? 'men' : 'women'}/${collaborator + Math.floor(Math.random() * 50)}.jpg`} alt='Collaborator' />
+												))
+											}
+											{
+												task.collaborators.length > 3 ? (
+													<span>+{task.collaborators.length - 3}</span>
+												) : null
+											}
+										</div>
+									</footer>
+								</div>
+							)) : <i>No tasks found</i>}
+						</div>
+					</> : <></>}
 				</main>
 			</article>
 		);
@@ -1264,13 +1442,16 @@ class TaskDetails extends React.Component {
 					<header>
 						<h6>Collaborators</h6>
 
-						<div>
+						{JSON.parse(localStorage.getItem('authentication'))._id === this.state.project.creatorId ? <div>
 							<select id='taskCollaboratorInput' disabled={this.state.task.completed}>
 								<option value=''>Add collaborator</option>
 								{(() => {
-									return this.state.project.collaborators.map((collaborator, i) => (
-										this.state.task.collaborators.find(collab => collab._id === collaborator._id) ? null : <option key={i} value={collaborator._id}>{collaborator.name}</option>
-									));
+									const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+									return this.state.project.collaborators.filter((collaborator) => {
+										return collaborator._id !== _id && !this.state.task.collaborators.find(collab => collab._id === collaborator._id)
+									}).map((collaborator, i) => (
+										<option key={i} value={collaborator._id}>{collaborator.name}</option>
+									))
 								})()}
 							</select>
 							<button
@@ -1301,7 +1482,7 @@ class TaskDetails extends React.Component {
 							>
 								Add
 							</button>
-						</div>
+						</div> : null}
 					</header>
 					<div id='collaboratorsList'>
 						{
@@ -1461,6 +1642,7 @@ class TaskDetails extends React.Component {
 							/>
 						</div>
 					</div>
+					{JSON.parse(localStorage.getItem('authentication'))._id !== this.state.task.creatorId ? <div>Creator ID:<br /><sub>{this.state.task.creatorId}</sub></div> : null}
 				</footer>
 			</article>
 		);

@@ -690,20 +690,23 @@
 	border: solid 0.25rem var(--color-primary);
 	border-radius: 1rem;
 }
-#createTaskForm > div:has(> div) > div {
+#createTaskForm > div:has(> label[for="taskChecklist"]) > div,
+#createTaskForm > div:has(> label[for="taskCollaborators"]) > div {
 	width: 100%;
 	display: flex;
 	flex-direction: row;
-	flex-wrap: wrap;
 	justify-content: flex-start;
 	align-items: center;
-	gap: 2rem;
+	flex-wrap: wrap;
+	gap: 1rem;
 }
-#createTaskForm > div:has(> div) > div > input {
+#createTaskForm > div:has(> label[for="taskChecklist"]) > div > input,
+#createTaskForm > div:has(> label[for="taskCollaborators"]) > div > input {
 	width: calc(100% - 8rem);
 }
-#createTaskForm > div:has(> div) > div > button {
-	width: 6rem;
+#createTaskForm > div:has(> label[for="taskChecklist"]) > div > button,
+#createTaskForm > div:has(> label[for="taskCollaborators"]) > div > button {
+	width: calc(8rem);
 	padding: 1rem;
 	border: solid 0.25rem var(--color-primary);
 	border-radius: 1rem;
@@ -711,18 +714,41 @@
 	transition: background-color var(--transition), color var(--transition);
 	cursor: pointer;
 }
-#createTaskForm > div:has(> div) > div > button:hover {
+#createTaskForm > div:has(> label[for="taskChecklist"]) > div > button:hover,
+#createTaskForm > div:has(> label[for="taskCollaborators"]) > div > button:hover {
 	background-color: var(--color-primary);
 	color: var(--color-white);
 }
-#createTaskForm > div:has(> div) > div > div {
+#createTaskForm > div:has(> label[for="taskChecklist"]) > div > div,
+#createTaskForm > div:has(> label[for="taskCollaborators"]) > div > div {
 	width: 100%;
 	display: flex;
 	flex-direction: row;
-	flex-wrap: wrap;
 	justify-content: flex-start;
 	align-items: center;
-	gap: 2rem;
+	gap: 1rem;
+}
+#createTaskForm > div:has(> label[for="taskChecklist"]) > div > div > div,
+#createTaskForm > div:has(> label[for="taskCollaborators"]) > div > div > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+}
+#createTaskForm > div:has(> label[for="taskChecklist"]) > div > div > div > button,
+#createTaskForm > div:has(> label[for="taskCollaborators"]) > div > div > div > button {
+	padding: 0.25rem 0.25rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 0.5rem;
+	background-color: var(--color-white);
+	transition: background-color var(--transition), color var(--transition);
+	cursor: pointer;
+}
+#createTaskForm > div:has(> label[for="taskChecklist"]) > div > div > div > button:hover,
+#createTaskForm > div:has(> label[for="taskCollaborators"]) > div > div > div > button:hover {
+	background-color: var(--color-primary);
+	color: var(--color-white);
 }
 #createTaskForm > div:has(> div) > div > div:not(:has(*)) {
 	display: none;

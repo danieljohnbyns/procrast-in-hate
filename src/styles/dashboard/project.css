@@ -286,6 +286,25 @@
 	align-items: center;
 	gap: 2rem;
 }
+#createProjectForm > div:last-of-type > div > div > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+}
+#createProjectForm > div:last-of-type > div > div > div > button {
+	padding: 0.25rem 0.25rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 0.5rem;
+	background-color: var(--color-white);
+	transition: background-color var(--transition), color var(--transition);
+	cursor: pointer;
+}
+#createProjectForm > div:last-of-type > div > div > div > button:hover {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+}
 #createProjectForm > div:last-of-type > div > div:not(:has(*)) {
 	display: none;
 }

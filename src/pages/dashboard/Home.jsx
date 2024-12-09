@@ -406,8 +406,17 @@ export default class Home extends React.Component {
 															const value = input.value.trim();
 															if (value) {
 																const list = document.getElementById('checklistList');
-																const item = document.createElement('p');
-																item.innerHTML = value;
+																const item = document.createElement('div');
+																const itemText = document.createElement('p');
+																itemText.innerHTML = value;
+																const itemButton = document.createElement('button');
+																itemButton.innerHTML = 'Remove';
+																itemButton.type = 'button';
+																itemButton.onclick = () => {
+																	item.remove();
+																};
+																item.appendChild(itemText);
+																item.appendChild(itemButton);
 																list.appendChild(item);
 																input.value = '';
 															};
@@ -431,7 +440,16 @@ export default class Home extends React.Component {
 															if (value) {
 																const list = document.getElementById('collaboratorsList');
 																const item = document.createElement('div');
-																item.innerHTML = value;
+																const itemText = document.createElement('p');
+																itemText.innerHTML = value;
+																const itemButton = document.createElement('button');
+																itemButton.innerHTML = 'Remove';
+																itemButton.type = 'button';
+																itemButton.onclick = () => {
+																	item.remove();
+																};
+																item.appendChild(itemText);
+																item.appendChild(itemButton);
 																list.appendChild(item);
 																input.value = '';
 															};
@@ -461,8 +479,8 @@ export default class Home extends React.Component {
 										const endDate = form.querySelector('#taskEndDate').value;
 										const label = form.querySelector('#taskLabel').value;
 										const projectId = form.querySelector('#taskProject').value;
-										const checklist = Array.from(form.querySelector('#checklistList').children).map(item => item.innerHTML);
-										const collaborators = Array.from(form.querySelector('#collaboratorsList').children).map(item => item.innerHTML);
+										const checklist = Array.from(form.querySelectorAll('#checklistList > div > p')).map((item, i) => item.innerHTML);
+										const collaborators = Array.from(form.querySelectorAll('#collaboratorsList > div > p')).map((item) => item.innerHTML);
 
 										if (!title || !description || !startDate || !endDate || !label) {
 											Swal.showValidationMessage('All fields are required');
@@ -474,38 +492,27 @@ export default class Home extends React.Component {
 										const response = await fetch(`${globals.API_URL}/tasks/`, {
 											method: 'PUT',
 											body: JSON.stringify({
-												title,
-												description,
+												title: title,
+												description: description,
 												dates: {
 													start: startDate,
 													end: endDate
 												},
-												label,
-												projectId,
-												checklist,
-												collaborators,
+												label: label,
+												projectId: projectId,
+												checklist: checklist,
+												collaborators: collaborators,
 												creatorId: _id
 											})
 										});
-										if (response.ok) {
+										if (!response.ok) {
 											const data = await response.json();
-											console.log(data);
-											this.fetchTasks();
-										} else {
-											const error = await response.json();
-											console.error(error);
-											Swal.fire({
-												icon: 'error',
-												title: '<h1>Error</h1>',
-												text: error.message,
-												showClass: {
-													popup: `fadeIn`
-												},
-												hideClass: {
-													popup: `fadeOut`
-												}
-											});
+											Swal.showValidationMessage(data.message || 'An error occured');
+											return;
 										};
+
+										this.fetchTasks();
+										this.fetchProjects();
 									}
 								});
 							}}
@@ -882,102 +889,96 @@ export default class Home extends React.Component {
 								</header>
 
 								<div id='listViewTasks'>
-									{this.state.data.tasks > 0 ? this.state.data.tasks.map((task, i) => (
-											<div
-												key={i}
-												className='taskCard'
-												onClick={() => this.showTask(task._id)}
-											>
-												<header>
-													<div>
+									{this.state.data.tasks.length > 0 ? this.state.data.tasks.map((task, i) => (
+										<div
+											key={i}
+											className='taskCard'
+											onClick={() => this.showTask(task._id)}
+										>
+											<header>
+												<div>
+													<input
+														type='checkbox'
+														id={`task${task._id}`}
+														defaultChecked={task.completed}
+														disabled
+													/>
+													<label htmlFor={`task${task._id}`}><h6>{task.title}</h6></label>
+												</div>
+
+												<div>
+													<span>
+														<b>
+															Due {(() => {
+																const today = new Date();
+																const taskDate = new Date(task.dates.end);
+
+																// Label with 'Today' 'Tomorrow' 'Yesterday' 'This week' 'Next week' 'Last week' 'This month' 'Next month' 'Last month' 'Long time ago' 'Soon'
+																if (today.toDateString() === taskDate.toDateString()) {
+																	return 'today';
+																} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
+																	return 'yesterday';
+																} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
+																	return 'tomorrow';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
+																	return 'this week';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
+																	return 'last week';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
+																	return 'next week';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
+																	return 'this month';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
+																	return 'last month';
+																} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
+																	return 'next month';
+																} else if (today.getFullYear() === taskDate.getFullYear()) {
+																	return 'soon';
+																} else {
+																	return 'long time ago';
+																};
+															})()}
+														</b>
+													</span>
+												</div>
+											</header>
+
+											<div>
+												<p>{task.description}</p>
+											</div>
+
+											<div>
+												<h6>Checklist</h6>
+
+												{task.checklists?.map((item, j) => (
+													<div key={j}>
 														<input
 															type='checkbox'
-															id={`task${task._id}`}
-															defaultChecked={task.completed}
+															id={`task${task._id}Checklist${item.id}`}
+															defaultChecked={item.completed}
 															disabled
 														/>
-														<label htmlFor={`task${task._id}`}><h6>{task.title}</h6></label>
+														<label htmlFor={`task${task._id}Checklist${item.id}`}>{item.item}</label>
 													</div>
-
-													<div>
-														<span>
-															<b>
-																Due {(() => {
-																	const today = new Date();
-																	const taskDate = new Date(task.dates.end);
-
-																	// Label with 'Today' 'Tomorrow' 'Yesterday' 'This week' 'Next week' 'Last week' 'This month' 'Next month' 'Last month' 'Long time ago' 'Soon'
-																	if (today.toDateString() === taskDate.toDateString()) {
-																		return 'today';
-																	} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
-																		return 'yesterday';
-																	} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
-																		return 'tomorrow';
-																	} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
-																		return 'this week';
-																	} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
-																		return 'last week';
-																	} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
-																		return 'next week';
-																	} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
-																		return 'this month';
-																	} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
-																		return 'last month';
-																	} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
-																		return 'next month';
-																	} else if (today.getFullYear() === taskDate.getFullYear()) {
-																		return 'soon';
-																	} else {
-																		return 'long time ago';
-																	};
-																})()}
-															</b>
-														</span>
-													</div>
-												</header>
-
-												<div>
-													<p>{task.description}</p>
-												</div>
-
-												<div>
-													<h6>Checklist</h6>
-
-													{
-														task.checklists?.map((item, j) => (
-															<div key={j}>
-																<input
-																	type='checkbox'
-																	id={`task${task._id}Checklist${item.id}`}
-																	defaultChecked={item.completed}
-																	disabled
-																/>
-																<label htmlFor={`task${task._id}Checklist${item.id}`}>{item.item}</label>
-															</div>
-														))
-													}
-												</div>
-
-												<footer>
-													<div>
-														<sub>Start: {new Date(task.dates.start).toDateString()}</sub>
-														<sub>End: {new Date(task.dates.end).toDateString()}</sub>
-													</div>
-
-													<div>
-														{
-															task.collaborators?.slice(0, 3).map((collaborator, j) => (
-																<img key={j} src={`https://randomuser.me/api/portraits/${Math.floor(Math.random() * 2) % 2 === 1 ? 'men' : 'women'}/${collaborator + Math.floor(Math.random() * 50)}.jpg`} alt='Collaborator' />
-															))
-														}
-														{
-															task.collaborators.length > 3 ? (
-																<span>+{task.collaborators.length - 3}</span>
-															) : null
-														}
-													</div>
-												</footer>
+												))}
 											</div>
+
+											<footer>
+												<div>
+													<sub>Start: {new Date(task.dates.start).toDateString()}</sub>
+													<sub>End: {new Date(task.dates.end).toDateString()}</sub>
+												</div>
+
+												<div>
+													{task.collaborators?.slice(0, 3).map((collaborator, j) => (
+														<img key={j} src={`https://randomuser.me/api/portraits/${Math.floor(Math.random() * 2) % 2 === 1 ? 'men' : 'women'}/${collaborator + Math.floor(Math.random() * 50)}.jpg`} alt='Collaborator' />
+													))}
+													{task.collaborators.length > 3 ? (
+														<span>+{task.collaborators.length - 3}</span>
+													) : null}
+												</div>
+											</footer>
+										</div>
 									)) : <i>No tasks found</i>}
 								</div>
 							</div>
@@ -985,444 +986,6 @@ export default class Home extends React.Component {
 					) : null
 				}
 			</div>
-		);
-	};
-};
-
-class TaskDetails extends React.Component {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			
-			/**
-			 * @type {{
-			 * 		title: String,
-			 * 		description: String,
-			 * 		dates: {
-			 * 			start: String,
-			 * 			end: String,
-			 * 			create: String
-			 * 		},
-			 * 		completed: Boolean,
-			 * 		label: String,
-			 * 		creatorId: String,
-			 * 		collaborators: {
-			 * 			_id: String,
-			 * 			accepted: Boolean
-			 * 		}[],
-			 * 		checklists: {
-			 * 			id: Number,
-			 * 			item: String,
-			 * 			completed: Boolean
-			 * 		}[],
-			 * 		projectId: String
-			 * }}
-			 */
-			task: {
-				title: null,
-				description: null,
-				dates: {
-					start: null,
-					end: null,
-					create: null
-				},
-				completed: null,
-				label: null,
-				creatorId: null,
-				collaborators: [],
-				checklists: [],
-				projectId: null
-			},
-			id: props.id
-		};
-	};
-
-	async componentDidMount() {
-		this.fetchTask();
-	};
-
-	fetchTask = async () => {
-		const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}`);
-		if (!response.ok) {
-			Swal.fire({
-				icon: 'error',
-				title: '<h1>Error</h1>',
-				text: 'An error occurred while fetching the task',
-				showClass: {
-					popup: `fadeIn`
-				},
-				hideClass: {
-					popup: `fadeOut`
-				}
-			});
-			console.error(response);
-			return;
-		};
-
-		this.setState({
-			task: await response.json()
-		});
-	};
-
-	render() {
-		return (
-			<article id='taskDetails'>
-				<header>
-					<p>{this.state.task.description}</p>
-					<sub>{this.state.task.label}</sub>
-				</header>
-
-				<div id='taskChecklists'>
-					<header>
-						<h6>Checklist</h6>
-
-						<div>
-							<input type='text' disabled={this.state.task.completed} id='taskChecklistInput' placeholder='Add item' />
-							<button
-								type='button'
-								disabled={this.state.task.completed}
-								id='taskChecklistButton'
-								onClick={async () => {
-									const input = document.getElementById('taskChecklistInput');
-									const value = input.value.trim();
-									if (!value) return;
-
-									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists`, {
-										method: 'PUT',
-										body: JSON.stringify({
-											item: value
-										})
-									});
-									if (!response.ok) {
-										const error = await response.json();
-										console.error(error);
-										Swal.fire({
-											icon: 'error',
-											title: '<h1>Error</h1>',
-											text: error.message,
-											showClass: {
-												popup: `fadeIn`
-											},
-											hideClass: {
-												popup: `fadeOut`
-											}
-										});
-										return;
-									};
-									await this.fetchTask();
-									input.value = '';
-								}}
-							>
-								Add
-							</button>
-						</div>
-					</header>
-					<div id='checklistList'>
-						{
-							this.state.task.checklists.length ? this.state.task.checklists.map((item, i) => (
-								<div key={i}>
-									<input
-										type='checkbox'
-										disabled={this.state.task.completed}
-										id={`checklistItem${item.id}`}
-										defaultChecked={item.completed}
-										onChange={async () => {
-											const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists/${item.id}`, {
-												method: 'PATCH',
-												body: JSON.stringify({
-													completed: document.getElementById(`checklistItem${item.id}`).checked
-												})
-											});
-											if (!response.ok) {
-												const error = await response.json();
-												console.error(error);
-												Swal.fire({
-													icon: 'error',
-													title: '<h1>Error</h1>',
-													text: error.message,
-													showClass: {
-														popup: `fadeIn`
-													},
-													hideClass: {
-														popup: `fadeOut`
-													}
-												});
-												return;
-											};
-
-											await this.fetchTask();
-										}}
-									/>
-									<label htmlFor={`checklistItem${item.id}`}><p>{item.item}</p></label>
-									<button
-										type='button'
-										disabled={this.state.task.completed}
-										onClick={async () => {
-											const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists/${item.id}`, {
-												method: 'DELETE'
-											});
-											if (!response.ok) {
-												const error = await response.json();
-												console.error(error);
-												Swal.fire({
-													icon: 'error',
-													title: '<h1>Error</h1>',
-													text: error.message,
-													showClass: {
-														popup: `fadeIn`
-													},
-													hideClass: {
-														popup: `fadeOut`
-													}
-												});
-												return;
-											};
-
-											await this.fetchTask();
-										}}
-									>
-										Remove
-									</button>
-								</div>
-							)) : <i>No items</i>
-						}
-					</div>
-				</div>
-				<div id='taskCollaborators'>
-					<header>
-						<h6>Collaborators</h6>
-
-						<div>
-							<input type='text' disabled={this.state.task.completed} id='taskCollaboratorInput' placeholder='Add collaborator' />
-							<button
-								type='button'
-								disabled={this.state.task.completed}
-								id='taskCollaboratorButton'
-								onClick={async () => {
-									const input = document.getElementById('taskCollaboratorInput');
-									const value = input.value.trim();
-									if (!value) return;
-
-									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/collaborators`, {
-										method: 'PUT',
-										body: JSON.stringify({
-											collaboratorId: value
-										})
-									});
-									if (!response.ok) {
-										const error = await response.json();
-										console.error(error);
-										Swal.fire({
-											icon: 'error',
-											title: '<h1>Error</h1>',
-											text: error.message,
-											showClass: {
-												popup: `fadeIn`
-											},
-											hideClass: {
-												popup: `fadeOut`
-											}
-										});
-										return;
-									};
-
-									await this.fetchTask();
-									input.value = '';
-								}}
-							>
-								Add
-							</button>
-						</div>
-					</header>
-					<div id='collaboratorsList'>
-						{
-							this.state.task.collaborators.length ? this.state.task.collaborators.map((collaborator, i) => (
-								<div key={i}>
-									<p>{collaborator.name}</p>
-									<sub>{collaborator._id}</sub>
-									{(() => {
-										const _id = JSON.parse(localStorage.getItem('authentication'))._id;
-
-										if (!this.state.task.collaborators?.find(collab => collab._id === _id)) {
-											return (
-												<button
-													type='button'
-													disabled={this.state.task.completed}
-													onClick={async () => {
-														const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/collaborators/${collaborator._id}`, {
-															method: 'DELETE'
-														});
-														if (!response.ok) {
-															const error = await response.json();
-															console.error(error);
-															Swal.fire({
-																icon: 'error',
-																title: '<h1>Error</h1>',
-																text: error.message,
-																showClass: {
-																	popup: `fadeIn`
-																},
-																hideClass: {
-																	popup: `fadeOut`
-																}
-															});
-															return;
-														};
-
-														await this.fetchTask();
-													}}
-												>
-													Remove
-												</button>
-											);
-										};
-									})()}
-								</div>
-							)) : <i>No collaborators</i>
-						}
-					</div>
-				</div>
-				<footer id='taskDates'>
-					<header><h6>Time Frame</h6></header>
-					<div id='taskDatesDisplay'>
-						{(() => {
-							const today = new Date();
-							const taskStartDate = new Date(this.state.task.dates.start);
-							const taskEndDate = new Date(this.state.task.dates.end);
-
-							today.setSeconds(0);
-							taskStartDate.setSeconds(0);
-							taskEndDate.setSeconds(0);
-
-							const difference = taskEndDate.getTime() - taskStartDate.getTime();
-							return <>
-								<progress value={today.getTime() - taskStartDate.getTime()} max={difference} />
-								<h6>
-									{(() => {
-										const remaining = taskEndDate.getTime() - today.getTime();
-										const remainingDays = Math.floor(remaining / 86400000);
-										const remainingHours = Math.floor(remaining / 3600000);
-										const remainingWeeks = Math.floor(remaining / 604800000);
-
-										if (today.getTime() > taskEndDate.getTime()) {
-											if (remainingWeeks > 0) {
-												return `${remainingWeeks} ${remainingWeeks === 1 ? 'week' : 'weeks'} overdue`;
-											} else if (remainingDays > 0) {
-												return `${remainingDays} ${remainingDays === 1 ? 'day' : 'days'} overdue`;
-											} else if (remainingHours > 0) {
-												return `${remainingHours} ${remainingHours === 1 ? 'hour' : 'hours'} overdue`;
-											};
-										} else {
-											if (remainingWeeks > 0) {
-												return `${remainingWeeks} ${remainingWeeks === 1 ? 'week' : 'weeks'} remaining`;
-											} else if (remainingDays > 0) {
-												return `${remainingDays} ${remainingDays === 1 ? 'day' : 'days'} remaining`;
-											} else if (remainingHours > 0) {
-												return `${remainingHours} ${remainingHours === 1 ? 'hour' : 'hours'} remaining`;
-											};
-										};
-									})()}
-								</h6>
-							</>;
-						})()}
-					</div>
-					<div id='taskDatesEdit'>
-						<div>
-							<label htmlFor='taskStartDate'>Start Date</label>
-							<input
-								type='datetime-local'
-								disabled={this.state.task.completed}
-								id='taskStartDate'
-								defaultValue={this.state.task.dates.start?.split('.')[0]}
-								onBlur={async (e) => {
-									const input = document.getElementById('taskStartDate');
-									const value = input.value;
-
-									if (new Date(value).getTime() > new Date(this.state.task.dates.end).getTime()) {
-										Swal.showValidationMessage('Start date cannot be after end date');
-										e.target.value = this.state.task.dates.start?.split('.')[0];
-										return;
-									};
-
-									if (input.value === this.state.task.dates.start) return;
-
-									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/dates/start`, {
-										method: 'PATCH',
-										body: JSON.stringify({
-											date: value
-										})
-									});
-									if (!response.ok) {
-										const error = await response.json();
-										console.error(error);
-										Swal.fire({
-											icon: 'error',
-											title: '<h1>Error</h1>',
-											text: error.message,
-											showClass: {
-												popup: `fadeIn`
-											},
-											hideClass: {
-												popup: `fadeOut`
-											}
-										});
-										return;
-									};
-
-									await this.fetchTask();
-								}}
-							/>
-						</div>
-						<div>
-							<label htmlFor='taskEndDate'>End Date</label>
-							<input
-								type='datetime-local'
-								disabled={this.state.task.completed}
-								id='taskEndDate'
-								defaultValue={this.state.task.dates.end?.split('.')[0]}
-								onBlur={async (e) => {
-									const input = document.getElementById('taskEndDate');
-									const value = input.value;
-
-									if (new Date(value).getTime() > new Date(this.state.task.dates.start).getTime()) {
-										Swal.showValidationMessage('End date cannot be before start date');
-										e.target.value = this.state.task.dates.end?.split('.')[0];
-										return;
-									};
-
-									if (input.value === this.state.task.dates.end) return;
-
-									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/dates/end`, {
-										method: 'PATCH',
-										body: JSON.stringify({
-											date: value
-										})
-									});
-									if (!response.ok) {
-										const error = await response.json();
-										console.error(error);
-										Swal.fire({
-											icon: 'error',
-											title: '<h1>Error</h1>',
-											text: error.message,
-											showClass: {
-												popup: `fadeIn`
-											},
-											hideClass: {
-												popup: `fadeOut`
-											}
-										});
-										return;
-									};
-
-									await this.fetchTask();
-								}}
-							/>
-						</div>
-					</div>
-				</footer>
-			</article>
 		);
 	};
 };
@@ -1467,17 +1030,52 @@ class ProjectDetails extends React.Component {
 				completed: false,
 				progress: 0
 			},
-			tasks: [],
+			tasks: [{
+				_id: '',
+				title: '',
+				description: '',
+				dates: {
+					start: '',
+					end: '',
+					create: ''
+				},
+				label: '',
+				creatorId: '',
+				collaborators: [],
+				completed: false,
+				checklists: [{
+					id: 0,
+					item: '',
+					completed: false
+				}]
+			}],
+			memberTasks: [{
+				_id: '',
+				title: '',
+				description: '',
+				dates: {
+					start: '',
+					end: '',
+					create: ''
+				},
+				label: '',
+				creatorId: '',
+				collaborators: [],
+				completed: false,
+				checklists: [{
+					id: 0,
+					item: '',
+					completed: false
+				}]
+			}],
 			id: this.props.id
 		};
 	};
-	componentDidMount() {
-		this.fetchProject();
-		this.fetchTask();
+	async componentDidMount() {
+		await this.fetchProject();
 	};
 	fetchProject = async () => {
 		const projectResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}`);
-
 		if (!projectResponse.ok) {
 			Swal.fire({
 				icon: 'error',
@@ -1492,11 +1090,8 @@ class ProjectDetails extends React.Component {
 			});
 			return;
 		};
-
 		const project = await projectResponse.json();
-
 		const progressResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}/progress`);
-
 		if (!progressResponse.ok) {
 			Swal.fire({
 				icon: 'error',
@@ -1511,18 +1106,13 @@ class ProjectDetails extends React.Component {
 			});
 			return;
 		};
-
 		const progress = (await progressResponse.json()).progress;
 		project.progress = progress;
 
-		this.setState({
-			project: project
-		});
-	};
-	fetchTask = async () => {
-		const response = await fetch(`${globals.API_URL}/projects/${this.state.id}/tasks`);
+		const _id = JSON.parse(localStorage.getItem('authentication'))._id;
 
-		if (!response.ok) {
+		const userTaskResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}/tasks/${_id}`);
+		if (!userTaskResponse.ok) {
 			Swal.fire({
 				icon: 'error',
 				title: '<h1>Error</h1>',
@@ -1536,11 +1126,38 @@ class ProjectDetails extends React.Component {
 			});
 			return;
 		};
+		const userTasks = await userTaskResponse.json();
+		const memberTasks = [];
 
-		const tasks = await response.json();
+		if (project.creatorId === _id) {
+			const memberTasksResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}/tasks/`);
+			if (!memberTasksResponse.ok) {
+				Swal.fire({
+					icon: 'error',
+					title: '<h1>Error</h1>',
+					text: 'An error occurred',
+					showClass: {
+						popup: `fadeIn`
+					},
+					hideClass: {
+						popup: `fadeOut`
+					}
+				});
+				return;
+			};
+			const filteredMemberTasks = (await memberTasksResponse.json()).filter((task) => {
+				return task.creatorId !== _id
+			});
+
+			for (const task of filteredMemberTasks) {
+				memberTasks.push(task);
+			};
+		};
 
 		this.setState({
-			tasks: tasks
+			project: project,
+			tasks: userTasks,
+			memberTasks: memberTasks
 		});
 	};
 
@@ -1669,11 +1286,11 @@ class ProjectDetails extends React.Component {
 						<header>
 							<h6>Collaborators</h6>
 
-							<div>
-								<input type='text' disabled={this.state.project.completed} id='projectCollaboratorInput' placeholder='Add collaborator' />
+							{JSON.parse(localStorage.getItem('authentication'))._id === this.state.project.creatorId ? <div>
+								<input type='text' disabled={this.state.project.completed || JSON.parse(localStorage.getItem('authentication'))._id !== this.state.project.creatorId} id='projectCollaboratorInput' placeholder='Add collaborator' />
 								<button
 									type='button'
-									disabled={this.state.project.completed}
+									disabled={this.state.project.completed || JSON.parse(localStorage.getItem('authentication'))._id !== this.state.project.creatorId}
 									id='projectCollaboratorButton'
 									onClick={async () => {
 										const input = document.getElementById('projectCollaboratorInput');
@@ -1709,22 +1326,27 @@ class ProjectDetails extends React.Component {
 								>
 									Add
 								</button>
-							</div>
+							</div> : null}
 						</header>
 						<div id='collaboratorsList'>
 							{
-								this.state.project.collaborators?.length ? this.state.project.collaborators?.map((collaborator, i) => (
+								this.state.project.collaborators?.filter((collaborator) => {
+									return collaborator._id !== this.state.project.creatorId
+								}).length ? this.state.project.collaborators
+									?.filter((collaborator) => {
+										return collaborator._id !== this.state.project.creatorId
+									}).map((collaborator, i) => (
 									<div key={i}>
 										<p>{collaborator.name}</p>
 										<sub>{collaborator._id}</sub>
 										{(() => {
 											const _id = JSON.parse(localStorage.getItem('authentication'))._id;
 
-											if (!this.state.project.collaborators?.find(collab => collab._id === _id)) {
+											if (this.state.project.creatorId === _id) {
 												return (
 													<button
 														type='button'
-														disabled={this.state.project.completed}
+														disabled={this.state.project.completed || JSON.parse(localStorage.getItem('authentication'))._id !== this.state.project.creatorId}
 														onClick={async () => {
 															const response = await fetch(`${globals.API_URL}/projects/${this.state.id}/collaborators/${collaborator._id}`, {
 																method: 'DELETE'
@@ -1808,7 +1430,7 @@ class ProjectDetails extends React.Component {
 								<label htmlFor='projectStartDate'>Start Date</label>
 								<input
 									type='datetime-local'
-									disabled={this.state.project.completed}
+									disabled={this.state.project.completed || JSON.parse(localStorage.getItem('authentication'))._id !== this.state.project.creatorId}
 									id='projectStartDate'
 									defaultValue={this.state.project.dates.start?.split('.')[0]}
 									onBlur={async (e) => {
@@ -1854,7 +1476,7 @@ class ProjectDetails extends React.Component {
 								<label htmlFor='projectEndDate'>End Date</label>
 								<input
 									type='datetime-local'
-									disabled={this.state.project.completed}
+									disabled={this.state.project.completed || JSON.parse(localStorage.getItem('authentication'))._id !== this.state.project.creatorId}
 									id='projectEndDate'
 									defaultValue={this.state.project.dates.end?.split('.')[0]}
 									onBlur={async (e) => {
@@ -1897,6 +1519,7 @@ class ProjectDetails extends React.Component {
 								/>
 							</div>
 						</div>
+						<div>Creator ID:<br /><sub>{this.state.project.creatorId}</sub></div>
 					</footer>
 				</aside>
 				<main>
@@ -1963,11 +1586,14 @@ class ProjectDetails extends React.Component {
 													<div>
 														<select id='taskCollaborators'>
 															<option value=''>Select a collaborator</option>
-															{
-																this.state.project.collaborators.map((collaborator, i) => (
+															{(() => {
+																const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+																return this.state.project.collaborators.filter((collaborator) => {
+																	return collaborator._id !== _id
+																}).map((collaborator, i) => (
 																	<option key={i} value={collaborator._id}>{collaborator.name}</option>
 																))
-															}
+															})()}
 														</select>
 														<button
 															type='button'
@@ -1978,7 +1604,16 @@ class ProjectDetails extends React.Component {
 																if (value) {
 																	const list = document.getElementById('collaboratorsList');
 																	const item = document.createElement('div');
-																	item.innerHTML = value;
+																	const itemText = document.createElement('p');
+																	itemText.innerHTML = value;
+																	const itemButton = document.createElement('button');
+																	itemButton.innerHTML = 'Remove';
+																	itemButton.type = 'button';
+																	itemButton.onclick = () => {
+																		item.remove();
+																	};
+																	item.appendChild(itemText);
+																	item.appendChild(itemButton);
 																	list.appendChild(item);
 																	input.value = '';
 																};
@@ -2050,8 +1685,111 @@ class ProjectDetails extends React.Component {
 						</div>
 					</header>
 					<div id='projectTasks'>
-						{
-							this.state.tasks.map((task, i) => (
+						{this.state.tasks.length > 0 ? this.state.tasks.map((task, i) => (
+							<div
+								key={i}
+								className='taskCard'
+								onClick={() => this.showTask(task._id, this.state.id)}
+							>
+								<header>
+									<div>
+										<input
+											type='checkbox'
+											id={`task${task._id}`}
+											checked={task.completed}
+											disabled
+										/>
+										<label htmlFor={`task${task._id}`}><h6>{task.title}</h6></label>
+									</div>
+
+									<div>
+										<span>
+											<b>
+												Due {(() => {
+													const today = new Date();
+													const taskDate = new Date(task.dates.end);
+
+													// Label with 'Today' 'Tomorrow' 'Yesterday' 'This week' 'Next week' 'Last week' 'This month' 'Next month' 'Last month' 'Long time ago' 'Soon'
+													if (today.toDateString() === taskDate.toDateString()) {
+														return 'today';
+													} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
+														return 'yesterday';
+													} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
+														return 'tomorrow';
+													} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
+														return 'this week';
+													} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
+														return 'last week';
+													} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
+														return 'next week';
+													} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
+														return 'this month';
+													} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
+														return 'last month';
+													} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
+														return 'next month';
+													} else if (today.getFullYear() === taskDate.getFullYear()) {
+														return 'soon';
+													} else {
+														return 'long time ago';
+													};
+												})()}
+											</b>
+										</span>
+									</div>
+								</header>
+
+								<div>
+									<p>{task.description}</p>
+								</div>
+
+								<div>
+									<h6>Checklist</h6>
+
+									{
+										task.checklists?.map((item, j) => (
+											<div key={j}>
+												<input
+													type='checkbox'
+													id={`task${task._id}Checklist${item.id}`}
+													checked={item.completed}
+													disabled
+												/>
+												<label htmlFor={`task${task._id}Checklist${item.id}`}>{item.item}</label>
+											</div>
+										))
+									}
+								</div>
+
+								<footer>
+									<div>
+										<sub>Start: {new Date(task.dates.start).toDateString()}</sub>
+										<sub>End: {new Date(task.dates.end).toDateString()}</sub>
+									</div>
+
+									<div>
+										{
+											task.collaborators?.slice(0, 3).map((collaborator, j) => (
+												<img key={j} src={`https://randomuser.me/api/portraits/${Math.floor(Math.random() * 2) % 2 === 1 ? 'men' : 'women'}/${collaborator + Math.floor(Math.random() * 50)}.jpg`} alt='Collaborator' />
+											))
+										}
+										{
+											task.collaborators.length > 3 ? (
+												<span>+{task.collaborators.length - 3}</span>
+											) : null
+										}
+									</div>
+								</footer>
+							</div>
+						)) : <i>No tasks found</i>}
+					</div>
+
+					{(JSON.parse(localStorage.getItem('authentication'))._id === this.state.project.creatorId) ? <>
+						<header>
+							<h6>Tasks made by members</h6>
+						</header>
+						<div id='projectTasks'>
+							{this.state.memberTasks.length > 0 ? this.state.memberTasks.map((task, i) => (
 								<div
 									key={i}
 									className='taskCard'
@@ -2147,10 +1885,435 @@ class ProjectDetails extends React.Component {
 										</div>
 									</footer>
 								</div>
-							))
+							)) : <i>No tasks found</i>}
+						</div>
+					</> : <></>}
+				</main>
+			</article>
+		);
+	};
+};
+
+class TaskDetails extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+
+			/**
+			 * @type {{
+			 * 		title: String,
+			 * 		description: String,
+			 * 		dates: {
+			 * 			start: String,
+			 * 			end: String,
+			 * 			create: String
+			 * 		},
+			 * 		completed: Boolean,
+			 * 		label: String,
+			 * 		creatorId: String,
+			 * 		collaborators: {
+			 * 			_id: String,
+			 * 			accepted: Boolean
+			 * 		}[],
+			 * 		checklists: {
+			 * 			id: Number,
+			 * 			item: String,
+			 * 			completed: Boolean
+			 * 		}[],
+			 * 		projectId: String
+			 * }}
+			 */
+			task: {
+				title: null,
+				description: null,
+				dates: {
+					start: null,
+					end: null,
+					create: null
+				},
+				completed: null,
+				label: null,
+				creatorId: null,
+				collaborators: [],
+				checklists: [],
+				projectId: null
+			},
+			/**
+			 * @type {{
+			 * 		_id: String,
+			 * 		title: String,
+			 * 		description: String,
+			 * 		dates: {
+			 * 			start: String,
+			 * 			end: String,
+			 * 			create: String
+			 * 		},
+			 * 		label: String,
+			 * 		creatorId: String,
+			 * 		collaborators: {
+			 * 			_id: String,
+			 * 			name: String
+			 * 		}[],
+			 * 		completed: Boolean
+			 * }}
+			 */
+			project: {
+				_id: '',
+				title: '',
+				description: '',
+				dates: {
+					start: '',
+					end: '',
+					create: ''
+				},
+				label: '',
+				creatorId: '',
+				collaborators: [],
+				completed: false
+			},
+			id: props.id
+		};
+	};
+
+	async componentDidMount() {
+		await this.fetchTask();
+	};
+
+	fetchTask = async () => {
+		const taskResponse = await fetch(`${globals.API_URL}/tasks/${this.state.id}`);
+		if (!taskResponse.ok) {
+			const error = await taskResponse.json();
+			Swal.showValidationMessage(error.message);
+			console.error(taskResponse);
+			return;
+		};
+
+		const taskData = await taskResponse.json();
+
+		if (!taskData.projectId) {
+			this.setState({
+				task: await taskResponse.json()
+			});
+			return;
+		};
+
+		const projectResponse = await fetch(`${globals.API_URL}/projects/${taskData.projectId}`);
+		if (!projectResponse.ok) {
+			const error = await projectResponse.json();
+			Swal.showValidationMessage(error.message);
+			console.error(projectResponse);
+			return;
+		};
+
+		const projectData = await projectResponse.json();
+
+		this.setState({
+			task: taskData,
+			project: projectData
+		});
+	};
+
+	render() {
+		return (
+			<article id='taskDetails'>
+				<header>
+					<p>{this.state.task.description}</p>
+					<sub>{this.state.task.label}</sub>
+				</header>
+
+				<div id='taskChecklists'>
+					<header>
+						<h6>Checklist</h6>
+
+						<div>
+							<input type='text' disabled={this.state.task.completed} id='taskChecklistInput' placeholder='Add item' />
+							<button
+								type='button'
+								disabled={this.state.task.completed}
+								id='taskChecklistButton'
+								onClick={async () => {
+									const input = document.getElementById('taskChecklistInput');
+									const value = input.value.trim();
+									if (!value) return;
+
+									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists`, {
+										method: 'PUT',
+										body: JSON.stringify({
+											item: value
+										})
+									});
+									if (!response.ok) {
+										const error = await response.json();
+										console.error(error);
+										Swal.showValidationMessage(error.message);
+										return;
+									};
+									await this.fetchTask();
+									input.value = '';
+								}}
+							>
+								Add
+							</button>
+						</div>
+					</header>
+					<div id='checklistList'>
+						{
+							this.state.task.checklists.length ? this.state.task.checklists.map((item, i) => (
+								<div key={i}>
+									<input
+										type='checkbox'
+										disabled={this.state.task.completed}
+										id={`checklistItem${item.id}`}
+										defaultChecked={item.completed}
+										onChange={async () => {
+											const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists/${item.id}`, {
+												method: 'PATCH',
+												body: JSON.stringify({
+													completed: document.getElementById(`checklistItem${item.id}`).checked
+												})
+											});
+											if (!response.ok) {
+												const error = await response.json();
+												console.error(error);
+												Swal.showValidationMessage(error.message);
+												return;
+											};
+
+											await this.fetchTask();
+										}}
+									/>
+									<label htmlFor={`checklistItem${item.id}`}><p>{item.item}</p></label>
+									<button
+										type='button'
+										disabled={this.state.task.completed}
+										onClick={async () => {
+											const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists/${item.id}`, {
+												method: 'DELETE'
+											});
+											if (!response.ok) {
+												const error = await response.json();
+												console.error(error);
+												Swal.showValidationMessage(error.message);
+												return;
+											};
+
+											await this.fetchTask();
+										}}
+									>
+										Remove
+									</button>
+								</div>
+							)) : <i>No items</i>
 						}
 					</div>
-				</main>
+				</div>
+				<div id='taskCollaborators'>
+					<header>
+						<h6>Collaborators</h6>
+
+						{JSON.parse(localStorage.getItem('authentication'))._id === this.state.project.creatorId ? <div>
+							<select id='taskCollaboratorInput' disabled={this.state.task.completed}>
+								<option value=''>Add collaborator</option>
+								{(() => {
+									const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+									return this.state.project.collaborators.filter((collaborator) => {
+										return collaborator._id !== _id && !this.state.task.collaborators.find(collab => collab._id === collaborator._id)
+									}).map((collaborator, i) => (
+										<option key={i} value={collaborator._id}>{collaborator.name}</option>
+									))
+								})()}
+							</select>
+							<button
+								type='button'
+								disabled={this.state.task.completed}
+								id='taskCollaboratorButton'
+								onClick={async () => {
+									const input = document.getElementById('taskCollaboratorInput');
+									const value = input.value.trim();
+									if (!value) return;
+
+									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/collaborators`, {
+										method: 'PUT',
+										body: JSON.stringify({
+											collaboratorId: value
+										})
+									});
+									if (!response.ok) {
+										const error = await response.json();
+										console.error(error);
+										Swal.showValidationMessage(error.message);
+										return;
+									};
+
+									await this.fetchTask();
+									input.value = '';
+								}}
+							>
+								Add
+							</button>
+						</div> : null}
+					</header>
+					<div id='collaboratorsList'>
+						{
+							this.state.task.collaborators.length ? this.state.task.collaborators.map((collaborator, i) => (
+								<div key={i}>
+									<p>{collaborator.name}</p>
+									<sub>{collaborator._id}</sub>
+									{(() => {
+										const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+
+										if (!this.state.task.collaborators?.find(collab => collab._id === _id)) {
+											return (
+												<button
+													type='button'
+													disabled={this.state.task.completed}
+													onClick={async () => {
+														const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/collaborators/${collaborator._id}`, {
+															method: 'DELETE'
+														});
+														if (!response.ok) {
+															const error = await response.json();
+															console.error(error);
+															Swal.showValidationMessage(error.message);
+															return;
+														};
+
+														await this.fetchTask();
+													}}
+												>
+													Remove
+												</button>
+											);
+										};
+									})()}
+								</div>
+							)) : <i>No collaborators</i>
+						}
+					</div>
+				</div>
+				<footer id='taskDates'>
+					<header><h6>Time Frame</h6></header>
+					<div id='taskDatesDisplay'>
+						{(() => {
+							const today = new Date();
+							const taskStartDate = new Date(this.state.task.dates.start);
+							const taskEndDate = new Date(this.state.task.dates.end);
+
+							today.setSeconds(0);
+							taskStartDate.setSeconds(0);
+							taskEndDate.setSeconds(0);
+
+							const difference = taskEndDate.getTime() - taskStartDate.getTime();
+							return <>
+								<progress value={today.getTime() - taskStartDate.getTime()} max={difference} />
+								<h6>
+									{(() => {
+										const remaining = taskEndDate.getTime() - today.getTime();
+										const remainingDays = Math.floor(remaining / 86400000);
+										const remainingHours = Math.floor(remaining / 3600000);
+										const remainingWeeks = Math.floor(remaining / 604800000);
+
+										if (today.getTime() > taskEndDate.getTime()) {
+											if (remainingWeeks > 0) {
+												return `${remainingWeeks} ${remainingWeeks === 1 ? 'week' : 'weeks'} overdue`;
+											} else if (remainingDays > 0) {
+												return `${remainingDays} ${remainingDays === 1 ? 'day' : 'days'} overdue`;
+											} else if (remainingHours > 0) {
+												return `${remainingHours} ${remainingHours === 1 ? 'hour' : 'hours'} overdue`;
+											};
+										} else {
+											if (remainingWeeks > 0) {
+												return `${remainingWeeks} ${remainingWeeks === 1 ? 'week' : 'weeks'} remaining`;
+											} else if (remainingDays > 0) {
+												return `${remainingDays} ${remainingDays === 1 ? 'day' : 'days'} remaining`;
+											} else if (remainingHours > 0) {
+												return `${remainingHours} ${remainingHours === 1 ? 'hour' : 'hours'} remaining`;
+											};
+										};
+									})()}
+								</h6>
+							</>;
+						})()}
+					</div>
+					<div id='taskDatesEdit'>
+						<div>
+							<label htmlFor='taskStartDate'>Start Date</label>
+							<input
+								type='datetime-local'
+								disabled={this.state.task.completed}
+								id='taskStartDate'
+								defaultValue={this.state.task.dates.start?.split('.')[0]}
+								onBlur={async (e) => {
+									const input = document.getElementById('taskStartDate');
+									const value = input.value;
+
+									if (new Date(value).getTime() > new Date(this.state.task.dates.end).getTime()) {
+										Swal.showValidationMessage('Start date cannot be after end date');
+										e.target.value = this.state.task.dates.start?.split('.')[0];
+										return;
+									};
+
+									if (input.value === this.state.task.dates.start) return;
+
+									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/dates/start`, {
+										method: 'PATCH',
+										body: JSON.stringify({
+											date: value
+										})
+									});
+									if (!response.ok) {
+										const error = await response.json();
+										console.error(error);
+										Swal.showValidationMessage(error.message);
+										this.fetchTask();
+										return;
+									};
+
+									await this.fetchTask();
+								}}
+							/>
+						</div>
+						<div>
+							<label htmlFor='taskEndDate'>End Date</label>
+							<input
+								type='datetime-local'
+								disabled={this.state.task.completed}
+								id='taskEndDate'
+								defaultValue={this.state.task.dates.end?.split('.')[0]}
+								onBlur={async (e) => {
+									const input = document.getElementById('taskEndDate');
+									const value = input.value;
+
+									if (new Date(value).getTime() > new Date(this.state.task.dates.start).getTime()) {
+										Swal.showValidationMessage('End date cannot be before start date');
+										e.target.value = this.state.task.dates.end?.split('.')[0];
+										return;
+									};
+
+									if (input.value === this.state.task.dates.end) return;
+
+									const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/dates/end`, {
+										method: 'PATCH',
+										body: JSON.stringify({
+											date: value
+										})
+									});
+									if (!response.ok) {
+										const error = await response.json();
+										console.error(error);
+										Swal.showValidationMessage(error.message);
+										this.fetchTask();
+										return;
+									};
+
+									await this.fetchTask();
+								}}
+							/>
+						</div>
+					</div>
+					{JSON.parse(localStorage.getItem('authentication'))._id !== this.state.task.creatorId ? <div>Creator ID:<br /><sub>{this.state.task.creatorId}</sub></div> : null}
+				</footer>
 			</article>
 		);
 	};

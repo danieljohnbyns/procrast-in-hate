@@ -82,9 +82,9 @@ export default class SignIn extends React.Component {
 									if (!response.ok) {
 										const data = await response.json();
 										Swal.fire({
+											icon: 'error',
 											title: 'Error',
-											text: data.message || 'An error occurred',
-											icon: 'error'
+											text: data.error
 										});
 										return;
 									};
