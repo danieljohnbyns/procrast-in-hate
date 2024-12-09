@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 const CACHE_NAME = 'offline-cache';
 const OFFLINE_URL = 'offline.html';
 const WEBSOCKET_URL = 'ws:localhost:5050';
@@ -49,8 +50,28 @@ const connectWebSocket = async () => {
 	};
 
 	socket.onmessage = (event) => {
-		console.log('WebSocket message received:', event.data);
-		// Handle incoming messages
+		// Handle the message received from the server
+		const message = JSON.parse(event.data);
+		switch (message.type) {
+			case 'AUTHENTICATION': {
+				if (message.success) {
+					console.log('Authentication successful');
+				} else {
+					console.error('Authentication failed');
+				};
+				break;
+			};
+			case 'NOTIFICATION': {
+				// Push notification for TASK_UPDATE
+				self.registration.showNotification('Task Update', {
+					body: message.message
+				});
+				break;
+			};
+			default: {
+				console.error('Unknown message type:', message.type);
+			};
+		};
 	};
 
 	socket.onclose = () => {

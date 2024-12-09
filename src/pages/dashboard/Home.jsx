@@ -1993,7 +1993,7 @@ class TaskDetails extends React.Component {
 
 		if (!taskData.projectId) {
 			this.setState({
-				task: await taskResponse.json()
+				task: taskData
 			});
 			return;
 		};

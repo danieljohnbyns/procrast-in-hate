@@ -23,7 +23,8 @@ export default class Dashboard extends React.Component {
 		super(props);
 
 		this.state = {
-			mobile: false
+			mobile: false,
+			notificationGranted: false
 		};
 	};
 	componentDidMount() {
@@ -36,6 +37,46 @@ export default class Dashboard extends React.Component {
 		window.addEventListener('resize', setMobile);
 		setMobile();
 
+		const originalFetch = window.fetch;
+		window.fetch = async (url, options) => {
+			const defaultHeaders = {
+				'Content-Type': 'application/json',
+				'Authentication': localStorage.getItem('authentication')
+			};
+			
+			if (options) {
+				options.headers = {
+					...defaultHeaders,
+					...options.headers
+				};
+			} else {
+				options = {
+					headers: defaultHeaders
+				};
+			};
+
+			return originalFetch(url, options);
+		};
+
+		window.Swal = Swal;
+
+		this.connectToWebSocket();
+
+		if (!localStorage.getItem('authentication')) {
+			window.location.href = '/signIn';
+		};
+
+		if (!this.state.notificationGranted) {
+			if ('Notification' in window) {
+				if (Notification.permission === 'granted') {
+					this.setState({
+						notificationGranted: true
+					});
+				};
+			};
+		};
+	};
+	componentDidUpdate() {
 		const root = document.getElementById('root');
 		root.setAttribute('page', 'dashboard');
 
@@ -73,34 +114,9 @@ export default class Dashboard extends React.Component {
 			tab.addEventListener('click', activateTab);
 		};
 		activateTab();
+	};
 
-		window.Swal = Swal;
-
-		const originalFetch = window.fetch;
-		window.fetch = async (url, options) => {
-			const defaultHeaders = {
-				'Content-Type': 'application/json',
-				'Authentication': localStorage.getItem('authentication')
-			};
-			
-			if (options) {
-				options.headers = {
-					...defaultHeaders,
-					...options.headers
-				};
-			} else {
-				options = {
-					headers: defaultHeaders
-				};
-			};
-
-			return originalFetch(url, options);
-		};
-
-		if (!localStorage.getItem('authentication')) {
-			window.location.href = '/signIn';
-		};
-
+	connectToWebSocket = () => {
 		const authentication = JSON.parse(localStorage.getItem('authentication'));
 
 		globals.socket = new WebSocket(globals.WEBSOCKET_URL);
@@ -121,13 +137,64 @@ export default class Dashboard extends React.Component {
 
 		globals.socket.onclose = () => {
 			console.log('WebSocket connection closed, retrying in 5 seconds...');
-			setTimeout(() => {
-				globals.socket = new WebSocket(globals.WEBSOCKET_URL);
-			}, 5000);
+			Swal.fire({
+				icon: 'error',
+				title: 'WebSocket connection closed',
+				text: 'Retrying in 5 seconds...',
+				timer: 5000,
+				timerProgressBar: true,
+				showConfirmButton: false
+			});
+			setTimeout(this.connectToWebSocket, 5000);
+		};
+
+		globals.socket.onerror = (error) => {
+			console.error('WebSocket error:', error);
+			globals.socket.close();
 		};
 	};
 
 	render() {
+		if (!this.state.notificationGranted) {
+			return (
+				<div
+					style={{
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+						justifyContent: 'center',
+						height: '100vh',
+						textAlign: 'center',
+						gap: '1rem'
+					}}
+				>
+					<h1>Notifications</h1>
+					<p>Click the button below to grant permission to show notifications.</p>
+					<button
+						style={{
+							padding: '1rem 2rem',
+							border: 'none',
+							borderRadius: '0.5rem',
+							backgroundColor: 'var(--color-primary)',
+							color: 'var(--color-white)',
+							cursor: 'pointer'
+						}}
+						onClick={() => {
+							if ('Notification' in window) {
+								Notification.requestPermission().then((permission) => {
+									if (permission === 'granted') {
+										window.location.reload();
+									};
+								});
+							};
+						}}
+					>
+						Grant Permission
+					</button>
+				</div>
+			);
+		};
+
 		return (
 			<>
 				<Sidebar>
