@@ -20,7 +20,7 @@ export default class Home extends React.Component {
 					year: new Date().getFullYear(),
 					month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][new Date().getMonth()],
 					days: [
-						{ date: 1, day: 0 },
+						{ date: 1, day: 0, tasks: [] },
 					]
 				},
 				tasks: [],
@@ -29,7 +29,6 @@ export default class Home extends React.Component {
 		};
 	};
 	componentDidMount() {
-		console.log(this.state);
 		const setMobile = () => {
 			this.setState({
 				mobile: matchMedia('screen and (max-width: 60rem)').matches
@@ -42,38 +41,106 @@ export default class Home extends React.Component {
 		const root = document.getElementById('root');
 		root.setAttribute('page', 'dashboard');
 
+		this.fetchCalendar(this.state.data.calendar.year, this.state.data.calendar.month);
+		this.fetchTasks();
+		this.fetchProjects();
+
+		window.showTask = this.showTask;
+		window.showProject = this.showProject;
+	};
+
+	fetchCalendar = async (year, month) => {
 		const days = [];
-		const month = this.state.data.calendar.month;
-		const year = this.state.data.calendar.year;
 		const firstDay = new Date(`${month} 1, ${year}`).getDay();
 		const lastDate = new Date(year, ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(month) + 1, 0).getDate();
 		const lastDay = new Date(`${month} ${lastDate}, ${year}`).getDay();
 
 		for (let i = 0; i < firstDay; i++) {
-			days.push({ date: '', day: i });
+			days.push({
+				date: '',
+				day: i,
+				tasks: []
+			});
 		};
 		for (let i = 1; i <= lastDate; i++) {
-			days.push({ date: i, day: (firstDay + i - 1) % 7 });
+			days.push({
+				date: i,
+				day: new Date(`${month} ${i}, ${year}`).getDay(),
+				tasks: []
+			});
 		};
-		for (let i = 0; i < 6 - lastDay; i++) {
-			days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
+		for (let i = lastDay + 1; i < 7; i++) {
+			days.push({
+				date: '',
+				day: i,
+				tasks: []
+			});
 		};
+		this.setState({
+			data: {
+				...this.state.data,
+				calendar: {
+					...this.state.data.calendar,
+					year,
+					month,
+					days
+				}
+			}
+		});
+
+		const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+		const monthIndex = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(month) + 1;
+		const calendarTasksResponse = await fetch(`${globals.API_URL}/tasks/user/${_id}/calendar/${year}/${monthIndex}`);
+		if (!calendarTasksResponse.ok) {
+			Swal.fire({
+				icon: 'error',
+				title: '<h1>Error</h1>',
+				text: 'An error occurred while fetching the calendar',
+				showClass: {
+					popup: `fadeIn`
+				},
+				hideClass: {
+					popup: `fadeOut`
+				}
+			});
+			console.error(calendarTasksResponse);
+			this.setState({
+				data: {
+					...this.state.data,
+					calendar: {
+						...this.state.data.calendar,
+						year,
+						month,
+						days
+					}
+				}
+			});
+			return;
+		};
+
+		const calendarTasks = await calendarTasksResponse.json();
+		// Add deadlines
+		for (const task of calendarTasks) {
+			const taskDate = new Date(task.dates.end).getDate();
+			const taskIndex = days.findIndex((day) => day.date === taskDate);
+			if (taskIndex !== -1) {
+				days[taskIndex].tasks.push(task);
+			};
+		};
+
+		console.log(days);
 
 		this.setState({
 			data: {
 				...this.state.data,
 				calendar: {
 					...this.state.data.calendar,
+					year,
+					month,
 					days
 				}
 			}
 		});
-
-		this.fetchTasks();
-		this.fetchProjects();
-
-		window.showTask = this.showTask;
-		window.showProject = this.showProject;
 	};
 
 	fetchTasks = async () => {
@@ -530,36 +597,11 @@ export default class Home extends React.Component {
 									<div>
 										<span
 											onClick={() => {
-												const monthName = this.state.data.calendar.month;
-												const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(monthName);
-
-												const days = [];
-												const year = this.state.data.calendar.year;
-												const firstDay = new Date(`${monthName} 1, ${year}`).getDay();
-												const lastDate = new Date(year, month, 0).getDate();
-												const lastDay = new Date(`${monthName} ${lastDate}, ${year}`).getDay();
-
-												for (let i = 0; i < firstDay; i++) {
-													days.push({ date: '', day: i });
-												};
-												for (let i = 1; i <= lastDate; i++) {
-													days.push({ date: i, day: (firstDay + i - 1) % 7 });
-												};
-												for (let i = 0; i < 6 - lastDay; i++) {
-													days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
-												};
-
-												this.setState({
-													data: {
-														...this.state.data,
-														calendar: {
-															...this.state.data.calendar,
-															month: month === 0 ? 'December' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month - 1],
-															year: month === 0 ? this.state.data.calendar.year - 1 : this.state.data.calendar.year,
-															days
-														}
-													}
-												});
+												// Fetch previous month using this.state.data.calendar.year and this.state.data.calendar.month for this.fetchCalendar(year, month)
+												const currentMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(this.state.data.calendar.month);
+												const month = currentMonth === 0 ? 'December' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][currentMonth - 1];
+												const year = currentMonth === 0 ? this.state.data.calendar.year - 1 : this.state.data.calendar.year;
+												this.fetchCalendar(year, month);
 											}}
 										>
 											<svg viewBox='0 0 13 14'>
@@ -568,36 +610,11 @@ export default class Home extends React.Component {
 										</span>
 										<span
 											onClick={() => {
-												const monthName = this.state.data.calendar.month;
-												const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(monthName);
-
-												const days = [];
-												const year = this.state.data.calendar.year;
-												const firstDay = new Date(`${monthName} 1, ${year}`).getDay();
-												const lastDate = new Date(year, month + 1, 0).getDate();
-												const lastDay = new Date(`${monthName} ${lastDate}, ${year}`).getDay();
-
-												for (let i = 0; i < firstDay; i++) {
-													days.push({ date: '', day: i });
-												};
-												for (let i = 1; i <= lastDate; i++) {
-													days.push({ date: i, day: (firstDay + i - 1) % 7 });
-												};
-												for (let i = 0; i < 6 - lastDay; i++) {
-													days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
-												};
-
-												this.setState({
-													data: {
-														...this.state.data,
-														calendar: {
-															...this.state.data.calendar,
-															month: month === 11 ? 'January' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month + 1],
-															year: month === 11 ? this.state.data.calendar.year + 1 : this.state.data.calendar.year,
-															days
-														}
-													}
-												});
+												// Fetch next month using this.state.data.calendar.year and this.state.data.calendar.month for this.fetchCalendar(year, month)
+												const currentMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(this.state.data.calendar.month);
+												const month = currentMonth === 11 ? 'January' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][currentMonth + 1];
+												const year = currentMonth === 11 ? this.state.data.calendar.year + 1 : this.state.data.calendar.year;
+												this.fetchCalendar(year, month);
 											}}
 										>
 											<svg viewBox='0 0 13 14'>
@@ -622,8 +639,92 @@ export default class Home extends React.Component {
 										this.state.data.calendar?.days.map((day, i) => {
 											const isToday = new Date().toDateString() === new Date(`${this.state.data.calendar.month} ${day.date}, ${this.state.data.calendar.year}`).toDateString();
 											return (
-												<span key={i} className={`${isToday ? 'today' : ''} ${day.date === '' ? 'empty' : ''}`} data-day={day.day}>
+												<span
+													key={i}
+													className={`${isToday ? 'today' : ''}
+													${day.date === '' ? 'empty' : ''}`}
+													data-day={day.day}
+													onClick={() => {
+														if (day.date !== '') {
+															const date = new Date(`${this.state.data.calendar.month} ${day.date}, ${this.state.data.calendar.year}`);
+															const tasks = day.tasks;
+															withReactContent(Swal).fire({
+																title: <h1>{date.toDateString()}</h1>,
+																html: (
+																	<div id='calendarTaskList'>
+																		{
+																			tasks.length > 0 ? tasks.map((task, i) => (
+																				<div
+																					key={i}
+																					onClick={() => this.showTask(task._id)}
+																				>
+																					<input
+																						type='checkbox'
+																						id={`task${task._id}`}
+																						checked={task.completed}
+																						onChange={(e) => {
+																							e.target.checked = false;
+																						}}
+																						style={{ cursor: 'inherit' }}
+																					/>
+																					<label htmlFor={`task${task._id}`} style={{ cursor: 'inherit' }}>{task.title}</label>
+
+																					<div>
+																						<b>
+																							{(() => {
+																								const today = new Date();
+																								const taskDate = new Date(task.dates.end);
+
+																								// Label with 'Today' 'Tomorrow' 'Yesterday' 'This week' 'Next week' 'Last week' 'This month' 'Next month' 'Last month' 'Long time ago' 'Soon'
+																								if (today.toDateString() === taskDate.toDateString()) {
+																									return 'Today';
+																								} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
+																									return 'Yesterday';
+																								} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
+																									return 'Tomorrow';
+																								} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
+																									return 'This week';
+																								} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
+																									return 'Last week';
+																								} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
+																									return 'Next week';
+																								} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
+																									return 'This month';
+																								} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
+																									return 'Last month';
+																								} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
+																									return 'Next month';
+																								} else if (today.getFullYear() === taskDate.getFullYear()) {
+																									return 'Soon';
+																								} else {
+																									return 'Long time ago';
+																								};
+																							})()}
+																						</b>
+																					</div>
+																				</div>
+																			)) : <i>No tasks found</i>
+																		}
+																	</div>
+																),
+																showClass: {
+																	popup: `fadeIn`
+																},
+																hideClass: {
+																	popup: `fadeOut`
+																},
+																showCloseButton: true,
+																showCancelButton: true,
+																showConfirmButton: false,
+																cancelButtonText: <h6 style={{ color: 'var(--color-white)' }}>Close</h6>
+															});
+														};
+													}}
+												>
 													<b>{day.date}</b>
+													{day.tasks?.length > 0 ? (
+														<sub><b>{day.tasks.length}</b></sub>
+													) : null}
 												</span>
 											);
 										})
@@ -776,36 +877,10 @@ export default class Home extends React.Component {
 									<div>
 										<span
 											onClick={() => {
-												const monthName = this.state.data.calendar.month;
-												const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(monthName);
-
-												const days = [];
-												const year = this.state.data.calendar.year;
-												const firstDay = new Date(`${monthName} 1, ${year}`).getDay();
-												const lastDate = new Date(year, month, 0).getDate();
-												const lastDay = new Date(`${monthName} ${lastDate}, ${year}`).getDay();
-
-												for (let i = 0; i < firstDay; i++) {
-													days.push({ date: '', day: i });
-												};
-												for (let i = 1; i <= lastDate; i++) {
-													days.push({ date: i, day: (firstDay + i - 1) % 7 });
-												};
-												for (let i = 0; i < 6 - lastDay; i++) {
-													days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
-												};
-
-												this.setState({
-													data: {
-														...this.state.data,
-														calendar: {
-															...this.state.data.calendar,
-															month: month === 0 ? 'December' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month - 1],
-															year: month === 0 ? this.state.data.calendar.year - 1 : this.state.data.calendar.year,
-															days
-														}
-													}
-												});
+												const currentMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(this.state.data.calendar.month);
+												const month = currentMonth === 0 ? 'December' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][currentMonth - 1];
+												const year = currentMonth === 0 ? this.state.data.calendar.year - 1 : this.state.data.calendar.year;
+												this.fetchCalendar(year, month);
 											}}
 										>
 											<svg viewBox='0 0 13 14'>
@@ -814,36 +889,10 @@ export default class Home extends React.Component {
 										</span>
 										<span
 											onClick={() => {
-												const monthName = this.state.data.calendar.month;
-												const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(monthName);
-
-												const days = [];
-												const year = this.state.data.calendar.year;
-												const firstDay = new Date(`${monthName} 1, ${year}`).getDay();
-												const lastDate = new Date(year, month + 1, 0).getDate();
-												const lastDay = new Date(`${monthName} ${lastDate}, ${year}`).getDay();
-
-												for (let i = 0; i < firstDay; i++) {
-													days.push({ date: '', day: i });
-												};
-												for (let i = 1; i <= lastDate; i++) {
-													days.push({ date: i, day: (firstDay + i - 1) % 7 });
-												};
-												for (let i = 0; i < 6 - lastDay; i++) {
-													days.push({ date: '', day: (firstDay + lastDate + i) % 7 });
-												};
-
-												this.setState({
-													data: {
-														...this.state.data,
-														calendar: {
-															...this.state.data.calendar,
-															month: month === 11 ? 'January' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month + 1],
-															year: month === 11 ? this.state.data.calendar.year + 1 : this.state.data.calendar.year,
-															days
-														}
-													}
-												});
+												const currentMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(this.state.data.calendar.month);
+												const month = currentMonth === 11 ? 'January' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][currentMonth + 1];
+												const year = currentMonth === 11 ? this.state.data.calendar.year + 1 : this.state.data.calendar.year;
+												this.fetchCalendar(year, month);
 											}}
 										>
 											<svg viewBox='0 0 13 14'>
@@ -865,11 +914,95 @@ export default class Home extends React.Component {
 
 								<div id='calendarDays'>
 									{
-										this.state.data.calendar.days.map((day, i) => {
+										this.state.data.calendar?.days.map((day, i) => {
 											const isToday = new Date().toDateString() === new Date(`${this.state.data.calendar.month} ${day.date}, ${this.state.data.calendar.year}`).toDateString();
 											return (
-												<span key={i} className={`${isToday ? 'today' : ''} ${day.date === '' ? 'empty' : ''}`} data-day={day.day}>
+												<span
+													key={i}
+													className={`${isToday ? 'today' : ''}
+													${day.date === '' ? 'empty' : ''}`}
+													data-day={day.day}
+													onClick={() => {
+														if (day.date !== '') {
+															const date = new Date(`${this.state.data.calendar.month} ${day.date}, ${this.state.data.calendar.year}`);
+															const tasks = day.tasks;
+															withReactContent(Swal).fire({
+																title: <h1>{date.toDateString()}</h1>,
+																html: (
+																	<div id='calendarTaskList'>
+																		{
+																			tasks.length > 0 ? tasks.map((task, i) => (
+																				<div
+																					key={i}
+																					onClick={() => this.showTask(task._id)}
+																				>
+																					<input
+																						type='checkbox'
+																						id={`task${task._id}`}
+																						checked={task.completed}
+																						onChange={(e) => {
+																							e.target.checked = false;
+																						}}
+																						style={{ cursor: 'inherit' }}
+																					/>
+																					<label htmlFor={`task${task._id}`} style={{ cursor: 'inherit' }}>{task.title}</label>
+
+																					<div>
+																						<b>
+																							{(() => {
+																								const today = new Date();
+																								const taskDate = new Date(task.dates.end);
+
+																								// Label with 'Today' 'Tomorrow' 'Yesterday' 'This week' 'Next week' 'Last week' 'This month' 'Next month' 'Last month' 'Long time ago' 'Soon'
+																								if (today.toDateString() === taskDate.toDateString()) {
+																									return 'Today';
+																								} else if (today.toDateString() === new Date(taskDate.getTime() - 86400000).toDateString()) {
+																									return 'Yesterday';
+																								} else if (today.toDateString() === new Date(taskDate.getTime() + 86400000).toDateString()) {
+																									return 'Tomorrow';
+																								} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 6) {
+																									return 'This week';
+																								} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() > taskDate.getDate() && today.getDate() - taskDate.getDate() <= 6) {
+																									return 'Last week';
+																								} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() && today.getDate() < taskDate.getDate() && taskDate.getDate() - today.getDate() <= 13) {
+																									return 'Next week';
+																								} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth()) {
+																									return 'This month';
+																								} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() - 1) {
+																									return 'Last month';
+																								} else if (today.getFullYear() === taskDate.getFullYear() && today.getMonth() === taskDate.getMonth() + 1) {
+																									return 'Next month';
+																								} else if (today.getFullYear() === taskDate.getFullYear()) {
+																									return 'Soon';
+																								} else {
+																									return 'Long time ago';
+																								};
+																							})()}
+																						</b>
+																					</div>
+																				</div>
+																			)) : <i>No tasks found</i>
+																		}
+																	</div>
+																),
+																showClass: {
+																	popup: `fadeIn`
+																},
+																hideClass: {
+																	popup: `fadeOut`
+																},
+																showCloseButton: true,
+																showCancelButton: true,
+																showConfirmButton: false,
+																cancelButtonText: <h6 style={{ color: 'var(--color-white)' }}>Close</h6>
+															});
+														};
+													}}
+												>
 													<b>{day.date}</b>
+													{day.tasks?.length > 0 ? (
+														<p><b>{day.tasks.length}</b></p>
+													) : null}
 												</span>
 											);
 										})

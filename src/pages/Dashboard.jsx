@@ -17,6 +17,7 @@ import Tab from '../components/Tab';
 import Home from './dashboard/Home';
 import Invitations from './dashboard/Invitations';
 import Projects from './dashboard/Projects';
+import Pomodoro from './dashboard/Pomodoro';
 
 export default class Dashboard extends React.Component {
 	constructor(props) {
@@ -281,11 +282,7 @@ export default class Dashboard extends React.Component {
 						/>
 						<Route
 							path='/pomodoro'
-							element={
-								<div>
-									<h1>Pomodoro</h1>
-								</div>
-							}
+							element={<Pomodoro />}
 						/>
 						<Route
 							path='/connections'
