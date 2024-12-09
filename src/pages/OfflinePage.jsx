@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom/client';
 
 const OfflinePage = () => {
 	return (
@@ -10,3 +11,9 @@ const OfflinePage = () => {
 };
 
 export default OfflinePage;
+
+// Mount the component to the DOM
+if (typeof document !== 'undefined') {
+	const root = ReactDOM.createRoot(document.getElementById('root'));
+	root.render(<OfflinePage />);
+};

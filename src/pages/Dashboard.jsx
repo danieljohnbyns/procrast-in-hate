@@ -66,6 +66,14 @@ export default class Dashboard extends React.Component {
 			window.location.href = '/signIn';
 		};
 
+		try {
+			console.log('Updating service worker authentication...');
+			navigator.serviceWorker.controller.postMessage({
+				type: 'UPDATE_AUTHENTICATION',
+				authentication: JSON.parse(localStorage.getItem('authentication') || '{}')
+			});
+		} catch (error) { console.log('Service Worker Error:', error) };
+
 		if (!this.state.notificationGranted) {
 			if ('Notification' in window) {
 				if (Notification.permission === 'granted') {

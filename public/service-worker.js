@@ -1,35 +1,43 @@
 /* eslint-disable no-lone-blocks */
-const CACHE_NAME = 'offline-cache';
-const OFFLINE_URL = 'offline.html';
 const WEBSOCKET_URL = 'ws:localhost:5050';
 
 let authentication = { token: '', _id: '' }; // Global variable to store the authentication
 
 self.addEventListener('install', (event) => {
 	event.waitUntil(
-		caches.open(CACHE_NAME).then((cache) => {
+		caches.open('offline-cache').then((cache) => {
 			return cache.addAll([
-				OFFLINE_URL,
-				// Add other assets you want to cache
+				'/offline.html',
+				'/offline.bundle.js'
 			]);
 		})
 	);
 });
 
 self.addEventListener('fetch', (event) => {
-	if (event.request.mode === 'navigate') {
-		event.respondWith(
-			fetch(event.request).catch(() => {
-				return caches.open(CACHE_NAME).then((cache) => {
-					return cache.match(OFFLINE_URL);
-				});
-			})
-		);
-	}
+	event.respondWith(
+		caches.match(event.request).then((response) => {
+			if (response) {
+				return response;
+			};
+			return fetch(event.request).catch(() => {
+				return caches.match('/offline.html');
+			});
+		})
+	);
 });
 
 // WebSocket connection
 let socket;
+
+// Method to update the authentication
+const updateAuthentication = (newAuthentication) => {
+	console.log('Updating authentication:', newAuthentication);
+	authentication = newAuthentication;
+	if (socket)
+		socket.close();
+};
+
 const connectWebSocket = async () => {
 	if (socket) {
 		socket.close();
@@ -47,6 +55,7 @@ const connectWebSocket = async () => {
 				serviceWorker: true
 			}
 		})); // Send the authentication to the server
+		console.log('authentication:', authentication);
 	};
 
 	socket.onmessage = (event) => {
@@ -58,6 +67,7 @@ const connectWebSocket = async () => {
 					console.log('Authentication successful');
 				} else {
 					console.error('Authentication failed');
+					socket.close();
 				};
 				break;
 			};
@@ -83,12 +93,6 @@ const connectWebSocket = async () => {
 		console.error('WebSocket error:', error);
 		socket.close();
 	};
-};
-
-// Method to update the authentication
-const updateAuthentication = (newAuthentication) => {
-	authentication = newAuthentication;
-	socket.close();
 };
 
 self.addEventListener('message', (event) => {
