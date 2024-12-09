@@ -1,3 +1,79 @@
-#invitations {
+#pomodoro {
 	min-height: 100%;
+}
+
+#pomodoro > header {
+	height: calc(8rem + 4rem);
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 2rem;
+}
+
+#pomodoro > main {
+	padding: 2rem;
+	height: calc(100vh - 12rem);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 4rem;
+}
+#pomodoro > main > #timer {
+	width: 60rem;
+	height: 40rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 2rem;
+	border: solid 0.25rem var(--color-white);
+	border-radius: 1rem;
+	background-color: var(--color-primary);
+}
+#pomodoro > main > #timer > #time {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+}
+#pomodoro > main > #timer > #time > h1 {
+	font-size: 12rem;
+	color: var(--color-white);
+	margin: 0;
+}
+#pomodoro > main > #timer > #controls {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 2rem;
+}
+#pomodoro > main > #timer > #controls > button {
+	padding: 1rem 2rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-gray);
+	color: var(--color-primary);
+}
+#pomodoro > main > #timer > #controls > button:hover {
+	background-color: var(--color-secondary);
+	color: var(--color-white);
+}
+#pomodoro > main > #timer > #controls > button:hover > * {
+	color: var(--color-white);
+}
+
+#pomodoro > main > #instructions {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: 1rem;
+}
+#pomodoro > main > #instructions > p {
+	margin-left: 2rem;
 }

@@ -21,6 +21,8 @@
 	box-sizing: border-box;
 	accent-color: var(--color-primary);
 
+	transition: color var(--transition), background-color var(--transition), border-color var(--transition);
+
 	line-height: 1;
 }
 
@@ -32,6 +34,7 @@ html {
 body {
 	font-family: 'Montserrat', sans-serif;
 	font-size: 2rem;
+	color: var(--color-black);
 }
 
 h6, h5, h4, h3, h2, h1 { font-family: 'Lemon Milk', sans-serif; line-height: 1; vertical-align: middle; color: var(--color-primary); }
@@ -335,8 +338,6 @@ sub, sup { font-size: 0.75em; }
 	background-color: transparent;
 	text-align: center;
 
-	transition: background-color var(--transition), color var(--transition);
-
 	cursor: pointer;
 }
 .button > * { color: unset; }
@@ -381,8 +382,6 @@ sub, sup { font-size: 0.75em; }
 	border: 0.25rem solid var(--color-primary);
 	outline: none;
 	font-family: unset;
-
-	transition: border-color var(--transition);
 }
 .input:focus {
 	border-color: var(--color-secondary);
@@ -442,9 +441,9 @@ sub, sup { font-size: 0.75em; }
 	position: absolute;
 	height: 50%;
 	width: 0.5rem;
-	background-color: var(--color-white);
+	background-color: #FFFFFF;
 	border-radius: 0.25rem;
-	transition: top var(--transition), left var(--transition), transform var(--transition), background-color var(--transition);
+	transition: top var(--transition), left var(--transition), transform var(--transition);
 }
 #sidebarToggleIcon:hover::before,
 #sidebarToggleIcon:hover::after {
