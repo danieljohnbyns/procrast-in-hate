@@ -134,7 +134,7 @@ export default class LandingPage extends React.Component {
 						<div>
 							<div>
 								<svg viewBox='0 0 800 800' fill='transparent'>
-									<g clip-path='url(#clip0_290_490)'>
+									<g clipPath='url(#clip0_290_490)'>
 										<path d='M400 800C180 800 0 620 0 400C0 180 180 0 400 0C620 0 800 180 800 400C800 620 620 800 400 800ZM400 80C224 80 80 224 80 400C80 576 224 720 400 720C576 720 720 576 720 400C720 224 576 80 400 80Z' fill='var(--color-primary)' />
 										<path d='M344 456C312 424 232 228 232 228C232 228 428 308 460 340C492 372 492 420 460 452C424 488 376 488 344 456Z' fill='var(--color-primary)' />
 									</g>
@@ -152,7 +152,7 @@ export default class LandingPage extends React.Component {
 								<svg viewBox='0 0 800 800' fill='transparent'>
 									<path d='M36.3633 727.272H763.636' stroke='var(--color-primary)' strokeWidth='40' strokeLinecap='round' strokeLinejoin='round' />
 									<path d='M36.3633 72.7269H763.636' stroke='var(--color-primary)' strokeWidth='40' strokeLinecap='round' strokeLinejoin='round' />
-									<path fill-rule='evenodd' clip-rule='evenodd' d='M581.818 581.818H218.181C178.015 581.818 145.454 549.257 145.454 509.091V290.909C145.454 250.743 178.015 218.181 218.181 218.181H581.818C621.984 218.181 654.545 250.743 654.545 290.909V509.091C654.545 549.257 621.984 581.818 581.818 581.818Z' stroke='var(--color-primary)' strokeWidth='40' strokeLinecap='round' strokeLinejoin='round' />
+									<path fillRule='evenodd' clip-rule='evenodd' d='M581.818 581.818H218.181C178.015 581.818 145.454 549.257 145.454 509.091V290.909C145.454 250.743 178.015 218.181 218.181 218.181H581.818C621.984 218.181 654.545 250.743 654.545 290.909V509.091C654.545 549.257 621.984 581.818 581.818 581.818Z' stroke='var(--color-primary)' strokeWidth='40' strokeLinecap='round' strokeLinejoin='round' />
 								</svg>
 
 								<h3>Sleek User Interface</h3>
@@ -172,10 +172,10 @@ export default class LandingPage extends React.Component {
 						<div>
 							<div>
 								<svg viewBox='0 0 800 800' fill='transparent'>
-									<path d='M50 750L622.667 177.333' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' strokeLinecap='round' />
-									<path d='M336.333 463.667H463.666' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' strokeLinecap='round' />
-									<path d='M592.667 50C634.367 50.0881 674.334 66.6925 703.821 96.1791C733.307 125.666 749.912 165.633 750 207.333C749.986 249.164 733.454 289.297 704 319L433.333 591H209V368.333L481 96C510.703 66.5463 550.836 50.014 592.667 50Z' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' strokeLinecap='round' />
-									<path d='M431.667 241V368.333' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' strokeLinecap='round' />
+									<path d='M50 750L622.667 177.333' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' strokeLinecap='round' />
+									<path d='M336.333 463.667H463.666' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' strokeLinecap='round' />
+									<path d='M592.667 50C634.367 50.0881 674.334 66.6925 703.821 96.1791C733.307 125.666 749.912 165.633 750 207.333C749.986 249.164 733.454 289.297 704 319L433.333 591H209V368.333L481 96C510.703 66.5463 550.836 50.014 592.667 50Z' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' strokeLinecap='round' />
+									<path d='M431.667 241V368.333' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' strokeLinecap='round' />
 								</svg>
 
 								<h3>Lighweight Design</h3>
@@ -213,17 +213,17 @@ export default class LandingPage extends React.Component {
 							</div>
 							<div>
 								<svg viewBox='0 0 800 800' fill='transparent'>
-									<path d='M400 463.667C435.162 463.667 463.667 435.162 463.667 400C463.667 364.838 435.162 336.333 400 336.333C364.838 336.333 336.333 364.838 336.333 400C336.333 435.162 364.838 463.667 400 463.667Z' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' />
-									<path d='M304.667 559C304.667 533.716 314.711 509.468 332.589 491.589C350.467 473.711 374.716 463.667 400 463.667C425.284 463.667 449.532 473.711 467.411 491.589C485.289 509.468 495.333 533.716 495.333 559' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' />
-									<path d='M686.333 177.333C721.495 177.333 750 148.829 750 113.667C750 78.5045 721.495 50 686.333 50C651.171 50 622.667 78.5045 622.667 113.667C622.667 148.829 651.171 177.333 686.333 177.333Z' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' />
-									<path d='M113.667 750C148.829 750 177.333 721.495 177.333 686.333C177.333 651.171 148.829 622.667 113.667 622.667C78.5045 622.667 50 651.171 50 686.333C50 721.495 78.5045 750 113.667 750Z' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' />
-									<path d='M670.333 750C714.332 750 750 714.332 750 670.333C750 626.335 714.332 590.667 670.333 590.667C626.335 590.667 590.667 626.335 590.667 670.333C590.667 714.332 626.335 750 670.333 750Z' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' />
-									<path d='M129.667 209.333C173.665 209.333 209.333 173.665 209.333 129.667C209.333 85.668 173.665 50 129.667 50C85.668 50 50 85.668 50 129.667C50 173.665 85.668 209.333 129.667 209.333Z' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' />
-									<path d='M265 535L158.333 641.667' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' />
-									<path d='M641.667 158.333L535 265' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' />
-									<path d='M591 400C591.447 444.348 576.474 487.475 548.641 522.004C520.807 556.534 481.843 580.322 438.411 589.301C394.979 598.279 349.776 591.891 310.533 571.228C271.29 550.565 240.444 516.91 223.27 476.02C206.096 435.129 203.661 389.542 216.381 347.055C229.1 304.567 256.185 267.818 293.003 243.092C329.821 218.365 374.086 207.197 418.228 211.497C462.369 215.798 503.646 235.299 535 266.667C570.543 301.971 590.674 349.904 591 400Z' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' />
-									<path d='M614 614L535 535' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' />
-									<path d='M265 265L186 186' stroke='var(--color-primary)' strokeWidth='40' stroke-miterlimit='10' />
+									<path d='M400 463.667C435.162 463.667 463.667 435.162 463.667 400C463.667 364.838 435.162 336.333 400 336.333C364.838 336.333 336.333 364.838 336.333 400C336.333 435.162 364.838 463.667 400 463.667Z' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' />
+									<path d='M304.667 559C304.667 533.716 314.711 509.468 332.589 491.589C350.467 473.711 374.716 463.667 400 463.667C425.284 463.667 449.532 473.711 467.411 491.589C485.289 509.468 495.333 533.716 495.333 559' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' />
+									<path d='M686.333 177.333C721.495 177.333 750 148.829 750 113.667C750 78.5045 721.495 50 686.333 50C651.171 50 622.667 78.5045 622.667 113.667C622.667 148.829 651.171 177.333 686.333 177.333Z' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' />
+									<path d='M113.667 750C148.829 750 177.333 721.495 177.333 686.333C177.333 651.171 148.829 622.667 113.667 622.667C78.5045 622.667 50 651.171 50 686.333C50 721.495 78.5045 750 113.667 750Z' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' />
+									<path d='M670.333 750C714.332 750 750 714.332 750 670.333C750 626.335 714.332 590.667 670.333 590.667C626.335 590.667 590.667 626.335 590.667 670.333C590.667 714.332 626.335 750 670.333 750Z' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' />
+									<path d='M129.667 209.333C173.665 209.333 209.333 173.665 209.333 129.667C209.333 85.668 173.665 50 129.667 50C85.668 50 50 85.668 50 129.667C50 173.665 85.668 209.333 129.667 209.333Z' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' />
+									<path d='M265 535L158.333 641.667' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' />
+									<path d='M641.667 158.333L535 265' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' />
+									<path d='M591 400C591.447 444.348 576.474 487.475 548.641 522.004C520.807 556.534 481.843 580.322 438.411 589.301C394.979 598.279 349.776 591.891 310.533 571.228C271.29 550.565 240.444 516.91 223.27 476.02C206.096 435.129 203.661 389.542 216.381 347.055C229.1 304.567 256.185 267.818 293.003 243.092C329.821 218.365 374.086 207.197 418.228 211.497C462.369 215.798 503.646 235.299 535 266.667C570.543 301.971 590.674 349.904 591 400Z' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' />
+									<path d='M614 614L535 535' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' />
+									<path d='M265 265L186 186' stroke='var(--color-primary)' strokeWidth='40' strokeMiterlimit='10' />
 								</svg>
 
 								<h3>Easily Collaborate</h3>

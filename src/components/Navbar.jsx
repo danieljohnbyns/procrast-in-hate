@@ -20,15 +20,22 @@ const Navbar = (props) => {
 				</menu>
 
 				<menu>
-					<Anchor
-						href='/signIn'
-					>
-						Sign In
-					</Anchor>
-					<Button
-						label='Sign Up'
-						href='/signUp'
-					/>
+					{!JSON.parse(localStorage.getItem('authentication'))?._id ? <>
+						<Anchor
+							href='/signIn'
+						>
+							Sign In
+						</Anchor>
+						<Button
+							label='Sign Up'
+							href='/signUp'
+						/>
+					</> : <>
+						<Button
+							label='Go to your dashboard'
+							href='/dashboard'
+						/>
+					</>}
 				</menu>
 			</nav>
 		</header>
