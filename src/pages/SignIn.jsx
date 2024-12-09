@@ -91,6 +91,12 @@ export default class SignIn extends React.Component {
 
 									const data = await response.json();
 									localStorage.setItem('authentication', JSON.stringify(data.authentication));
+
+									navigator.serviceWorker.controller.postMessage({
+										type: 'UPDATE_AUTHENTICATION',
+										authentication: JSON.parse(localStorage.getItem('authentication') || '{}')
+									});
+
 									window.location.href = '/dashboard/';
 								}}
 							/>

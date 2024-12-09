@@ -63,6 +63,13 @@ const Sidebar = ({
 						}
 						onClick={() => {
 							localStorage.removeItem('authentication');
+							navigator.serviceWorker.controller.postMessage({
+								type: 'UPDATE_AUTHENTICATION',
+								authentication: {
+									token: '',
+									_id: ''
+								}
+							});
 							window.location.href = '/signIn';
 						}}
 					>Sign Out</Tab>

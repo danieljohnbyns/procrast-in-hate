@@ -61,7 +61,7 @@ const connectWebSocket = async () => {
 // Method to update the authentication
 const updateAuthentication = (newAuthentication) => {
 	authentication = newAuthentication;
-	connectWebSocket(); // Reconnect the WebSocket with the new authentication
+	socket.close();
 };
 
 self.addEventListener('message', (event) => {
