@@ -77,6 +77,18 @@ export default class Dashboard extends React.Component {
 		};
 	};
 	componentDidUpdate() {
+		if (!this.state.notificationGranted) {
+			if ('Notification' in window) {
+				if (Notification.permission === 'granted') {
+					this.setState({
+						notificationGranted: true
+					});
+				};
+			};
+
+			return;
+		};
+
 		const root = document.getElementById('root');
 		root.setAttribute('page', 'dashboard');
 
