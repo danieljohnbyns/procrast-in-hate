@@ -1,7 +1,8 @@
-// FILE: public/service-worker.js
 const CACHE_NAME = 'offline-cache';
 const OFFLINE_URL = 'offline.html';
 const WEBSOCKET_URL = 'ws:localhost:5050';
+
+let authentication = { token: '', _id: '' }; // Global variable to store the authentication
 
 self.addEventListener('install', (event) => {
 	event.waitUntil(
@@ -33,10 +34,12 @@ const connectWebSocket = async () => {
 		socket.close();
 	};
 
-	socket = new WebSocket(WEBSOCKET_URL);
+	// Include the authentication token in the WebSocket URL or headers
+	const wsUrl = `${WEBSOCKET_URL}`;
+	socket = new WebSocket(wsUrl);
 
 	socket.onopen = () => {
-		console.log('WebSocket connection established');
+		socket.send(JSON.stringify(authentication)); // Send the authentication to the server
 	};
 
 	socket.onmessage = (event) => {
@@ -55,6 +58,21 @@ const connectWebSocket = async () => {
 	};
 };
 
+// Method to update the authentication
+const updateAuthentication = (newAuthentication) => {
+	authentication = newAuthentication;
+	connectWebSocket(); // Reconnect the WebSocket with the new authentication
+};
+
+self.addEventListener('message', (event) => {
+	if (event.data && event.data.type === 'UPDATE_AUTHENTICATION') {
+		console.log('Updating authentication:', event.data.authentication);
+		updateAuthentication(event.data.authentication);
+	};
+});
+
+connectWebSocket();
+
 self.addEventListener('activate', (event) => {
-	event.waitUntil(connectWebSocket());
+	event.waitUntil(self.clients.claim());
 });
