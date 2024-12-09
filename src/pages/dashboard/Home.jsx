@@ -1082,7 +1082,7 @@ export default class Home extends React.Component {
 													<input
 														type='checkbox'
 														id={`task${task._id}`}
-														defaultChecked={task.completed}
+														value={task.completed}
 														disabled
 													/>
 													<label htmlFor={`task${task._id}`}><h6>{task.title}</h6></label>
@@ -1138,6 +1138,7 @@ export default class Home extends React.Component {
 															type='checkbox'
 															id={`task${task._id}Checklist${item.id}`}
 															defaultChecked={item.completed}
+															checked={item.completed}
 															disabled
 														/>
 														<label htmlFor={`task${task._id}Checklist${item.id}`}>{item.item}</label>
@@ -2225,6 +2226,7 @@ class TaskDetails extends React.Component {
 										disabled={this.state.task.completed}
 										id={`checklistItem${item.id}`}
 										defaultChecked={item.completed}
+										checked={item.completed}
 										onChange={async () => {
 											const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists/${item.id}`, {
 												method: 'PATCH',

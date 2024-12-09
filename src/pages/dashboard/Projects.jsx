@@ -1380,6 +1380,7 @@ class TaskDetails extends React.Component {
 										disabled={this.state.task.completed}
 										id={`checklistItem${item.id}`}
 										defaultChecked={item.completed}
+										checked={item.completed}
 										onChange={async () => {
 											const response = await fetch(`${globals.API_URL}/tasks/${this.state.id}/checklists/${item.id}`, {
 												method: 'PATCH',
