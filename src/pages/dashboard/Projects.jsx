@@ -1599,7 +1599,7 @@ class TaskDetails extends React.Component {
 									const input = document.getElementById('taskEndDate');
 									const value = input.value;
 
-									if (new Date(value).getTime() > new Date(this.state.task.dates.start).getTime()) {
+									if (new Date(value).getTime() < new Date(this.state.task.dates.start).getTime()) {
 										Swal.showValidationMessage('End date cannot be before start date');
 										e.target.value = this.state.task.dates.end?.split('.')[0];
 										return;
