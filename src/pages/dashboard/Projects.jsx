@@ -35,6 +35,13 @@ export default class Projects extends React.Component {
 		this.fetchProjects();
 
 		window.showProject = this.showProject;
+
+		globals.socket.addEventListener('message', (event) => {
+			const data = JSON.parse(event.data);
+			if (data.type === 'UPDATE_DATA') {
+				this.fetchProjects();
+			};
+		});
 	};
 	fetchProjects = async () => {
 		const _id = JSON.parse(localStorage.getItem('authentication'))._id;
@@ -367,6 +374,13 @@ class ProjectDetails extends React.Component {
 	};
 	async componentDidMount() {
 		await this.fetchProject();
+
+		globals.socket.addEventListener('message', (event) => {
+			const data = JSON.parse(event.data);
+			if (data.type === 'UPDATE_DATA') {
+				this.fetchProject();
+			};
+		});
 	};
 	fetchProject = async () => {
 		const projectResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}`);
@@ -454,7 +468,6 @@ class ProjectDetails extends React.Component {
 			memberTasks: memberTasks
 		});
 	};
-
 	
 	showTask = async (id, projectId) => {
 		const response = await fetch(`${globals.API_URL}/tasks/${id}`);
@@ -1272,6 +1285,13 @@ class TaskDetails extends React.Component {
 
 	async componentDidMount() {
 		await this.fetchTask();
+
+		globals.socket.addEventListener('message', (event) => {
+			const data = JSON.parse(event.data);
+			if (data.type === 'UPDATE_DATA') {
+				this.fetchTask();
+			};
+		});
 	};
 
 	fetchTask = async () => {

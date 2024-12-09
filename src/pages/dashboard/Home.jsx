@@ -47,6 +47,15 @@ export default class Home extends React.Component {
 
 		window.showTask = this.showTask;
 		window.showProject = this.showProject;
+
+		globals.socket.addEventListener('message', (event) => {
+			const data = JSON.parse(event.data);
+			if (data.type === 'UPDATE_DATA') {
+				this.fetchCalendar(this.state.data.calendar.year, this.state.data.calendar.month);
+				this.fetchTasks();
+				this.fetchProjects();
+			};
+		});
 	};
 
 	fetchCalendar = async (year, month) => {
@@ -601,6 +610,16 @@ export default class Home extends React.Component {
 												const currentMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(this.state.data.calendar.month);
 												const month = currentMonth === 0 ? 'December' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][currentMonth - 1];
 												const year = currentMonth === 0 ? this.state.data.calendar.year - 1 : this.state.data.calendar.year;
+												this.setState({
+													data: {
+														...this.state.data,
+														calendar: {
+															...this.state.data.calendar,
+															month: month,
+															year: year
+														}
+													}
+												});
 												this.fetchCalendar(year, month);
 											}}
 										>
@@ -614,6 +633,16 @@ export default class Home extends React.Component {
 												const currentMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(this.state.data.calendar.month);
 												const month = currentMonth === 11 ? 'January' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][currentMonth + 1];
 												const year = currentMonth === 11 ? this.state.data.calendar.year + 1 : this.state.data.calendar.year;
+												this.setState({
+													data: {
+														...this.state.data,
+														calendar: {
+															...this.state.data.calendar,
+															month: month,
+															year: year
+														}
+													}
+												});
 												this.fetchCalendar(year, month);
 											}}
 										>
@@ -880,6 +909,16 @@ export default class Home extends React.Component {
 												const currentMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(this.state.data.calendar.month);
 												const month = currentMonth === 0 ? 'December' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][currentMonth - 1];
 												const year = currentMonth === 0 ? this.state.data.calendar.year - 1 : this.state.data.calendar.year;
+												this.setState({
+													data: {
+														...this.state.data,
+														calendar: {
+															...this.state.data.calendar,
+															month: month,
+															year: year
+														}
+													}
+												});
 												this.fetchCalendar(year, month);
 											}}
 										>
@@ -892,6 +931,16 @@ export default class Home extends React.Component {
 												const currentMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(this.state.data.calendar.month);
 												const month = currentMonth === 11 ? 'January' : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][currentMonth + 1];
 												const year = currentMonth === 11 ? this.state.data.calendar.year + 1 : this.state.data.calendar.year;
+												this.setState({
+													data: {
+														...this.state.data,
+														calendar: {
+															...this.state.data.calendar,
+															month: month,
+															year: year
+														}
+													}
+												});
 												this.fetchCalendar(year, month);
 											}}
 										>
@@ -1170,6 +1219,13 @@ class ProjectDetails extends React.Component {
 	};
 	async componentDidMount() {
 		await this.fetchProject();
+
+		globals.socket.addEventListener('message', (event) => {
+			const data = JSON.parse(event.data);
+			if (data.type === 'UPDATE_DATA') {
+				this.fetchProject();
+			};
+		});
 	};
 	fetchProject = async () => {
 		const projectResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}`);
@@ -1257,7 +1313,6 @@ class ProjectDetails extends React.Component {
 			memberTasks: memberTasks
 		});
 	};
-
 	
 	showTask = async (id, projectId) => {
 		const response = await fetch(`${globals.API_URL}/tasks/${id}`);
@@ -2075,6 +2130,13 @@ class TaskDetails extends React.Component {
 
 	async componentDidMount() {
 		await this.fetchTask();
+
+		globals.socket.addEventListener('message', (event) => {
+			const data = JSON.parse(event.data);
+			if (data.type === 'UPDATE_DATA') {
+				this.fetchTask();
+			};
+		});
 	};
 
 	fetchTask = async () => {
@@ -2090,7 +2152,7 @@ class TaskDetails extends React.Component {
 
 		if (!taskData.projectId) {
 			this.setState({
-				task: taskData
+				task: await taskResponse.json()
 			});
 			return;
 		};
