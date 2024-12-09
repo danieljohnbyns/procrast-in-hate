@@ -1030,44 +1030,8 @@ class ProjectDetails extends React.Component {
 				completed: false,
 				progress: 0
 			},
-			tasks: [{
-				_id: '',
-				title: '',
-				description: '',
-				dates: {
-					start: '',
-					end: '',
-					create: ''
-				},
-				label: '',
-				creatorId: '',
-				collaborators: [],
-				completed: false,
-				checklists: [{
-					id: 0,
-					item: '',
-					completed: false
-				}]
-			}],
-			memberTasks: [{
-				_id: '',
-				title: '',
-				description: '',
-				dates: {
-					start: '',
-					end: '',
-					create: ''
-				},
-				label: '',
-				creatorId: '',
-				collaborators: [],
-				completed: false,
-				checklists: [{
-					id: 0,
-					item: '',
-					completed: false
-				}]
-			}],
+			tasks: [],
+			memberTasks: [],
 			id: this.props.id
 		};
 	};
