@@ -39,7 +39,13 @@ const connectWebSocket = async () => {
 	socket = new WebSocket(wsUrl);
 
 	socket.onopen = () => {
-		socket.send(JSON.stringify(authentication)); // Send the authentication to the server
+		socket.send(JSON.stringify({
+			type: 'AUTHENTICATION',
+			authentication: {
+				...authentication,
+				serviceWorker: true
+			}
+		})); // Send the authentication to the server
 	};
 
 	socket.onmessage = (event) => {

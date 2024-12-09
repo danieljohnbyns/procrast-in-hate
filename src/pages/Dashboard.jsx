@@ -9,6 +9,8 @@ import Swal from 'sweetalert2';
 
 import '../styles/dashboard.css';
 
+import globals from '../utils/globals';
+
 import Sidebar from '../components/Sidebar';
 import Tab from '../components/Tab';
 
@@ -94,7 +96,37 @@ export default class Dashboard extends React.Component {
 
 			return originalFetch(url, options);
 		};
+
+		if (!localStorage.getItem('authentication')) {
+			window.location.href = '/signIn';
+		};
+
+		const authentication = JSON.parse(localStorage.getItem('authentication'));
+
+		globals.socket = new WebSocket(globals.WEBSOCKET_URL);
+
+		globals.socket.onopen = () => {
+			globals.socket.send(JSON.stringify({
+				type: 'AUTHENTICATION',
+				authentication: {
+					...authentication,
+					serviceWorker: false
+				}
+			}));
+		};
+
+		globals.socket.onmessage = (event) => {
+			console.log('WebSocket message received:', event.data);
+		};
+
+		globals.socket.onclose = () => {
+			console.log('WebSocket connection closed, retrying in 5 seconds...');
+			setTimeout(() => {
+				globals.socket = new WebSocket(globals.WEBSOCKET_URL);
+			}, 5000);
+		};
 	};
+
 	render() {
 		return (
 			<>
