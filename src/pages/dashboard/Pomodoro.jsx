@@ -62,6 +62,8 @@ export default class Pomodoro extends React.Component {
 						seconds: seconds
 					}
 				});
+
+				document.title = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} - Procrast In Hate`;
 			};
 		}, 1000);
 
@@ -75,25 +77,6 @@ export default class Pomodoro extends React.Component {
 			sidebarToggle.checked = true;
 			sidebarToggle.onchange();
 
-			/**
-			 * Invert root
-			 * 
-:root {
-	--color-primary: #260351;
-	--color-secondary: #705BD3;
-	--color-tertiary: #9885F0;
-	--color-quaternary: #AC9BFA;
-	--color-quinary: #CDC1FF;
-	
-	--gradient-primary: linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%);
-
-	--color-white: #FFFFFF;
-	--color-black: #000000;
-	--color-gray: #F1F1F1;
-
-	--transition: 0.25s;
-}
-			 */
 			document.documentElement.style.setProperty('--color-primary', '#AC9BFA');
 			document.documentElement.style.setProperty('--color-secondary', '#CDC1FF');
 			document.documentElement.style.setProperty('--color-tertiary', '#260351');
@@ -128,6 +111,8 @@ export default class Pomodoro extends React.Component {
 			},
 			state: 'stopped'
 		});
+
+		document.title = 'Procrast In Hate';
 	};
 
 	render() {
