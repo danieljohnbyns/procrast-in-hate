@@ -11,6 +11,7 @@ import React from 'react';
  * 		theme: 'light' | 'dark'
  * 		filled: Boolean,
  * 		onClick?: Function,
+ * 		style?: React.CSSProperties
  * }) => JSX.Element}
  */
 const Button = ({
@@ -22,6 +23,7 @@ const Button = ({
 	theme,
 	filled,
 	onClick,
+	style,
 	...props
 }) => {
 	if (props.href || type === 'link') {
@@ -30,6 +32,7 @@ const Button = ({
 				href={props.href}
 				className={`button ${className} ${theme === 'light' ? 'light' : 'dark'} ${filled ? 'filled' : ''}`}
 				onClick={onClick}
+				style={style}
 			>
 				{
 					head === '6' ? <h6>{children ? children : label}</h6> :
@@ -47,6 +50,7 @@ const Button = ({
 		<button
 			className={`button ${className} ${props.theme === 'light' ? 'light' : 'dark'} ${filled ? 'filled' : ''}`}
 			onClick={onClick}
+			style={style}
 		>
 			{
 				head === '6' ? <h6>{children ? children : label}</h6> :

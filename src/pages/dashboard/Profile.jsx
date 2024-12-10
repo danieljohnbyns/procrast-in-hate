@@ -219,6 +219,54 @@ export default class Profile extends React.Component {
 								window.location.href = '/passwordReset';
 							}}
 						/>
+
+						<Button
+							label='Delete account'
+							style={{
+								border: 'solid 0.25rem red',
+								color: 'red'
+							}}
+							onClick={async () => {
+								await Swal.fire({
+									icon: 'warning',
+									title: 'Are you sure?',
+									text: 'You are about to delete your account, this action is irreversible! This will delete all your data and you will not be able to recover it.',
+									showCancelButton: true,
+									confirmButtonText: 'Yes, delete my account',
+									cancelButtonText: 'No, keep my account'
+								}).then(async (result) => {
+									if (result.isConfirmed) {
+										const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+										const response = await fetch(`${globals.API_URL}/users/${_id}`, {
+											method: 'DELETE',
+											headers: {
+												'Content-Type': 'application/json',
+												'Authentication': localStorage.getItem('authentication')
+											}
+										});
+
+										if (!response.ok) {
+											const data = await response.json();
+											await Swal.fire({
+												icon: 'error',
+												title: 'Error deleting user',
+												text: data.message
+											});
+											window.location.reload();
+											return;
+										};
+
+										await Swal.fire({
+											icon: 'success',
+											title: 'User deleted',
+											text: 'Your user has been deleted successfully!'
+										});
+										localStorage.removeItem('authentication');
+										window.location.href = '/';
+									};
+								});
+							}}
+						/>
 					</div>
 				</main>
 			</div>

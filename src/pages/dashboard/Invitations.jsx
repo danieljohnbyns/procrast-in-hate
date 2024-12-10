@@ -75,12 +75,22 @@ export default class Invitations extends React.Component {
 		const root = document.getElementById('root');
 		root.setAttribute('page', 'dashboard');
 
-		this.fetchInvitations();
+		try {
+			this.fetchInvitations();
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Error fetching invitations',
+				text: error.message
+			});
+		};
 
 		globals.socket.addEventListener('message', (event) => {
 			const data = JSON.parse(event.data);
 			if (data.type === 'UPDATE_DATA') {
-				this.fetchInvitations();
+				try {
+					this.fetchInvitations();
+				} catch (error) { };
 			};
 		});
 	};
@@ -90,12 +100,8 @@ export default class Invitations extends React.Component {
 		const response = await fetch(`${globals.API_URL}/users/${_id}/invitations`);
 
 		if (!response.ok) {
-			Swal.fire({
-				icon: 'error',
-				title: 'Error',
-				text: 'An error occurred while fetching invitations.'
-			});
-			return;
+			const data = await response.json();
+			throw new Error(data.message);
 		};
 
 		const data = await response.json();

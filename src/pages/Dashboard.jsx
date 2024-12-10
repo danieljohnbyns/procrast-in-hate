@@ -41,7 +41,7 @@ export default class Dashboard extends React.Component {
 		setMobile();
 
 		const originalFetch = window.fetch;
-		window.fetch = async (url, options) => {
+		window.fetch = (url, options) => new Promise((resolve, reject) => {
 			const defaultHeaders = {
 				'Content-Type': 'application/json',
 				'Authentication': localStorage.getItem('authentication')
@@ -58,8 +58,8 @@ export default class Dashboard extends React.Component {
 				};
 			};
 
-			return originalFetch(url, options);
-		};
+			originalFetch(url, options).then(resolve).catch(reject);
+		});
 
 		window.Swal = Swal;
 

@@ -41,24 +41,40 @@ export default class Home extends React.Component {
 		const root = document.getElementById('root');
 		root.setAttribute('page', 'dashboard');
 
-		this.fetchCalendar(this.state.data.calendar.year, this.state.data.calendar.month);
-		this.fetchTasks();
-		this.fetchProjects();
-
 		window.showTask = this.showTask;
 		window.showProject = this.showProject;
+
+		try {
+			this.fetchCalendar(this.state.data.calendar.year, this.state.data.calendar.month);
+			this.fetchTasks();
+			this.fetchProjects();
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: '<h1>Error</h1>',
+				text: error.message,
+				showClass: {
+					popup: `fadeIn`
+				},
+				hideClass: {
+					popup: `fadeOut`
+				}
+			});
+		};
 
 		globals.socket.addEventListener('message', (event) => {
 			const data = JSON.parse(event.data);
 			if (data.type === 'UPDATE_DATA') {
-				this.fetchCalendar(this.state.data.calendar.year, this.state.data.calendar.month);
-				this.fetchTasks();
-				this.fetchProjects();
+				try {
+					this.fetchCalendar(this.state.data.calendar.year, this.state.data.calendar.month);
+					this.fetchTasks();
+					this.fetchProjects();
+				} catch (error) {};
 			};
 		});
 	};
 
-	fetchCalendar = async (year, month) => {
+	fetchCalendar = async (year, month, silentError) => {
 		const days = [];
 		const firstDay = new Date(`${month} 1, ${year}`).getDay();
 		const lastDate = new Date(year, ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(month) + 1, 0).getDate();
@@ -101,18 +117,7 @@ export default class Home extends React.Component {
 		const monthIndex = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(month) + 1;
 		const calendarTasksResponse = await fetch(`${globals.API_URL}/tasks/user/${_id}/calendar/${year}/${monthIndex}`);
 		if (!calendarTasksResponse.ok) {
-			Swal.fire({
-				icon: 'error',
-				title: '<h1>Error</h1>',
-				text: 'An error occurred while fetching the calendar',
-				showClass: {
-					popup: `fadeIn`
-				},
-				hideClass: {
-					popup: `fadeOut`
-				}
-			});
-			console.error(calendarTasksResponse);
+			const data = await calendarTasksResponse.json();
 			this.setState({
 				data: {
 					...this.state.data,
@@ -124,7 +129,9 @@ export default class Home extends React.Component {
 					}
 				}
 			});
-			return;
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 
 		const calendarTasks = await calendarTasksResponse.json();
@@ -152,40 +159,35 @@ export default class Home extends React.Component {
 		});
 	};
 
-	fetchTasks = async () => {
+	fetchTasks = async (silentError) => {
 		if (!localStorage.getItem('authentication')) {
 			window.location.href = '/signIn';
 		};
 		const _id = JSON.parse(localStorage.getItem('authentication'))._id;
-		fetch(`${globals.API_URL}/tasks/user/${_id}`)
-			.then(response => response.json())
-			.then(data => {
-				console.log(data);
-				this.setState({
-					data: {
-						...this.state.data,
-						tasks: data
-					}
-				});
-			});
+		
+		const response = await fetch(`${globals.API_URL}/tasks/user/${_id}`);
+		if (!response.ok) {
+			const data = await response.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
+		};
+		const tasks = await response.json();
+		this.setState({
+			data: {
+				...this.state.data,
+				tasks: tasks
+			}
+		});
 	};
 
-	showTask = async (id) => {
+	showTask = async (id, silentError) => {
 		const response = await fetch(`${globals.API_URL}/tasks/${id}`);
 		if (!response.ok) {
-			Swal.fire({
-				icon: 'error',
-				title: '<h1>Error</h1>',
-				text: 'An error occurred while fetching the task',
-				showClass: {
-					popup: `fadeIn`
-				},
-				hideClass: {
-					popup: `fadeOut`
-				}
-			});
-			console.error(response);
-			return;
+			const data = await response.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 		/**
 		 * @type {{
@@ -277,13 +279,16 @@ export default class Home extends React.Component {
 		});
 	};
 
-	fetchProjects = async () => {
+	fetchProjects = async (silentError) => {
 		const _id = JSON.parse(localStorage.getItem('authentication'))._id;
 
 		const response = await fetch(`${globals.API_URL}/projects/user/${_id}`);
 
 		if (!response.ok) {
-			return;
+			const data = await response.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 
 		const projects = await response.json();
@@ -293,7 +298,10 @@ export default class Home extends React.Component {
 		for (const project of projects) {
 			const response = await fetch(`${globals.API_URL}/projects/${project._id}/progress`);
 			if (!response.ok) {
-				return;
+				const data = await response.json();
+				if (!silentError)
+					throw new Error(data.message);
+				else return;
 			};
 
 			const progress = (await response.json()).progress;
@@ -312,11 +320,14 @@ export default class Home extends React.Component {
 		});
 	};
 
-	showProject = async (id) => {
+	showProject = async (id, silentError) => {
 		const response = await fetch(`${globals.API_URL}/projects/${id}`);
 
 		if (!response.ok) {
-			return;
+			const data = await response.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 		const project = await response.json();
 
@@ -1219,46 +1230,46 @@ class ProjectDetails extends React.Component {
 		};
 	};
 	async componentDidMount() {
-		await this.fetchProject();
+		try {
+			await this.fetchProject();
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: '<h1>Error</h1>',
+				text: error.message,
+				showClass: {
+					popup: `fadeIn`
+				},
+				hideClass: {
+					popup: `fadeOut`
+				}
+			});
+		};
 
 		globals.socket.addEventListener('message', (event) => {
 			const data = JSON.parse(event.data);
 			if (data.type === 'UPDATE_DATA') {
-				this.fetchProject();
+				try {
+					this.fetchProject(true);
+				} catch (error) { };
 			};
 		});
 	};
-	fetchProject = async () => {
+	fetchProject = async (silentError) => {
 		const projectResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}`);
 		if (!projectResponse.ok) {
-			Swal.fire({
-				icon: 'error',
-				title: '<h1>Error</h1>',
-				text: 'An error occurred',
-				showClass: {
-					popup: `fadeIn`
-				},
-				hideClass: {
-					popup: `fadeOut`
-				}
-			});
-			return;
+			const data = await projectResponse.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 		const project = await projectResponse.json();
 		const progressResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}/progress`);
 		if (!progressResponse.ok) {
-			Swal.fire({
-				icon: 'error',
-				title: '<h1>Error</h1>',
-				text: 'An error occurred',
-				showClass: {
-					popup: `fadeIn`
-				},
-				hideClass: {
-					popup: `fadeOut`
-				}
-			});
-			return;
+			const data = await progressResponse.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 		const progress = (await progressResponse.json()).progress;
 		project.progress = progress;
@@ -1267,18 +1278,10 @@ class ProjectDetails extends React.Component {
 
 		const userTaskResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}/tasks/${_id}`);
 		if (!userTaskResponse.ok) {
-			Swal.fire({
-				icon: 'error',
-				title: '<h1>Error</h1>',
-				text: 'An error occurred',
-				showClass: {
-					popup: `fadeIn`
-				},
-				hideClass: {
-					popup: `fadeOut`
-				}
-			});
-			return;
+			const data = await userTaskResponse.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 		const userTasks = await userTaskResponse.json();
 		const memberTasks = [];
@@ -1286,18 +1289,10 @@ class ProjectDetails extends React.Component {
 		if (project.creatorId === _id) {
 			const memberTasksResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}/tasks/`);
 			if (!memberTasksResponse.ok) {
-				Swal.fire({
-					icon: 'error',
-					title: '<h1>Error</h1>',
-					text: 'An error occurred',
-					showClass: {
-						popup: `fadeIn`
-					},
-					hideClass: {
-						popup: `fadeOut`
-					}
-				});
-				return;
+				const data = await memberTasksResponse.json();
+				if (!silentError)
+					throw new Error(data.message);
+				else return;
 			};
 			const filteredMemberTasks = (await memberTasksResponse.json()).filter((task) => {
 				return task.creatorId !== _id
@@ -2130,23 +2125,29 @@ class TaskDetails extends React.Component {
 	};
 
 	async componentDidMount() {
-		await this.fetchTask();
+		try {
+			await this.fetchTask();
+		} catch (error) {
+			Swal.showValidationMessage(error.message);
+		};
 
 		globals.socket.addEventListener('message', (event) => {
 			const data = JSON.parse(event.data);
 			if (data.type === 'UPDATE_DATA') {
-				this.fetchTask();
+				try {
+					this.fetchTask(true);
+				} catch (error) { };
 			};
 		});
 	};
 
-	fetchTask = async () => {
+	fetchTask = async (silentError) => {
 		const taskResponse = await fetch(`${globals.API_URL}/tasks/${this.state.id}`);
 		if (!taskResponse.ok) {
-			const error = await taskResponse.json();
-			Swal.showValidationMessage(error.message);
-			console.error(taskResponse);
-			return;
+			const data = await taskResponse.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 
 		const taskData = await taskResponse.json();
@@ -2160,10 +2161,10 @@ class TaskDetails extends React.Component {
 
 		const projectResponse = await fetch(`${globals.API_URL}/projects/${taskData.projectId}`);
 		if (!projectResponse.ok) {
-			const error = await projectResponse.json();
-			Swal.showValidationMessage(error.message);
-			console.error(projectResponse);
-			return;
+			const data = await projectResponse.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 
 		const projectData = await projectResponse.json();

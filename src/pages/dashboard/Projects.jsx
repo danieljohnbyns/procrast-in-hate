@@ -32,24 +32,43 @@ export default class Projects extends React.Component {
 		const root = document.getElementById('root');
 		root.setAttribute('page', 'dashboard');
 
-		this.fetchProjects();
-
 		window.showProject = this.showProject;
+
+		try {
+			this.fetchProjects();
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: '<h1>Error</h1>',
+				text: error.message,
+				showClass: {
+					popup: `fadeIn`
+				},
+				hideClass: {
+					popup: `fadeOut`
+				}
+			});
+		};
 
 		globals.socket.addEventListener('message', (event) => {
 			const data = JSON.parse(event.data);
 			if (data.type === 'UPDATE_DATA') {
-				this.fetchProjects();
+				try {
+					this.fetchProjects(true);
+				} catch (error) { };
 			};
 		});
 	};
-	fetchProjects = async () => {
+	fetchProjects = async (silentError) => {
 		const _id = JSON.parse(localStorage.getItem('authentication'))._id;
 
 		const response = await fetch(`${globals.API_URL}/projects/user/${_id}`);
 
 		if (!response.ok) {
-			return;
+			const data = await response.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 
 		const projects = await response.json();
@@ -59,7 +78,10 @@ export default class Projects extends React.Component {
 		for (const project of projects) {
 			const response = await fetch(`${globals.API_URL}/projects/${project._id}/progress`);
 			if (!response.ok) {
-				return;
+				const data = await response.json();
+				if (!silentError)
+					throw new Error(data.message);
+				else return;
 			};
 
 			const progress = (await response.json()).progress;
@@ -68,7 +90,6 @@ export default class Projects extends React.Component {
 				progress: progress
 			});
 		};
-		console.log(withProgress);
 
 		this.setState({
 			data: {
@@ -373,46 +394,46 @@ class ProjectDetails extends React.Component {
 		};
 	};
 	async componentDidMount() {
-		await this.fetchProject();
+		try {
+			await this.fetchProject();
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: '<h1>Error</h1>',
+				text: error.message,
+				showClass: {
+					popup: `fadeIn`
+				},
+				hideClass: {
+					popup: `fadeOut`
+				}
+			});
+		};
 
 		globals.socket.addEventListener('message', (event) => {
 			const data = JSON.parse(event.data);
 			if (data.type === 'UPDATE_DATA') {
-				this.fetchProject();
+				try {
+					this.fetchProject(true);
+				} catch (error) { };
 			};
 		});
 	};
-	fetchProject = async () => {
+	fetchProject = async (silentError) => {
 		const projectResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}`);
 		if (!projectResponse.ok) {
-			Swal.fire({
-				icon: 'error',
-				title: '<h1>Error</h1>',
-				text: 'An error occurred',
-				showClass: {
-					popup: `fadeIn`
-				},
-				hideClass: {
-					popup: `fadeOut`
-				}
-			});
-			return;
+			const data = await projectResponse.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 		const project = await projectResponse.json();
 		const progressResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}/progress`);
 		if (!progressResponse.ok) {
-			Swal.fire({
-				icon: 'error',
-				title: '<h1>Error</h1>',
-				text: 'An error occurred',
-				showClass: {
-					popup: `fadeIn`
-				},
-				hideClass: {
-					popup: `fadeOut`
-				}
-			});
-			return;
+			const data = await progressResponse.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 		const progress = (await progressResponse.json()).progress;
 		project.progress = progress;
@@ -421,18 +442,10 @@ class ProjectDetails extends React.Component {
 
 		const userTaskResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}/tasks/${_id}`);
 		if (!userTaskResponse.ok) {
-			Swal.fire({
-				icon: 'error',
-				title: '<h1>Error</h1>',
-				text: 'An error occurred',
-				showClass: {
-					popup: `fadeIn`
-				},
-				hideClass: {
-					popup: `fadeOut`
-				}
-			});
-			return;
+			const data = await userTaskResponse.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 		const userTasks = await userTaskResponse.json();
 		const memberTasks = [];
@@ -440,18 +453,10 @@ class ProjectDetails extends React.Component {
 		if (project.creatorId === _id) {
 			const memberTasksResponse = await fetch(`${globals.API_URL}/projects/${this.state.id}/tasks/`);
 			if (!memberTasksResponse.ok) {
-				Swal.fire({
-					icon: 'error',
-					title: '<h1>Error</h1>',
-					text: 'An error occurred',
-					showClass: {
-						popup: `fadeIn`
-					},
-					hideClass: {
-						popup: `fadeOut`
-					}
-				});
-				return;
+				const data = await memberTasksResponse.json();
+				if (!silentError)
+					throw new Error(data.message);
+				else return;
 			};
 			const filteredMemberTasks = (await memberTasksResponse.json()).filter((task) => {
 				return task.creatorId !== _id
@@ -1284,23 +1289,29 @@ class TaskDetails extends React.Component {
 	};
 
 	async componentDidMount() {
-		await this.fetchTask();
+		try {
+			await this.fetchTask();
+		} catch (error) {
+			Swal.showValidationMessage(error.message);
+		};
 
 		globals.socket.addEventListener('message', (event) => {
 			const data = JSON.parse(event.data);
 			if (data.type === 'UPDATE_DATA') {
-				this.fetchTask();
+				try {
+					this.fetchTask(true);
+				} catch (error) { };
 			};
 		});
 	};
 
-	fetchTask = async () => {
+	fetchTask = async (silentError) => {
 		const taskResponse = await fetch(`${globals.API_URL}/tasks/${this.state.id}`);
 		if (!taskResponse.ok) {
-			const error = await taskResponse.json();
-			Swal.showValidationMessage(error.message);
-			console.error(taskResponse);
-			return;
+			const data = await taskResponse.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 
 		const taskData = await taskResponse.json();
@@ -1314,10 +1325,10 @@ class TaskDetails extends React.Component {
 
 		const projectResponse = await fetch(`${globals.API_URL}/projects/${taskData.projectId}`);
 		if (!projectResponse.ok) {
-			const error = await projectResponse.json();
-			Swal.showValidationMessage(error.message);
-			console.error(projectResponse);
-			return;
+			const data = await projectResponse.json();
+			if (!silentError)
+				throw new Error(data.message);
+			else return;
 		};
 
 		const projectData = await projectResponse.json();
