@@ -86,7 +86,7 @@ export default class Dashboard extends React.Component {
 			navigator.serviceWorker.addEventListener('message', (event) => {
 				if (event.data) {
 					if (event.data.type === 'POMODORO_UPDATE') {
-						document.title = `${event.data.time.minutes.toString().padStart(2, '0')}:${event.data.time.seconds.toString().padStart(2, '0')} - Pocrast In Hate`;
+						document.title = `${event.data.time.minutes.toString().padStart(2, '0')}:${event.data.time.seconds.toString().padStart(2, '0')} - Pomodoro - Pocrast In Hate`;
 
 						if (event.data.state === 'running') {
 							document.documentElement.style.setProperty('--color-primary', '#AC9BFA');

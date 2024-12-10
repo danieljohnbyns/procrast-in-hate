@@ -1,4 +1,6 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable no-lone-blocks */
+
 const WEBSOCKET_URL = 'ws:localhost:5050';
 
 let authentication = { token: '', _id: '' }; // Global variable to store the authentication
@@ -106,6 +108,20 @@ const Pomodoro = {
 	 */
 	state: 'stopped'
 };
+const Break = {
+	timer: null,
+	time: {
+		minutes: 5,
+		seconds: 0
+	},
+	/**
+	 * @type {'paused' | 'running' | 'stopped'}
+	 */
+};
+/**
+ * @type {'Pomodoro' | 'Break' }
+ */
+let Time_Mode = 'Pomodoro';
 
 self.addEventListener('message', (event) => {
 	if (event.data && event.data.type === 'UPDATE_AUTHENTICATION') {

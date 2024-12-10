@@ -13,14 +13,16 @@ export default class Pomodoro extends React.Component {
 		this.state = {
 			mobile: false,
 
-			time: {
-				minutes: 25,
-				seconds: 0
-			},
-			/**
-			 * @type {'paused' | 'running' | 'stopped'}
-			 */
-			state: 'stopped'
+			pomodoro: {
+				time: {
+					minutes: 25,
+					seconds: 0
+				},
+				/**
+				 * @type {'paused' | 'running' | 'stopped'}
+				 */
+				state: 'stopped'
+			}
 		};
 	};
 	componentDidMount() {
@@ -48,8 +50,10 @@ export default class Pomodoro extends React.Component {
 			if (event.data) {
 				if (event.data.type === 'POMODORO_UPDATE') {
 					this.setState({
-						time: event.data.time,
-						state: event.data.state
+						pomodoro: {
+							time: event.data.time,
+							state: event.data.state
+						}
 					});
 
 					if (event.data.state === 'running') {
@@ -79,27 +83,27 @@ export default class Pomodoro extends React.Component {
 					};
 				} else if (event.data.type === 'POMODORO_STOP') {
 					this.setState({
-						time: event.data.time,
-						state: event.data.state
+						pomodoro: {
+							time: event.data.time,
+							state: event.data.state
+						}
 					});
 				};
 			};
 		});
 	};
 
-	handleStart = () => {
+	Pomodoro_HandleStart = () => {
 		navigator.serviceWorker.controller.postMessage({
 			type: 'POMODORO_START'
 		});
 	};
-
-	handlePause = () => {
+	Pomodoro_HandlePause = () => {
 		navigator.serviceWorker.controller.postMessage({
 			type: 'POMODORO_PAUSE'
 		});
 	};
-
-	handleReset = () => {
+	Pomodoro_HandleReset = () => {
 		navigator.serviceWorker.controller.postMessage({
 			type: 'POMODORO_STOP'
 		});
@@ -119,20 +123,20 @@ export default class Pomodoro extends React.Component {
 				<main>
 					<div id='timer'>
 						<div id='time'>
-							<h1 id='minutes'>{this.state.time.minutes.toString().padStart(2, '0')}</h1>
+							<h1 id='minutes'>{this.state.pomodoro.time.minutes.toString().padStart(2, '0')}</h1>
 							<h1>:</h1>
-							<h1 id='seconds'>{this.state.time.seconds.toString().padStart(2, '0')}</h1>
+							<h1 id='seconds'>{this.state.pomodoro.time.seconds.toString().padStart(2, '0')}</h1>
 						</div>
 						<div id='controls'>
 							{
-								this.state.state === 'stopped' ?
-									<button onClick={this.handleStart}><h3>Start</h3></button>
-									: this.state.state === 'running' ?
-										<button onClick={this.handlePause}><h3>Pause</h3></button>
-										: this.state.state === 'paused' ?
+								this.state.pomodoro.state === 'stopped' ?
+									<button onClick={this.Pomodoro_HandleStart}><h3>Start</h3></button>
+									: this.state.pomodoro.state === 'running' ?
+										<button onClick={this.Pomodoro_HandlePause}><h3>Pause</h3></button>
+										: this.state.pomodoro.state === 'paused' ?
 											<>
-												<button onClick={this.handleStart}><h3>Resume</h3></button>
-												<button onClick={this.handleReset}><h3>Reset</h3></button>
+												<button onClick={this.Pomodoro_HandleStart}><h3>Resume</h3></button>
+												<button onClick={this.Pomodoro_HandleReset}><h3>Reset</h3></button>
 											</>
 											: null
 							}
