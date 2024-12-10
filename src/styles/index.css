@@ -38,6 +38,11 @@ body {
 	background-color: var(--color-gray);
 }
 
+img {
+	background-image: url('../images/Placeholder.png');
+	background-size: cover;
+}
+
 h6, h5, h4, h3, h2, h1 { font-family: 'Lemon Milk', sans-serif; line-height: 1; vertical-align: middle; color: var(--color-primary); }
 h6 { font-size: calc(2rem * 1); }
 h5 { font-size: calc(2rem * 1.25); }
@@ -425,6 +430,7 @@ sub, sup { font-size: 0.75em; }
 	display: block;
 	background-color: var(--color-white);
 	border-radius: 100%;
+	object-fit: cover;
 	transition: height var(--transition), width var(--transition);
 }
 #sidebarToggleIcon {
@@ -485,12 +491,29 @@ sub, sup { font-size: 0.75em; }
 #sidebarToggle:checked ~ #sidebar > div > img {
 	height: 4rem;
 	width: 4rem;
+	object-fit: cover;
 }
 #sidebarToggle:checked ~ #sidebar > div#userProfile > div {
 	display: none;
 }
 #sidebarToggle:checked ~ #sidebar > div#actions {
 	gap: 2rem;
+}
+#sidebar > div#userProfile {
+	position: relative;
+}
+#sidebar > div#userProfile::before {
+	content: '';
+	position: absolute;
+	top: -4rem;
+	left: -4rem;
+	width: calc(100% + 8rem);
+	height: calc(100% + 8rem);
+	z-index: -1;
+	transition: var(--transition);
+}
+#sidebar > div#userProfile:hover::before {
+	background-color: var(--color-secondary);
 }
 
 .swal2-popup {

@@ -19,6 +19,7 @@ import Invitations from './dashboard/Invitations';
 import Projects from './dashboard/Projects';
 import Pomodoro from './dashboard/Pomodoro';
 import Connections from './dashboard/Connections';
+import Profile from './dashboard/Profile';
 
 export default class Dashboard extends React.Component {
 	constructor(props) {
@@ -324,6 +325,11 @@ export default class Dashboard extends React.Component {
 						<Route
 							path='/connections'
 							element={<Connections />}
+						/>
+
+						<Route
+							path='/profile'
+							element={<Profile />}
 						/>
 					</Routes>				
 				</main>

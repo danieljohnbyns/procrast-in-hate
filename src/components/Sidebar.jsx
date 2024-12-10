@@ -61,7 +61,12 @@ const Sidebar = ({
 			<aside
 				id='sidebar'
 			>
-				<div id='userProfile'>
+				<div
+					id='userProfile'
+					onClick={() => {
+						window.location.href = '/dashboard/profile';
+					}}
+				>
 					<img src={profile} alt='Profile' />
 
 					<div>

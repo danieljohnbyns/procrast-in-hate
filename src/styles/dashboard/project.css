@@ -210,6 +210,7 @@
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
+	object-fit: cover;
 }
 @media screen and (max-width: 60rem) {
 	#projects > main {
@@ -679,6 +680,7 @@
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
+	object-fit: cover;
 }
 @media screen and (max-width: 70rem) {
 	#projectDetails > aside,
