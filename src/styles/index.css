@@ -5,7 +5,7 @@
 	--color-tertiary: #9885F0;
 	--color-quaternary: #AC9BFA;
 	--color-quinary: #CDC1FF;
-	
+
 	--gradient-primary: linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%);
 
 	--color-white: #FFFFFF;
@@ -396,6 +396,7 @@ sub, sup { font-size: 0.75em; }
 	left: 0;
 	padding: 4rem 4rem;
 	background-color: var(--color-tertiary);
+	box-shadow: 0 0 2rem rgba(255, 255, 255, 0.25);
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;

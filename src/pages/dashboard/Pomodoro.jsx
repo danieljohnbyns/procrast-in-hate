@@ -13,7 +13,6 @@ export default class Pomodoro extends React.Component {
 				minutes: 25,
 				seconds: 0
 			},
-			timer: null,
 			/**
 			 * @type {'paused' | 'running' | 'stopped'}
 			 */
@@ -32,87 +31,70 @@ export default class Pomodoro extends React.Component {
 
 		const root = document.getElementById('root');
 		root.setAttribute('page', 'dashboard');
+
+		navigator.serviceWorker.controller.postMessage({
+			type: 'POMODORO_GET'
+		});
+
+		navigator.serviceWorker.addEventListener('message', (event) => {
+			if (event.data) {
+				if (event.data.type === 'POMODORO_UPDATE') {
+					this.setState({
+						time: event.data.time,
+						state: event.data.state
+					});
+
+					if (event.data.state === 'running') {
+						document.documentElement.style.setProperty('--color-primary', '#AC9BFA');
+						document.documentElement.style.setProperty('--color-secondary', '#CDC1FF');
+						document.documentElement.style.setProperty('--color-tertiary', '#260351');
+						document.documentElement.style.setProperty('--color-quaternary', '#705BD3');
+						document.documentElement.style.setProperty('--color-quinary', '#9885F0');
+
+						document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%)');
+
+						document.documentElement.style.setProperty('--color-white', '#1F1F1F');
+						document.documentElement.style.setProperty('--color-black', '#FFFFFF');
+						document.documentElement.style.setProperty('--color-gray', '#260351');
+					} else {
+						document.documentElement.style.setProperty('--color-primary', '#260351');
+						document.documentElement.style.setProperty('--color-secondary', '#705BD3');
+						document.documentElement.style.setProperty('--color-tertiary', '#9885F0');
+						document.documentElement.style.setProperty('--color-quaternary', '#AC9BFA');
+						document.documentElement.style.setProperty('--color-quinary', '#CDC1FF');
+
+						document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%)');
+
+						document.documentElement.style.setProperty('--color-white', '#FFFFFF');
+						document.documentElement.style.setProperty('--color-black', '#000000');
+						document.documentElement.style.setProperty('--color-gray', '#F1F1F1');
+					};
+				} else if (event.data.type === 'POMODORO_STOP') {
+					this.setState({
+						time: event.data.time,
+						state: event.data.state
+					});
+				};
+			};
+		});
 	};
 
 	handleStart = () => {
-		const timer = setInterval(() => {
-			let minutes = this.state.time.minutes;
-			let seconds = this.state.time.seconds;
-
-			if (minutes === 0 && seconds === 0) {
-				clearInterval(timer);
-				this.setState({
-					timer: null,
-					time: {
-						minutes: 25,
-						seconds: 0
-					}
-				});
-			} else {
-				if (seconds === 0) {
-					minutes--;
-					seconds = 59;
-				} else {
-					seconds--;
-				};
-
-				this.setState({
-					time: {
-						minutes: minutes,
-						seconds: seconds
-					}
-				});
-
-				document.title = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} - Procrast In Hate`;
-			};
-		}, 1000);
-
-		this.setState({
-			timer: timer,
-			state: 'running'
+		navigator.serviceWorker.controller.postMessage({
+			type: 'POMODORO_START'
 		});
-
-		try {
-			const sidebarToggle = document.getElementById('sidebarToggle');
-			sidebarToggle.checked = true;
-			sidebarToggle.onchange();
-
-			document.documentElement.style.setProperty('--color-primary', '#AC9BFA');
-			document.documentElement.style.setProperty('--color-secondary', '#CDC1FF');
-			document.documentElement.style.setProperty('--color-tertiary', '#260351');
-			document.documentElement.style.setProperty('--color-quaternary', '#705BD3');
-			document.documentElement.style.setProperty('--color-quinary', '#9885F0');
-
-			document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%)');
-
-			document.documentElement.style.setProperty('--color-white', '#1F1F1F');
-			document.documentElement.style.setProperty('--color-black', '#FFFFFF');
-			document.documentElement.style.setProperty('--color-gray', '#260351');
-		} catch (error) {
-			console.error(error);
-		};
 	};
 
 	handlePause = () => {
-		clearInterval(this.state.timer);
-		this.setState({
-			timer: null,
-			state: 'paused'
+		navigator.serviceWorker.controller.postMessage({
+			type: 'POMODORO_PAUSE'
 		});
 	};
 
 	handleReset = () => {
-		clearInterval(this.state.timer);
-		this.setState({
-			timer: null,
-			time: {
-				minutes: 25,
-				seconds: 0
-			},
-			state: 'stopped'
+		navigator.serviceWorker.controller.postMessage({
+			type: 'POMODORO_STOP'
 		});
-
-		document.title = 'Procrast In Hate';
 	};
 
 	render() {

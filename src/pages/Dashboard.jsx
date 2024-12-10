@@ -67,6 +67,42 @@ export default class Dashboard extends React.Component {
 			window.location.href = '/signIn';
 		};
 
+		navigator.serviceWorker.addEventListener('message', (event) => {
+			if (event.data) {
+				if (event.data.type === 'POMODORO_UPDATE') {
+					document.title = `${event.data.time.minutes.toString().padStart(2, '0')}:${event.data.time.seconds.toString().padStart(2, '0')} - Pocrast In Hate`;
+
+					if (event.data.state === 'running') {
+						document.documentElement.style.setProperty('--color-primary', '#AC9BFA');
+						document.documentElement.style.setProperty('--color-secondary', '#CDC1FF');
+						document.documentElement.style.setProperty('--color-tertiary', '#260351');
+						document.documentElement.style.setProperty('--color-quaternary', '#705BD3');
+						document.documentElement.style.setProperty('--color-quinary', '#9885F0');
+
+						document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%)');
+
+						document.documentElement.style.setProperty('--color-white', '#1F1F1F');
+						document.documentElement.style.setProperty('--color-black', '#FFFFFF');
+						document.documentElement.style.setProperty('--color-gray', '#260351');
+					} else {
+						document.documentElement.style.setProperty('--color-primary', '#260351');
+						document.documentElement.style.setProperty('--color-secondary', '#705BD3');
+						document.documentElement.style.setProperty('--color-tertiary', '#9885F0');
+						document.documentElement.style.setProperty('--color-quaternary', '#AC9BFA');
+						document.documentElement.style.setProperty('--color-quinary', '#CDC1FF');
+
+						document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%)');
+
+						document.documentElement.style.setProperty('--color-white', '#FFFFFF');
+						document.documentElement.style.setProperty('--color-black', '#000000');
+						document.documentElement.style.setProperty('--color-gray', '#F1F1F1');
+					};
+				} else if (event.data.type === 'POMODORO_STOP') {
+					document.title = 'Pocrast In Hate';
+				};
+			};
+		})
+
 		try {
 			console.log('Updating service worker authentication...');
 			navigator.serviceWorker.controller.postMessage({
