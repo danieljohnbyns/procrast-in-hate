@@ -38,11 +38,6 @@ body {
 	background-color: var(--color-gray);
 }
 
-img.failed {
-	background-image: url('../images/Placeholder.png');
-	background-size: cover;
-}
-
 h6, h5, h4, h3, h2, h1 { font-family: 'Lemon Milk', sans-serif; line-height: 1; vertical-align: middle; color: var(--color-primary); }
 h6 { font-size: calc(2rem * 1); }
 h5 { font-size: calc(2rem * 1.25); }

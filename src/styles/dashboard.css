@@ -7,6 +7,11 @@
 	display: block;
 }
 
+#root[page='dashboard'] img {
+	background-image: url('../images/Placeholder.png');
+	background-size: cover;
+}
+
 #dashboard {
 	position: relative;
 	height: 100vh;
