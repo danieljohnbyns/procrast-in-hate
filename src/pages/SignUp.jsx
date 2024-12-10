@@ -34,6 +34,12 @@ export default class SignUp extends React.Component {
 
 		const root = document.getElementById('root');
 		root.setAttribute('page', 'signUp');
+
+		navigator.serviceWorker.addEventListener('message', async (event) => {
+			if (event.data.type === 'SIGN_IN') {
+				window.location.href = '/dashboard/';
+			};
+		});
 	};
 	render() {
 		return (

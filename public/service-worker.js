@@ -112,6 +112,21 @@ self.addEventListener('message', (event) => {
 		console.log('Updating authentication:', event.data.authentication);
 		updateAuthentication(event.data.authentication);
 	};
+	if (event.data && event.data.type === 'SIGN_OUT') {
+		updateAuthentication({ token: '', _id: '' });
+		self.clients.matchAll().then(clients => {
+			clients.forEach(client => client.postMessage({
+				type: 'SIGN_OUT'
+			}));
+		});
+	};
+	if (event.data && event.data.type === 'SIGN_IN') {
+		self.clients.matchAll().then(clients => {
+			clients.forEach(client => client.postMessage({
+				type: 'SIGN_IN'
+			}));
+		});
+	};
 
 	if (event.data) {
 		switch (event.data.type) {

@@ -33,6 +33,12 @@ export default class SignIn extends React.Component {
 
 		const root = document.getElementById('root');
 		root.setAttribute('page', 'signIn');
+
+		navigator.serviceWorker.addEventListener('message', async (event) => {
+			if (event.data.type === 'SIGN_IN') {
+				window.location.href = '/dashboard/';
+			};
+		});
 	};
 	render() {
 		return (
@@ -95,6 +101,9 @@ export default class SignIn extends React.Component {
 									navigator.serviceWorker.controller.postMessage({
 										type: 'UPDATE_AUTHENTICATION',
 										authentication: JSON.parse(localStorage.getItem('authentication') || '{}')
+									});
+									navigator.serviceWorker.controller.postMessage({
+										type: 'SIGN_IN'
 									});
 
 									window.location.href = '/dashboard/';

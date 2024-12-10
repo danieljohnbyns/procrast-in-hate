@@ -33,6 +33,26 @@ const Sidebar = ({
 			});
 	}, []);
 
+	navigator.serviceWorker.addEventListener('message', async (event) => {
+		if (event.data.type === 'SIGN_OUT') {
+			const authentication = JSON.parse(localStorage.getItem('authentication'));
+			const response = await fetch(`${globals.API_URL}/users/`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authentication': localStorage.getItem('authentication')
+				},
+				body: JSON.stringify(authentication)
+			});
+
+			if (!response.ok) {
+				console.error('Error:', response.statusText);
+			};
+			localStorage.removeItem('authentication');
+			window.location.href = '/signIn';
+		};
+	});
+
 	return (
 		<>
 			<input type='checkbox' id='sidebarToggle' />
@@ -62,15 +82,12 @@ const Sidebar = ({
 							</svg>
 						}
 						onClick={() => {
-							localStorage.removeItem('authentication');
 							navigator.serviceWorker.controller.postMessage({
-								type: 'UPDATE_AUTHENTICATION',
-								authentication: {
-									token: '',
-									_id: ''
-								}
+								type: 'SIGN_OUT'
 							});
-							window.location.href = '/signIn';
+							navigator.serviceWorker.controller.postMessage({
+								type: 'POMODORO_STOP'
+							});
 						}}
 					>Sign Out</Tab>
 				</div>
