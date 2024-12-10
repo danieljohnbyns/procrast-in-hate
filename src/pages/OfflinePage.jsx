@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
+import Pomodoro from './dashboard/Pomodoro';
+
 const OfflinePage = () => {
 	return (
-		<div>
-			<h1>You are offline</h1>
-			<p>Please check your internet connection.</p>
-		</div>
+		<Pomodoro offline={true} />
 	);
 };
 

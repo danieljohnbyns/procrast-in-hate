@@ -23,6 +23,7 @@
 }
 #pomodoro > main > #timer {
 	width: 60rem;
+	max-width: 60rem;
 	height: 40rem;
 	display: flex;
 	flex-direction: column;
@@ -69,6 +70,7 @@
 
 #pomodoro > main > #instructions {
 	width: 100%;
+	max-width: 120rem;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;

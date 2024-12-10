@@ -35,6 +35,7 @@ body {
 	font-family: 'Montserrat', sans-serif;
 	font-size: 2rem;
 	color: var(--color-black);
+	background-color: var(--color-gray);
 }
 
 h6, h5, h4, h3, h2, h1 { font-family: 'Lemon Milk', sans-serif; line-height: 1; vertical-align: middle; color: var(--color-primary); }

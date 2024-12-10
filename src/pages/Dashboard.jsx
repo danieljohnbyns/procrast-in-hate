@@ -79,7 +79,7 @@ export default class Dashboard extends React.Component {
 						document.documentElement.style.setProperty('--color-quaternary', '#705BD3');
 						document.documentElement.style.setProperty('--color-quinary', '#9885F0');
 
-						document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%)');
+						document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(45deg, #260351 0%, #705BD3 50%, #9885F0 62.5%)');
 
 						document.documentElement.style.setProperty('--color-white', '#1F1F1F');
 						document.documentElement.style.setProperty('--color-black', '#FFFFFF');

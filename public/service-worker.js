@@ -141,6 +141,10 @@ self.addEventListener('message', (event) => {
 						}));
 					});
 
+					self.registration.showNotification('Pomodoro', {
+						body: 'Pomodoro started!'
+					});
+
 					Pomodoro.timer = setInterval(() => {
 						if (Pomodoro.time.minutes === 0 && Pomodoro.time.seconds === 0) {
 							clearInterval(Pomodoro.timer);
@@ -151,6 +155,10 @@ self.addEventListener('message', (event) => {
 									time: Pomodoro.time,
 									state: Pomodoro.state
 								}));
+							});
+
+							self.registration.showNotification('Pomodoro', {
+								body: 'Pomodoro completed!'
 							});
 						} else {
 							if (Pomodoro.time.seconds === 0) {
@@ -182,6 +190,10 @@ self.addEventListener('message', (event) => {
 							state: Pomodoro.state
 						}));
 					});
+
+					self.registration.showNotification('Pomodoro', {
+						body: 'Pomodoro paused!'
+					});
 				};
 				break;
 			};
@@ -199,6 +211,10 @@ self.addEventListener('message', (event) => {
 							time: Pomodoro.time,
 							state: Pomodoro.state
 						}));
+					});
+
+					self.registration.showNotification('Pomodoro', {
+						body: 'Pomodoro stopped!'
 					});
 				};
 				break;

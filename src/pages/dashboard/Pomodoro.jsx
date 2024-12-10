@@ -1,6 +1,10 @@
 import React from 'react';
 
+import '../../styles/index.css';
+import '../../styles/dashboard.css'
 import '../../styles/dashboard/pomodoro.css';
+
+import Button from '../../components/Button';
 
 export default class Pomodoro extends React.Component {
 	constructor(props) {
@@ -32,9 +36,13 @@ export default class Pomodoro extends React.Component {
 		const root = document.getElementById('root');
 		root.setAttribute('page', 'dashboard');
 
-		navigator.serviceWorker.controller.postMessage({
-			type: 'POMODORO_GET'
-		});
+		try {
+			navigator.serviceWorker.controller.postMessage({
+				type: 'POMODORO_GET'
+			});
+		} catch (error) {
+			console.error(error);
+		};
 
 		navigator.serviceWorker.addEventListener('message', (event) => {
 			if (event.data) {
@@ -101,7 +109,11 @@ export default class Pomodoro extends React.Component {
 		return (
 			<div id='pomodoro'>
 				<header>
-					<h1>Pomodoro</h1>
+					{
+						!this.props.offline ?
+							<h1>Pomodoro</h1>
+							: <h1>Offline</h1>
+					}
 				</header>
 
 				<main>
@@ -128,6 +140,17 @@ export default class Pomodoro extends React.Component {
 					</div>
 
 					<div id='instructions'>
+						{this.props.offline ?
+							<>
+								<h2>Offline</h2>
+								<p>You are currently offline. Please check your internet connection and try again.</p>
+								<Button
+									text='Try Again'
+									onClick={() => window.location.reload()}
+								>Retry</Button>
+								<p>For the meantime, here are the instructions for the Pomodoro Technique:</p>
+							</>
+							: null}
 						<h2>Instructions</h2>
 						<p>1. Work for 25 minutes.</p>
 						<p>2. Take a 5 minute break.</p>
