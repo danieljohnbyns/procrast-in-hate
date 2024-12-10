@@ -29,6 +29,9 @@
 	align-items: center;
 	gap: 2rem;
 }
+#profile > main > div#userProfile > input {
+	display: none;
+}
 #profile > main > div#userProfile > img {
 	width: 24rem;
 	height: 24rem;

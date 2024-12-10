@@ -101,7 +101,52 @@ export default class Profile extends React.Component {
 
 				<main>
 					<div id='userProfile'>
-						<img src={this.state.user.profilePicture} alt='Profile' />
+						<input
+							id='profilePicture'
+							type='file'
+							accept='image/*'
+							onChange={async (e) => {
+								const file = e.target.files[0];
+								const reader = new FileReader();
+
+								reader.onload = async () => {
+									const _id = JSON.parse(localStorage.getItem('authentication'))._id;
+									const response = await fetch(`${globals.API_URL}/users/${_id}/profilePicture`, {
+										method: 'PATCH',
+										headers: {
+											'Content-Type': 'application/json',
+											'Authentication': localStorage.getItem('authentication')
+										},
+										body: JSON.stringify({
+											image: reader.result
+										})
+									});
+
+									if (!response.ok) {
+										const data = await response.json();
+										await Swal.fire({
+											icon: 'error',
+											title: 'Error updating profile picture',
+											text: data.message
+										});
+										window.location.reload();
+										return;
+									};
+
+									await Swal.fire({
+										icon: 'success',
+										title: 'Profile picture updated',
+										text: 'Your profile picture has been updated successfully!'
+									});
+									window.location.reload();
+								};
+
+								reader.readAsDataURL(file);
+							}}
+						/>
+						<img src={
+							`${globals.API_URL}/users/${JSON.parse(localStorage.getItem('authentication'))._id}/profilePicture`
+						} alt='Profile' onClick={() => document.getElementById('profilePicture').click()} />
 						<div>
 							<h4
 								onClick={() => this.setState({

@@ -30,7 +30,7 @@ export default class Dashboard extends React.Component {
 			notificationGranted: false
 		};
 	};
-	componentDidMount() {
+	async componentDidMount() {
 		const setMobile = () => {
 			this.setState({
 				mobile: matchMedia('screen and (max-width: 60rem)').matches
@@ -69,49 +69,63 @@ export default class Dashboard extends React.Component {
 			window.location.href = '/signIn';
 		};
 
-		navigator.serviceWorker.addEventListener('message', (event) => {
-			if (event.data) {
-				if (event.data.type === 'POMODORO_UPDATE') {
-					document.title = `${event.data.time.minutes.toString().padStart(2, '0')}:${event.data.time.seconds.toString().padStart(2, '0')} - Pocrast In Hate`;
+		const authenticationResponse = await fetch(`${globals.API_URL}/users/authenticate`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authentication': localStorage.getItem('authentication')
+			},
+			body: JSON.stringify(JSON.parse(localStorage.getItem('authentication')))
+		});
+		if (!authenticationResponse.ok) {
+			localStorage.removeItem('authentication');
+			window.location.href = '/signIn';
+		};
 
-					if (event.data.state === 'running') {
-						document.documentElement.style.setProperty('--color-primary', '#AC9BFA');
-						document.documentElement.style.setProperty('--color-secondary', '#CDC1FF');
-						document.documentElement.style.setProperty('--color-tertiary', '#260351');
-						document.documentElement.style.setProperty('--color-quaternary', '#705BD3');
-						document.documentElement.style.setProperty('--color-quinary', '#9885F0');
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.addEventListener('message', (event) => {
+				if (event.data) {
+					if (event.data.type === 'POMODORO_UPDATE') {
+						document.title = `${event.data.time.minutes.toString().padStart(2, '0')}:${event.data.time.seconds.toString().padStart(2, '0')} - Pocrast In Hate`;
 
-						document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(45deg, #260351 0%, #705BD3 50%, #9885F0 62.5%)');
+						if (event.data.state === 'running') {
+							document.documentElement.style.setProperty('--color-primary', '#AC9BFA');
+							document.documentElement.style.setProperty('--color-secondary', '#CDC1FF');
+							document.documentElement.style.setProperty('--color-tertiary', '#260351');
+							document.documentElement.style.setProperty('--color-quaternary', '#705BD3');
+							document.documentElement.style.setProperty('--color-quinary', '#9885F0');
 
-						document.documentElement.style.setProperty('--color-white', '#1F1F1F');
-						document.documentElement.style.setProperty('--color-black', '#FFFFFF');
-						document.documentElement.style.setProperty('--color-gray', '#260351');
-					} else {
-						document.documentElement.style.setProperty('--color-primary', '#260351');
-						document.documentElement.style.setProperty('--color-secondary', '#705BD3');
-						document.documentElement.style.setProperty('--color-tertiary', '#9885F0');
-						document.documentElement.style.setProperty('--color-quaternary', '#AC9BFA');
-						document.documentElement.style.setProperty('--color-quinary', '#CDC1FF');
+							document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(45deg, #260351 0%, #705BD3 50%, #9885F0 62.5%)');
 
-						document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%)');
+							document.documentElement.style.setProperty('--color-white', '#1F1F1F');
+							document.documentElement.style.setProperty('--color-black', '#FFFFFF');
+							document.documentElement.style.setProperty('--color-gray', '#260351');
+						} else {
+							document.documentElement.style.setProperty('--color-primary', '#260351');
+							document.documentElement.style.setProperty('--color-secondary', '#705BD3');
+							document.documentElement.style.setProperty('--color-tertiary', '#9885F0');
+							document.documentElement.style.setProperty('--color-quaternary', '#AC9BFA');
+							document.documentElement.style.setProperty('--color-quinary', '#CDC1FF');
 
-						document.documentElement.style.setProperty('--color-white', '#FFFFFF');
-						document.documentElement.style.setProperty('--color-black', '#000000');
-						document.documentElement.style.setProperty('--color-gray', '#F1F1F1');
+							document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%)');
+
+							document.documentElement.style.setProperty('--color-white', '#FFFFFF');
+							document.documentElement.style.setProperty('--color-black', '#000000');
+							document.documentElement.style.setProperty('--color-gray', '#F1F1F1');
+						};
+					} else if (event.data.type === 'POMODORO_STOP') {
+						document.title = 'Pocrast In Hate';
 					};
-				} else if (event.data.type === 'POMODORO_STOP') {
-					document.title = 'Pocrast In Hate';
 				};
-			};
-		})
-
-		try {
-			console.log('Updating service worker authentication...');
-			navigator.serviceWorker.controller.postMessage({
-				type: 'UPDATE_AUTHENTICATION',
-				authentication: JSON.parse(localStorage.getItem('authentication') || '{}')
 			});
-		} catch (error) { console.log('Service Worker Error:', error) };
+			try {
+				console.log('Updating service worker authentication...');
+				navigator.serviceWorker.controller.postMessage({
+					type: 'UPDATE_AUTHENTICATION',
+					authentication: JSON.parse(localStorage.getItem('authentication') || '{}')
+				});
+			} catch (error) { console.log('Service Worker Error:', error) };
+		};
 
 		if (!this.state.notificationGranted) {
 			if ('Notification' in window) {

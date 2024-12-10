@@ -13,19 +13,17 @@ const Sidebar = ({
 	children,
 	...props
 }) => {
-	const [profile, setProfile] = React.useState('https://via.placeholder.com/200');
 	const [name, setName] = React.useState();
 	const [email, setEmail] = React.useState();
 
 	React.useEffect(() => {
-		if (!localStorage.getItem('authentication')) {
-			window.location.href = '/signIn';
-		};
+		// if (!localStorage.getItem('authentication')) {
+		// 	window.location.href = '/signIn';
+		// };
 		const _id = JSON.parse(localStorage.getItem('authentication'))._id;
 		fetch(`${globals.API_URL}/users/${_id}`)
 			.then((response) => response.json())
 			.then((data) => {
-				setProfile(data.profile || 'https://via.placeholder.com/200');
 				setName(data.name);
 				setEmail(data.email);
 			}).catch((error) => {
@@ -67,7 +65,7 @@ const Sidebar = ({
 						window.location.href = '/dashboard/profile';
 					}}
 				>
-					<img src={profile} alt='Profile' />
+					<img src={`${globals.API_URL}/users/${JSON.parse(localStorage.getItem('authentication'))._id}/profilePicture`} alt='Profile' />
 
 					<div>
 						<h6>{name}</h6>

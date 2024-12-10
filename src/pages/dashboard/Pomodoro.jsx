@@ -154,8 +154,7 @@ export default class Pomodoro extends React.Component {
 						<h2>Instructions</h2>
 						<p>1. Work for 25 minutes.</p>
 						<p>2. Take a 5 minute break.</p>
-						<p>3. Repeat steps 1 and 2 three more times.</p>
-						<p>4. Take a 15 minute break.</p>
+						<p>3. Repeat.</p>
 					</div>
 				</main>
 			</div>

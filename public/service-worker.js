@@ -86,7 +86,8 @@ const connectWebSocket = async () => {
 
 	socket.onclose = () => {
 		console.log('WebSocket connection closed, retrying in 5 seconds...');
-		setTimeout(connectWebSocket, 5000);
+		if (authentication.token)
+			setTimeout(() => connectWebSocket(), 5000);
 	};
 
 	socket.onerror = (error) => {
