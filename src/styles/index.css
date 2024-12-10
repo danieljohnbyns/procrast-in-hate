@@ -414,7 +414,7 @@ sub, sup { font-size: 0.75em; }
 	gap: 2rem;
 	text-align: center;
 }
-#sidebar > div:nth-child(2) {
+#sidebar > div#actions {
 	align-items: flex-start;
 	gap: unset;
 	text-align: left;
@@ -486,10 +486,10 @@ sub, sup { font-size: 0.75em; }
 	height: 4rem;
 	width: 4rem;
 }
-#sidebarToggle:checked ~ #sidebar > div:nth-child(1) > div {
+#sidebarToggle:checked ~ #sidebar > div#userProfile > div {
 	display: none;
 }
-#sidebarToggle:checked ~ #sidebar > div:nth-child(2) {
+#sidebarToggle:checked ~ #sidebar > div#actions {
 	gap: 2rem;
 }
 

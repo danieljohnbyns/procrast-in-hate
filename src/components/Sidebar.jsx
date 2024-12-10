@@ -61,7 +61,7 @@ const Sidebar = ({
 			<aside
 				id='sidebar'
 			>
-				<div>
+				<div id='userProfile'>
 					<img src={profile} alt='Profile' />
 
 					<div>
@@ -70,7 +70,7 @@ const Sidebar = ({
 					</div>
 				</div>
 
-				<div>
+				<div id='actions'>
 					{children}
 				</div>
 
