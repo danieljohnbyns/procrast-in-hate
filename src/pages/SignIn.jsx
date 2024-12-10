@@ -90,7 +90,7 @@ export default class SignIn extends React.Component {
 										Swal.fire({
 											icon: 'error',
 											title: 'Error',
-											text: data.error
+											text: data.message
 										});
 										return;
 									};
