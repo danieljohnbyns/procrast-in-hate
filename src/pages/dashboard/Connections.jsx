@@ -44,7 +44,9 @@ export default class Connections extends React.Component {
 		globals.socket.addEventListener('message', (event) => {
 			const data = JSON.parse(event.data);
 			if (data.type === 'COLLABORATOR_UPDATE') {
-				this.fetchConnections();
+				setTimeout(() => {
+					this.fetchConnections();
+				}, 1000);
 			};
 		});
 	};
