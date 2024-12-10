@@ -1,0 +1,77 @@
+#connections {
+	min-height: 100%;
+}
+#connections > header {
+	height: calc(8rem + 4rem);
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 2rem;
+	box-shadow: 0 0 1rem rgba(0, 0, 0, 0.25);
+}
+
+#connections > main {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 2rem;
+}
+#connections > main > #connections {
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 2rem;
+}
+#connections > main > #connections > .connection {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 2rem;
+	padding: 2rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-white);
+	transition: transform var(--transition);
+}
+#connections > main > #connections > .connection > img {
+	width: 8rem;
+	height: 8rem;
+	border-radius: 50%;
+}
+#connections > main > #connections > .connection > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+#connections > main > #connections > .connection::before,
+#connections > main > #connections > .connection::after {
+	content: '';
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	border-radius: 1rem;
+	background-color: var(--color-primary);
+	transition: transform var(--transition);
+	z-index: -2;
+}
+#connections > main > #connections > .connection::after {
+	background-color: var(--color-white);
+	z-index: -1;
+}
+#connections > main > #connections > .connection:hover {
+	transform: translateY(-0.5rem);
+}
+#connections > main > #connections > .connection:hover::before {
+	transform: translateY(0.5rem);
+}
+#connections > main > #connections > .connection.offline {
+	opacity: 0.5;
+}
