@@ -498,6 +498,7 @@ sub, sup { font-size: 0.75em; }
 	padding-bottom: 2rem;
 	background-color: var(--color-white);
 	border: 0.25rem solid var(--color-primary);
+	color: var(--color-black);
 	border-radius: 1rem;
 	font-size: unset;
 	overflow-y: auto;
