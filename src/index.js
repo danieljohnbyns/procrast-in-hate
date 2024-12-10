@@ -12,6 +12,7 @@ import './styles/index.css';
 import LandingPage from './pages/LandingPage';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
+import PasswordReset from './pages/PasswordReset';
 import Dashboard from './pages/Dashboard';
 import OfflinePage from './pages/OfflinePage';
 
@@ -22,6 +23,7 @@ const App = () => {
 				<Route path='/' element={<LandingPage />} />
 				<Route path='/signUp' element={<SignUp />} />
 				<Route path='/signIn' element={<SignIn />} />
+				<Route path='/passwordReset' element={<PasswordReset />} />
 				<Route path='/dashboard/*' element={<Dashboard />} />
 				<Route path='/offline' element={<OfflinePage />} />
 			</Routes>

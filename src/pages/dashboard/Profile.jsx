@@ -5,6 +5,8 @@ import '../../styles/index.css';
 import '../../styles/dashboard.css'
 import '../../styles/dashboard/profile.css';
 
+import Button from '../../components/Button';
+
 import globals from '../../utils/globals';
 
 export default class Profile extends React.Component {
@@ -210,6 +212,13 @@ export default class Profile extends React.Component {
 							</p>
 						</div>
 						<sub><i>Click to field edit</i></sub>
+
+						<Button
+							label='Reset password'
+							onClick={async () => {
+								window.location.href = '/passwordReset';
+							}}
+						/>
 					</div>
 				</main>
 			</div>

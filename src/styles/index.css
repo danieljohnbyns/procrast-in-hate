@@ -38,7 +38,7 @@ body {
 	background-color: var(--color-gray);
 }
 
-img {
+img.failed {
 	background-image: url('../images/Placeholder.png');
 	background-size: cover;
 }

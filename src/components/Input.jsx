@@ -6,6 +6,7 @@ import React from 'react';
  * 		placeholder: String,
  * 		type: 'text' | 'password' | 'email' | 'number',
  * 		className: String,
+ * 		id: String,
  * 		value: String,
  * 		onChange: Function,
  * 		required: Boolean
@@ -16,6 +17,7 @@ const Input = ({
 	placeholder,
 	type,
 	className,
+	id,
 	value,
 	onChange,
 	required,
@@ -26,6 +28,7 @@ const Input = ({
 			placeholder={placeholder}
 			type={type}
 			className={`input ${className}`}
+			id={id}
 			value={value}
 			onChange={onChange}
 			required={required}
