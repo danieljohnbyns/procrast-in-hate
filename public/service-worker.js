@@ -55,7 +55,7 @@ const connectWebSocket = async () => {
 				serviceWorker: true
 			}
 		})); // Send the authentication to the server
-		console.log('authentication:', authentication);
+		console.log('Authentication:', authentication);
 	};
 
 	socket.onmessage = (event) => {
@@ -86,8 +86,7 @@ const connectWebSocket = async () => {
 
 	socket.onclose = () => {
 		console.log('WebSocket connection closed, retrying in 5 seconds...');
-		if (authentication.token)
-			setTimeout(() => connectWebSocket(), 5000);
+		setTimeout(() => connectWebSocket(), 5000);
 	};
 
 	socket.onerror = (error) => {
