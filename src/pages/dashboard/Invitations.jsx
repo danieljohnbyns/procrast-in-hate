@@ -76,6 +76,13 @@ export default class Invitations extends React.Component {
 		root.setAttribute('page', 'dashboard');
 
 		this.fetchInvitations();
+
+		globals.socket.addEventListener('message', (event) => {
+			const data = JSON.parse(event.data);
+			if (data.type === 'UPDATE_DATA') {
+				this.fetchInvitations();
+			};
+		});
 	};
 
 	fetchInvitations = async () => {

@@ -40,6 +40,13 @@ export default class Connections extends React.Component {
 		root.setAttribute('page', 'dashboard');
 
 		this.fetchConnections();
+
+		globals.socket.addEventListener('message', (event) => {
+			const data = JSON.parse(event.data);
+			if (data.type === 'COLLABORATOR_UPDATE') {
+				this.fetchConnections();
+			};
+		});
 	};
 
 	fetchConnections = async () => {
