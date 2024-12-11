@@ -484,12 +484,12 @@ sub, sup { font-size: 0.75em; }
 	padding: 4rem 1rem;
 	padding-top: 12rem;
 }
-#sidebarToggle:checked ~ #sidebar > div > img {
+#sidebarToggle:checked ~ #sidebar > #userProfile > img {
 	height: 4rem;
 	width: 4rem;
 	object-fit: cover;
 }
-#sidebarToggle:checked ~ #sidebar > div#userProfile > div {
+#sidebarToggle:checked ~ #sidebar > #userProfile > div {
 	display: none;
 }
 #sidebarToggle:checked ~ #sidebar > div#actions {
