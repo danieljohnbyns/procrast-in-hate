@@ -1,7 +1,7 @@
 
 const globals = {
-	API_URL: 'http://localhost:5050',
-	WEBSOCKET_URL: 'ws:localhost:5050',
+	API_URL: 'https://procrast-in-hate-api.onrender.com',
+	WEBSOCKET_URL: 'wss://procrast-in-hate-api.onrender.com',
 	socket: null
 };
 

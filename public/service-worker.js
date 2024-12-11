@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-lone-blocks */
 
-const WEBSOCKET_URL = 'ws:localhost:5050';
+const WEBSOCKET_URL = 'wss://procrast-in-hate-api.onrender.com';
 
 let authentication = { token: '', _id: '' }; // Global variable to store the authentication
 
