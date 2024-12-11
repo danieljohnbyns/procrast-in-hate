@@ -47,6 +47,11 @@ const connectWebSocket = async () => {
 
 	// Include the authentication token in the WebSocket URL or headers
 	const wsUrl = `${WEBSOCKET_URL}`;
+	if (authentication.token === '') {
+		console.error('No authentication token provided');
+		setTimeout(() => connectWebSocket(), 5000);
+		return;
+	};
 	socket = new WebSocket(wsUrl);
 
 	socket.onopen = () => {

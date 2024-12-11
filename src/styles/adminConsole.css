@@ -1,0 +1,75 @@
+
+body:has(> #root > #adminConsole) {
+	color: var(--color-white);
+}
+
+#root:has(> #adminConsole) {
+	display: unset;
+}
+#root:has(> #adminConsole) h6,
+#root:has(> #adminConsole) h5,
+#root:has(> #adminConsole) h4,
+#root:has(> #adminConsole) h3,
+#root:has(> #adminConsole) h2,
+#root:has(> #adminConsole) h1 { color: var(--color-white); }
+
+#adminConsole {
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	padding: 2rem;
+	background-color: var(--color-primary);
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 2rem;
+}
+
+#adminConsole > header {
+	padding: 2rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-radius: 1rem;
+	background-color: var(--color-secondary);
+}
+
+#adminConsole > main {
+	width: 100%;
+	height: 100%;
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	gap: 1rem;
+	border-radius: 1rem;
+	background-color: var(--color-black);
+	overflow-y: auto;
+}
+#adminConsole > main > pre {
+	width: 100%;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+#adminConsole > main > div {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+#adminConsole > main > div > pre {
+	text-align: left;
+	vertical-align: top;
+}
+#adminConsole > main > div > textarea {
+	flex: 1;
+	font-size: unset;
+	color: unset;
+	background-color: unset;
+	border: none;
+	outline: none;
+	border-bottom: 1px solid var(--color-white);
+}

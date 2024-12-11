@@ -16,6 +16,9 @@ import PasswordReset from './pages/PasswordReset';
 import Dashboard from './pages/Dashboard';
 import OfflinePage from './pages/OfflinePage';
 
+import AdminSignIn from './pages/AdminSignIn';
+import AdminConsole from './pages/AdminConsole';
+
 const App = () => {
 	return (
 		<BrowserRouter>
@@ -26,6 +29,9 @@ const App = () => {
 				<Route path='/passwordReset' element={<PasswordReset />} />
 				<Route path='/dashboard/*' element={<Dashboard />} />
 				<Route path='/offline' element={<OfflinePage />} />
+
+				<Route path='/adminSignIn' element={<AdminSignIn />} />
+				<Route path='/adminConsole/*' element={<AdminConsole />} />
 			</Routes>
 		</BrowserRouter>
 	);

@@ -1,0 +1,40 @@
+
+body:has(> #root[page='adminSignIn']) {
+	background-color: var(--color-tertiary);
+}
+
+#root[page='adminSignIn'] {
+	position: relative;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}
+
+#adminSignIn {
+	padding: 4rem;
+	width: 100%;
+	max-width: 60rem;
+	
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 0.5rem;
+	background-color: var(--color-white);
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	gap: 4rem;
+}
+#adminSignIn > div {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: stretch;
+	text-align: center;
+	gap: 2rem;
+}
