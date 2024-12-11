@@ -96,6 +96,11 @@
 #projects > header > div > #createButton:hover::after {
 	background-color: var(--color-white);
 }
+#projects > header > div > input {
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+}
 @media screen and (max-width: 60rem) {
 	#projects > header > div > #createButton {
 		position: fixed;

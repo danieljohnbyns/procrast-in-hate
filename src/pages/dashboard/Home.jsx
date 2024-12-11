@@ -1079,6 +1079,29 @@ export default class Home extends React.Component {
 							<div id='listPanel'>
 								<header id='listViewHeader'>
 									<h5>Tasks</h5>
+
+									<input
+										type='search'
+										id='searchTasks'
+										placeholder='Search tasks'
+										onChange={(e) => {
+											const value = e.target.value.trim().toLowerCase();
+											const tasks = document.getElementById('listViewTasks').children;
+											for (const task of tasks) {
+												task.style.display = 'flex';
+											};
+											for (const task of tasks) {
+												const title = task.querySelector('header div label')?.innerHTML.toLowerCase();
+												const description = task.querySelector('div p')?.innerHTML.toLowerCase();
+												const label = task.querySelector('header div span b')?.innerHTML.toLowerCase();
+												if (title.includes(value) || description.includes(value) || label.includes(value)) {
+													task.style.display = 'flex';
+												} else {
+													task.style.display = 'none';
+												};
+											};
+										}}
+									/>
 								</header>
 
 								<div id='listViewTasks'>

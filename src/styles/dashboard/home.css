@@ -588,6 +588,11 @@
 	justify-content: space-between;
 	align-items: center;
 }
+#home > #listViewPanel > #listPanel > #listViewHeader > input {
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+}
 #home > #listViewPanel > #listPanel > #listViewTasks {
 	width: 100%;
 	display: grid;

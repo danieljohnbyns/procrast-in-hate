@@ -178,6 +178,30 @@ export default class Projects extends React.Component {
 					<h1>{this.state.mobile ? 'Projects' : 'My Projects'}</h1>
 
 					<div>
+						<input
+							type='search'
+							id='searchTasks'
+							placeholder='Search tasks'
+							onChange={(e) => {
+								const value = e.target.value.trim().toLowerCase();
+								const projects = Array.from(document.querySelectorAll('.project'));
+								for (const project of projects) {
+									project.style.display = 'flex';
+								};
+								if (value) {
+									const projects = Array.from(document.querySelectorAll('.project'));
+									for (const project of projects) {
+										const title = project.querySelector('header > h6').innerHTML.toLowerCase();
+										const description = project.querySelector('main > p').innerHTML.toLowerCase();
+										const label = project.querySelector('header > span').innerHTML.toLowerCase();
+										const collaborators = Array.from(project.querySelectorAll('footer > div > img')).map((collaborator) => collaborator.alt).join(' ').toLowerCase();
+										if (!(title.includes(value) || description.includes(value) || label.includes(value) || collaborators.includes(value))) {
+											project.style.display = 'none';
+										};
+									};
+								};
+							}}
+						/>
 						<div
 							id='createButton'
 							onClick={() => {
