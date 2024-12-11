@@ -405,7 +405,8 @@ sub, sup { font-size: 0.75em; }
 	z-index: 10;
 	transition: width var(--transition), padding var(--transition);
 }
-#sidebar > div {
+#sidebar > div,
+#sidebar > #userProfile {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
@@ -414,12 +415,7 @@ sub, sup { font-size: 0.75em; }
 	gap: 2rem;
 	text-align: center;
 }
-#sidebar > div#actions {
-	align-items: flex-start;
-	gap: unset;
-	text-align: left;
-}
-#sidebar > div > img {
+#sidebar > #userProfile > img {
 	height: 20rem;
 	width: 20rem;
 	display: block;
@@ -427,6 +423,11 @@ sub, sup { font-size: 0.75em; }
 	border-radius: 100%;
 	object-fit: cover;
 	transition: height var(--transition), width var(--transition);
+}
+#sidebar > div#actions {
+	align-items: flex-start;
+	gap: unset;
+	text-align: left;
 }
 #sidebarToggleIcon {
 	position: absolute;
@@ -494,10 +495,10 @@ sub, sup { font-size: 0.75em; }
 #sidebarToggle:checked ~ #sidebar > div#actions {
 	gap: 2rem;
 }
-#sidebar > div#userProfile {
+#sidebar > #userProfile {
 	position: relative;
 }
-#sidebar > div#userProfile::before {
+#sidebar > #userProfile::before {
 	content: '';
 	position: absolute;
 	top: -4rem;
@@ -507,7 +508,7 @@ sub, sup { font-size: 0.75em; }
 	z-index: -1;
 	transition: var(--transition);
 }
-#sidebar > div#userProfile:hover::before {
+#sidebar > #userProfile:hover::before {
 	background-color: var(--color-secondary);
 }
 
