@@ -66,3 +66,8 @@
 	text-align: center;
 	color: inherit;
 }
+#profile > main > div#userProfile > input {
+	padding: 1rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+}
