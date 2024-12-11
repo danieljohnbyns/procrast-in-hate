@@ -89,7 +89,7 @@ const Sidebar = ({
 								type: 'SIGN_OUT'
 							});
 							navigator.serviceWorker.controller.postMessage({
-								type: 'POMODORO_STOP'
+								type: 'TIMER_STOP'
 							});
 						}}
 					>Sign Out</Tab>

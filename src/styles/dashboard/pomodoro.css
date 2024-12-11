@@ -21,6 +21,21 @@
 	align-items: center;
 	gap: 4rem;
 }
+#pomodoro > main > #mode {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	gap: 1rem;
+}
+#pomodoro > main > #mode > select {
+	padding: 0.5rem;
+	border: solid 0.25rem var(--color-primary);
+	border-radius: 1rem;
+	background-color: var(--color-gray);
+	color: var(--color-primary);
+}
 #pomodoro > main > #timer {
 	width: 60rem;
 	max-width: 60rem;
@@ -29,7 +44,7 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	gap: 2rem;
+	gap: 4rem;
 	border: solid 0.25rem var(--color-white);
 	border-radius: 1rem;
 	background-color: var(--color-primary);

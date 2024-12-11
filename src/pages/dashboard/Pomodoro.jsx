@@ -13,16 +13,35 @@ export default class Pomodoro extends React.Component {
 		this.state = {
 			mobile: false,
 
-			pomodoro: {
-				time: {
-					minutes: 25,
-					seconds: 0
-				},
+			timer: {
+				minutes: 25,
+				seconds: 0,
+
 				/**
-				 * @type {'paused' | 'running' | 'stopped'}
+				 * @type {'running' | 'paused' | 'stopped'}
 				 */
 				state: 'stopped'
-			}
+			},
+
+			pomodoro: {
+				minutes: 25,
+				seconds: 0
+			},
+
+			shortBreak: {
+				minutes: 5,
+				seconds: 0
+			},
+
+			longBreak: {
+				minutes: 15,
+				seconds: 0
+			},
+
+			/**
+			 * @type {'pomodoro' | 'shortBreak' | 'longBreak'}
+			 */
+			mode: 'pomodoro'
 		};
 	};
 	componentDidMount() {
@@ -38,75 +57,94 @@ export default class Pomodoro extends React.Component {
 		const root = document.getElementById('root');
 		root.setAttribute('page', 'dashboard');
 
-		try {
-			navigator.serviceWorker.controller.postMessage({
-				type: 'POMODORO_GET'
-			});
-		} catch (error) {
-			console.error(error);
-		};
-
-		navigator.serviceWorker.addEventListener('message', (event) => {
-			if (event.data) {
-				if (event.data.type === 'POMODORO_UPDATE') {
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.addEventListener('message', event => {
+				if (event.data.type === 'TIMER_UPDATE') {
 					this.setState({
-						pomodoro: {
-							time: event.data.time,
-							state: event.data.state
-						}
-					});
-
-					if (event.data.state === 'running') {
-						document.documentElement.style.setProperty('--color-primary', '#AC9BFA');
-						document.documentElement.style.setProperty('--color-secondary', '#CDC1FF');
-						document.documentElement.style.setProperty('--color-tertiary', '#260351');
-						document.documentElement.style.setProperty('--color-quaternary', '#705BD3');
-						document.documentElement.style.setProperty('--color-quinary', '#9885F0');
-
-						document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%)');
-
-						document.documentElement.style.setProperty('--color-white', '#1F1F1F');
-						document.documentElement.style.setProperty('--color-black', '#FFFFFF');
-						document.documentElement.style.setProperty('--color-gray', '#260351');
-					} else {
-						document.documentElement.style.setProperty('--color-primary', '#260351');
-						document.documentElement.style.setProperty('--color-secondary', '#705BD3');
-						document.documentElement.style.setProperty('--color-tertiary', '#9885F0');
-						document.documentElement.style.setProperty('--color-quaternary', '#AC9BFA');
-						document.documentElement.style.setProperty('--color-quinary', '#CDC1FF');
-
-						document.documentElement.style.setProperty('--gradient-primary', 'linear-gradient(-45deg, #9885F0 0%, #AC9BFA 50%, #CDC1FF 62.5%)');
-
-						document.documentElement.style.setProperty('--color-white', '#FFFFFF');
-						document.documentElement.style.setProperty('--color-black', '#000000');
-						document.documentElement.style.setProperty('--color-gray', '#F1F1F1');
-					};
-				} else if (event.data.type === 'POMODORO_STOP') {
-					this.setState({
-						pomodoro: {
-							time: event.data.time,
+						timer: {
+							...this.state.timer,
+							minutes: event.data.minutes,
+							seconds: event.data.seconds,
 							state: event.data.state
 						}
 					});
 				};
-			};
-		});
+			});
+		};
 	};
 
-	Pomodoro_HandleStart = () => {
-		navigator.serviceWorker.controller.postMessage({
-			type: 'POMODORO_START'
+	handleStart() {
+		this.setState({
+			timer: {
+				...this.state.timer,
+				state: 'running'
+			}
 		});
+
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.controller.postMessage({
+				type: 'TIMER_START'
+			});
+		};
 	};
-	Pomodoro_HandlePause = () => {
-		navigator.serviceWorker.controller.postMessage({
-			type: 'POMODORO_PAUSE'
+
+	handlePause() {
+		this.setState({
+			timer: {
+				...this.state.timer,
+				state: 'paused'
+			}
 		});
+
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.controller.postMessage({
+				type: 'TIMER_PAUSE'
+			});
+		};
 	};
-	Pomodoro_HandleReset = () => {
-		navigator.serviceWorker.controller.postMessage({
-			type: 'POMODORO_STOP'
+
+	handleResume() {
+		this.setState({
+			timer: {
+				...this.state.timer,
+				state: 'running'
+			}
 		});
+
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.controller.postMessage({
+				type: 'TIMER_RESUME'
+			});
+		};
+	};
+
+	handleReset() {
+		this.setState({
+			timer: {
+				...this.state.timer,
+				state: 'stopped'
+			}
+		});
+
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.controller.postMessage({
+				type: 'TIMER_RESET'
+			});
+		};
+	};
+
+	handleSetMode(mode) {
+		this.setState({
+			mode
+		});
+
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.controller.postMessage({
+				type: 'TIMER_RESET',
+				minutes: this.state[mode].minutes,
+				seconds: this.state[mode].seconds
+			});
+		};
 	};
 
 	render() {
@@ -121,22 +159,56 @@ export default class Pomodoro extends React.Component {
 				</header>
 
 				<main>
+					<div id='mode'>
+						<h6>Mode</h6>
+						<select
+							value={this.state.mode}
+							onChange={async (e) => {
+								await this.setState({ mode: e.target.value })
+								
+								this.handleSetMode(this.state.mode);
+							}}
+
+							disabled={this.state.timer.state !== 'stopped'}
+						>
+							<option value='pomodoro'>Pomodoro</option>
+							<option value='shortBreak'>Short Break</option>
+							<option value='longBreak'>Long Break</option>
+						</select>
+					</div>
+
 					<div id='timer'>
 						<div id='time'>
-							<h1 id='minutes'>{this.state.pomodoro.time.minutes.toString().padStart(2, '0')}</h1>
+							<h1 id='minutes'>{this.state.timer.minutes.toString().padStart(2, '0')}</h1>
 							<h1>:</h1>
-							<h1 id='seconds'>{this.state.pomodoro.time.seconds.toString().padStart(2, '0')}</h1>
+							<h1 id='seconds'>{this.state.timer.seconds.toString().padStart(2, '0')}</h1>
 						</div>
 						<div id='controls'>
 							{
-								this.state.pomodoro.state === 'stopped' ?
-									<button onClick={this.Pomodoro_HandleStart}><h3>Start</h3></button>
-									: this.state.pomodoro.state === 'running' ?
-										<button onClick={this.Pomodoro_HandlePause}><h3>Pause</h3></button>
-										: this.state.pomodoro.state === 'paused' ?
+								this.state.timer.state === 'stopped' ?
+									<Button
+										text='Start'
+										head='4'
+										onClick={() => { this.handleStart() }}
+									>Start</Button>
+									: this.state.timer.state === 'running' ?
+										<Button
+											text='Pause'
+											head='4'
+											onClick={() => { this.handlePause() }}
+										>Pause</Button>
+										: this.state.timer.state === 'paused' ?
 											<>
-												<button onClick={this.Pomodoro_HandleStart}><h3>Resume</h3></button>
-												<button onClick={this.Pomodoro_HandleReset}><h3>Reset</h3></button>
+												<Button
+													text='Resume'
+													head='4'
+													onClick={() => { this.handleResume() }}
+												>Resume</Button>
+												<Button
+													text='Reset'
+													head='4'
+													onClick={() => { this.handleReset() }}
+												>Reset</Button>
 											</>
 											: null
 							}
@@ -158,7 +230,8 @@ export default class Pomodoro extends React.Component {
 						<h2>Instructions</h2>
 						<p>1. Work for 25 minutes.</p>
 						<p>2. Take a 5 minute break.</p>
-						<p>3. Repeat.</p>
+						<p>3. Repeat steps 1 and 2 three more times.</p>
+						<p>4. Take a 15 minute break.</p>
 					</div>
 				</main>
 			</div>

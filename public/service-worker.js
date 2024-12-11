@@ -102,31 +102,123 @@ const connectWebSocket = async () => {
 	};
 };
 
-const Pomodoro = {
-	timer: null,
-	time: {
-		minutes: 25,
-		seconds: 0
-	},
+// Pomodoro timer
+const timer = {
+	minutes: 25,
+	seconds: 0,
+
 	/**
-	 * @type {'paused' | 'running' | 'stopped'}
+	 * @type {'running' | 'paused' | 'stopped'}
 	 */
-	state: 'stopped'
-};
-const Break = {
-	timer: null,
-	time: {
-		minutes: 5,
-		seconds: 0
+	state: 'stopped',
+
+	interval: null,
+
+	start: () => {
+		timer.state = 'running';
+		// Notify the clients that the timer has started
+		self.registration.showNotification('Timer Update', {
+			body: 'Timer has started'
+		});
+
+		timer.interval = setInterval(() => {
+			if (timer.seconds === 0) {
+				if (timer.minutes === 0) {
+					timer.stop();
+					return;
+				};
+				timer.seconds = 59;
+				timer.minutes--;
+			} else {
+				timer.seconds--;
+			};
+
+			self.clients.matchAll().then(clients => {
+				clients.forEach(client => client.postMessage({
+					type: 'TIMER_UPDATE',
+					minutes: timer.minutes,
+					seconds: timer.seconds,
+					state: timer.state
+				}));
+			});
+		}, 1000);
 	},
-	/**
-	 * @type {'paused' | 'running' | 'stopped'}
-	 */
+	stop: () => {
+		timer.state = 'stopped';
+		clearInterval(timer.interval);
+
+		self.clients.matchAll().then(clients => {
+			clients.forEach(client => client.postMessage({
+				type: 'TIMER_UPDATE',
+				minutes: timer.minutes,
+				seconds: timer.seconds,
+				state: timer.state
+			}));
+		});
+		self.registration.showNotification('Timer Update', {
+			body: 'Timer has stopped'
+		});
+	},
+	pause: () => {
+		timer.state = 'paused';
+		clearInterval(timer.interval);
+
+		self.clients.matchAll().then(clients => {
+			clients.forEach(client => client.postMessage({
+				type: 'TIMER_UPDATE',
+				minutes: timer.minutes,
+				seconds: timer.seconds,
+				state: timer.state
+			}));
+		});
+		self.registration.showNotification('Timer Update', {
+			body: 'Timer has paused'
+		});
+	},
+	resume: () => {
+		timer.state = 'running';
+
+		timer.interval = setInterval(() => {
+			if (timer.seconds === 0) {
+				if (timer.minutes === 0) {
+					timer.stop();
+					return;
+				};
+				timer.seconds = 59;
+				timer.minutes--;
+			} else {
+				timer.seconds--;
+			};
+
+			self.clients.matchAll().then(clients => {
+				clients.forEach(client => client.postMessage({
+					type: 'TIMER_UPDATE',
+					minutes: timer.minutes,
+					seconds: timer.seconds,
+					state: timer.state
+				}));
+			});
+		}, 1000);
+	},
+	reset: (minutes = 25, seconds = 0) => {
+		timer.minutes = minutes;
+		timer.seconds = seconds;
+		timer.state = 'stopped';
+
+		self.clients.matchAll().then(clients => {
+			clients.forEach(client => client.postMessage({
+				type: 'TIMER_UPDATE',
+				minutes: timer.minutes,
+				seconds: timer.seconds,
+				state: timer.state
+			}));
+		});
+
+		self.registration.showNotification('Timer Update', {
+			body: 'Timer has reset'
+		});
+	}
 };
-/**
- * @type {'Pomodoro' | 'Break' }
- */
-let Time_Mode = 'Pomodoro';
 
 self.addEventListener('message', (event) => {
 	if (event.data && event.data.type === 'UPDATE_AUTHENTICATION') {
@@ -151,93 +243,24 @@ self.addEventListener('message', (event) => {
 
 	if (event.data) {
 		switch (event.data.type) {
-			case 'POMODORO_START': {
-				if (Pomodoro.state === 'stopped' || Pomodoro.state === 'paused') {
-					Pomodoro.state = 'running';
-					self.clients.matchAll().then(clients => {
-						clients.forEach(client => client.postMessage({
-							type: 'POMODORO_UPDATE',
-							time: Pomodoro.time,
-							state: Pomodoro.state
-						}));
-					});
-
-					self.registration.showNotification('Pomodoro', {
-						body: 'Pomodoro started!'
-					});
-
-					Pomodoro.timer = setInterval(() => {
-						if (Pomodoro.time.minutes === 0 && Pomodoro.time.seconds === 0) {
-							clearInterval(Pomodoro.timer);
-							Pomodoro.state = 'stopped';
-							self.clients.matchAll().then(clients => {
-								clients.forEach(client => client.postMessage({
-									type: 'POMODORO_STOP',
-									time: Pomodoro.time,
-									state: Pomodoro.state
-								}));
-							});
-
-							self.registration.showNotification('Pomodoro', {
-								body: 'Pomodoro completed!'
-							});
-						} else {
-							if (Pomodoro.time.seconds === 0) {
-								Pomodoro.time.minutes--;
-								Pomodoro.time.seconds = 59;
-							} else {
-								Pomodoro.time.seconds--;
-							};
-							self.clients.matchAll().then(clients => {
-								clients.forEach(client => client.postMessage({
-									type: 'POMODORO_UPDATE',
-									time: Pomodoro.time,
-									state: Pomodoro.state
-								}));
-							});
-						};
-					}, 1000);
-				};
+			case 'TIMER_START': {
+				timer.start();
 				break;
 			};
-			case 'POMODORO_PAUSE': {
-				if (Pomodoro.state === 'running') {
-					Pomodoro.state = 'paused';
-					clearInterval(Pomodoro.timer);
-					self.clients.matchAll().then(clients => {
-						clients.forEach(client => client.postMessage({
-							type: 'POMODORO_UPDATE',
-							time: Pomodoro.time,
-							state: Pomodoro.state
-						}));
-					});
-
-					self.registration.showNotification('Pomodoro', {
-						body: 'Pomodoro paused!'
-					});
-				};
+			case 'TIMER_STOP': {
+				timer.stop();
 				break;
 			};
-			case 'POMODORO_STOP': {
-				if (Pomodoro.state === 'running' || Pomodoro.state === 'paused') {
-					Pomodoro.state = 'stopped';
-					clearInterval(Pomodoro.timer);
-					Pomodoro.time = {
-						minutes: 25,
-						seconds: 0
-					};
-					self.clients.matchAll().then(clients => {
-						clients.forEach(client => client.postMessage({
-							type: 'POMODORO_STOP',
-							time: Pomodoro.time,
-							state: Pomodoro.state
-						}));
-					});
-
-					self.registration.showNotification('Pomodoro', {
-						body: 'Pomodoro stopped!'
-					});
-				};
+			case 'TIMER_PAUSE': {
+				timer.pause();
+				break;
+			};
+			case 'TIMER_RESUME': {
+				timer.resume();
+				break;
+			};
+			case 'TIMER_RESET': {
+				timer.reset(event.data.minutes, event.data.seconds);
 				break;
 			};
 			default: { };

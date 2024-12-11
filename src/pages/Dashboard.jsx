@@ -85,8 +85,8 @@ export default class Dashboard extends React.Component {
 		if ('serviceWorker' in navigator) {
 			navigator.serviceWorker.addEventListener('message', (event) => {
 				if (event.data) {
-					if (event.data.type === 'POMODORO_UPDATE') {
-						document.title = `${event.data.time.minutes.toString().padStart(2, '0')}:${event.data.time.seconds.toString().padStart(2, '0')} - Pomodoro - Pocrast In Hate`;
+					if (event.data.type === 'TIMER_UPDATE') {
+						document.title = `${event.data.minutes.toString().padStart(2, '0')}:${event.data.seconds.toString().padStart(2, '0')} - Pomodoro - Pocrast In Hate`;
 
 						if (event.data.state === 'running') {
 							document.documentElement.style.setProperty('--color-primary', '#AC9BFA');
@@ -113,7 +113,7 @@ export default class Dashboard extends React.Component {
 							document.documentElement.style.setProperty('--color-black', '#000000');
 							document.documentElement.style.setProperty('--color-gray', '#F1F1F1');
 						};
-					} else if (event.data.type === 'POMODORO_STOP') {
+					} else if (event.data.type === 'TIMER_STOP') {
 						document.title = 'Pocrast In Hate';
 					};
 				};
