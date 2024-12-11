@@ -56,8 +56,6 @@ export default class LandingPage extends React.Component {
 			<>
 				<Navbar>
 					<Anchor href='/' className='active'>Home</Anchor>
-					<Anchor href='/about'>About</Anchor>
-					<Anchor href='/contact'>Contact</Anchor>
 				</Navbar>
 
 				<main
