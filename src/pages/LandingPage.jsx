@@ -289,8 +289,6 @@ export default class LandingPage extends React.Component {
 
 						<div>
 							<Anchor theme='light' href='/' className='active'>Home</Anchor>
-							<Anchor theme='light' href='/about'>About</Anchor>
-							<Anchor theme='light' href='/contact'>Contact</Anchor>
 						</div>
 					</div>
 
