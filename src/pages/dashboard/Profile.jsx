@@ -213,22 +213,24 @@ export default class Profile extends React.Component {
 						</div>
 						<sub><i>Click to field edit</i></sub>
 
-						<p>Your Id:</p>
-						<input
-							type='text'
-							value={JSON.parse(localStorage.getItem('authentication'))._id} readOnly
-							onClick={async () => {
-								try {
-									await navigator.clipboard.writeText(JSON.parse(localStorage.getItem('authentication'))._id);
+						<div>
+							<p>Your Id:</p>
+							<input
+								type='text'
+								value={JSON.parse(localStorage.getItem('authentication'))._id} readOnly
+								onClick={async () => {
+									try {
+										await navigator.clipboard.writeText(JSON.parse(localStorage.getItem('authentication'))._id);
 
-									await Swal.fire({
-										icon: 'success',
-										title: 'Id copied',
-										text: 'Your Id has been copied to the clipboard!'
-									});
-								} catch (error) {};
-							}}
-						/>
+										await Swal.fire({
+											icon: 'success',
+											title: 'Id copied',
+											text: 'Your Id has been copied to the clipboard!'
+										});
+									} catch (error) {};
+								}}
+							/>
+						</div>
 
 						<Button
 							label='Reset password'
