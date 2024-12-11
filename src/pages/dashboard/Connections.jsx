@@ -95,7 +95,7 @@ export default class Connections extends React.Component {
 									{
 										this.state.data.connections.map((connection, index) => (
 											<div key={index} className={`connection ${!connection.online ? 'offline' : ''}`}>
-												<img src={`https://via.placeholder.com/200`} alt='Avatar' />
+												<img src={`${globals.API_URL}/users/${connection._id}/profilePicture`} alt='Avatar' />
 												<div>
 													<h6>{connection.name}</h6>
 													<p>{connection.email}</p>

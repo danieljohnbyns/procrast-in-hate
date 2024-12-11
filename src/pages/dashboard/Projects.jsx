@@ -354,7 +354,7 @@ export default class Projects extends React.Component {
 									<div>
 										{
 											project.collaborators.slice(0, 3).map((collaborator, j) => (
-												<img key={j} src={`https://randomuser.me/api/portraits/${Math.floor(Math.random() * 2) % 2 === 1 ? 'men' : 'women'}/${collaborator + Math.floor(Math.random() * 50)}.jpg`} alt='Collaborator' />
+												<img key={j} src={`${globals.API_URL}/users/${collaborator._id}/profilePicture`} alt='Collaborator' />
 											))
 										}
 										{
@@ -1106,7 +1106,7 @@ class ProjectDetails extends React.Component {
 									<div>
 										{
 											task.collaborators?.slice(0, 3).map((collaborator, j) => (
-												<img key={j} src={`https://randomuser.me/api/portraits/${Math.floor(Math.random() * 2) % 2 === 1 ? 'men' : 'women'}/${collaborator + Math.floor(Math.random() * 50)}.jpg`} alt='Collaborator' />
+												<img key={j} src={`${globals.API_URL}/users/${collaborator._id}/profilePicture`} alt='Collaborator' />
 											))
 										}
 										{
@@ -1210,7 +1210,7 @@ class ProjectDetails extends React.Component {
 										<div>
 											{
 												task.collaborators?.slice(0, 3).map((collaborator, j) => (
-													<img key={j} src={`https://randomuser.me/api/portraits/${Math.floor(Math.random() * 2) % 2 === 1 ? 'men' : 'women'}/${collaborator + Math.floor(Math.random() * 50)}.jpg`} alt='Collaborator' />
+													<img key={j} src={`${globals.API_URL}/users/${collaborator._id}/profilePicture`} alt='Collaborator' />
 												))
 											}
 											{

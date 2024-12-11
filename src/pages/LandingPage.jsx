@@ -82,13 +82,6 @@ export default class LandingPage extends React.Component {
 									filled={true}
 									theme='dark'
 								/>
-								<Button
-									label='Contact Us'
-									href='/contact'
-									type='CallToAction'
-									head='6'
-									theme='dark'
-								/>
 							</div>
 						</div>
 

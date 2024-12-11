@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import Tab from './Tab';
 
@@ -59,7 +60,7 @@ const Sidebar = ({
 			<aside
 				id='sidebar'
 			>
-				<div
+				<Link
 					id='userProfile'
 					onClick={() => {
 						window.location.href = '/dashboard/profile';
@@ -71,7 +72,7 @@ const Sidebar = ({
 						<h6>{name}</h6>
 						<p>{email}</p>
 					</div>
-				</div>
+				</Link>
 
 				<div id='actions'>
 					{children}

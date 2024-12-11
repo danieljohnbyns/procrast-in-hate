@@ -199,7 +199,7 @@ export default class Invitations extends React.Component {
 								</main>
 
 								<footer>
-									<img src='https://via.placeholder.com/150' alt='Profile' />
+									<img src={`${globals.API_URL}/users/${invitation.creatorId}/profilePicture`} alt='Profile' />
 									<p>{invitation.creatorId}</p>
 								</footer>
 							</article>
