@@ -110,7 +110,7 @@ export default class SignIn extends React.Component {
 										type: 'SIGN_IN'
 									});
 
-									// window.location.href = '/dashboard/';
+									window.location.href = '/dashboard/';
 								}}
 							/>
 							<p><a href='/forgotPassword'>Forgot your password?</a></p>
