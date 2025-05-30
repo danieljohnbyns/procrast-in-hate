@@ -80,9 +80,11 @@ const connectWebSocket = async () => {
 			};
 			case 'NOTIFICATION': {
 				// Push notification for TASK_UPDATE
-				self.registration.showNotification('Task Update', {
-					body: message.message
-				});
+				try {
+					self.registration.showNotification('Task Update', {
+						body: message.message
+					});
+				} catch (error) { };
 				break;
 			};
 			default: {
@@ -117,9 +119,11 @@ const timer = {
 	start: () => {
 		timer.state = 'running';
 		// Notify the clients that the timer has started
-		self.registration.showNotification('Timer Update', {
-			body: 'Timer has started'
-		});
+		try {
+			self.registration.showNotification('Timer Update', {
+				body: 'Timer has started'
+			});
+		} catch (error) { };
 
 		timer.interval = setInterval(() => {
 			if (timer.seconds === 0) {
@@ -155,9 +159,11 @@ const timer = {
 				state: timer.state
 			}));
 		});
-		self.registration.showNotification('Timer Update', {
-			body: 'Timer has stopped'
-		});
+		try {
+			self.registration.showNotification('Timer Update', {
+				body: 'Timer has stopped'
+			});
+		} catch (error) { };
 	},
 	pause: () => {
 		timer.state = 'paused';
@@ -171,9 +177,11 @@ const timer = {
 				state: timer.state
 			}));
 		});
-		self.registration.showNotification('Timer Update', {
-			body: 'Timer has paused'
-		});
+		try {
+			self.registration.showNotification('Timer Update', {
+				body: 'Timer has paused'
+			});
+		} catch (error) { };
 	},
 	resume: () => {
 		timer.state = 'running';
@@ -214,9 +222,11 @@ const timer = {
 			}));
 		});
 
-		self.registration.showNotification('Timer Update', {
-			body: 'Timer has reset'
-		});
+		try {
+			self.registration.showNotification('Timer Update', {
+				body: 'Timer has reset'
+			});
+		} catch (error) { };
 	}
 };
 

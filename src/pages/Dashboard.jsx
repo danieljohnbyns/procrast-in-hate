@@ -127,7 +127,7 @@ export default class Dashboard extends React.Component {
 			} catch (error) { console.log('Service Worker Error:', error) };
 		};
 
-		if (!this.state.notificationGranted) {
+		if (!this.state.notificationGranted || localStorage.getItem('notificationGranted') !== 'true') {
 			if ('Notification' in window) {
 				if (Notification.permission === 'granted') {
 					this.setState({
@@ -260,6 +260,7 @@ export default class Dashboard extends React.Component {
 									};
 								});
 							};
+							localStorage.setItem('notificationGranted', 'true');
 						}}
 					>
 						Grant Permission
