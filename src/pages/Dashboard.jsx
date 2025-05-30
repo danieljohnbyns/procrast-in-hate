@@ -128,13 +128,9 @@ export default class Dashboard extends React.Component {
 		};
 
 		if (!this.state.notificationGranted || localStorage.getItem('notificationGranted') === 'true') {
-			if ('Notification' in window) {
-				if (Notification.permission === 'granted') {
-					this.setState({
-						notificationGranted: true
-					});
-				};
-			};
+			this.setState({
+				notificationGranted: true
+			});
 		};
 	};
 	componentDidUpdate() {
