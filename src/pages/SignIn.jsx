@@ -38,7 +38,7 @@ export default class SignIn extends React.Component {
 			window.location.href = '/dashboard/';
 		};
 
-		navigator.serviceWorker.addEventListener('message', async (event) => {
+		navigator.serviceWorker?.addEventListener('message', async (event) => {
 			if (event.data.type === 'SIGN_IN') {
 				window.location.href = '/dashboard/';
 			};
@@ -102,11 +102,11 @@ export default class SignIn extends React.Component {
 									const data = await response.json();
 									localStorage.setItem('authentication', JSON.stringify(data.authentication));
 
-									navigator.serviceWorker.controller.postMessage({
+									navigator.serviceWorker?.controller.postMessage({
 										type: 'UPDATE_AUTHENTICATION',
 										authentication: JSON.parse(localStorage.getItem('authentication') || '{}')
 									});
-									navigator.serviceWorker.controller.postMessage({
+									navigator.serviceWorker?.controller.postMessage({
 										type: 'SIGN_IN'
 									});
 

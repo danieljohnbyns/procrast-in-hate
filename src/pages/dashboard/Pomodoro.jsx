@@ -58,7 +58,7 @@ export default class Pomodoro extends React.Component {
 		root.setAttribute('page', 'dashboard');
 
 		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.addEventListener('message', event => {
+			navigator.serviceWorker?.addEventListener('message', event => {
 				if (event.data.type === 'TIMER_UPDATE') {
 					this.setState({
 						timer: {
@@ -82,7 +82,7 @@ export default class Pomodoro extends React.Component {
 		});
 
 		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.controller.postMessage({
+			navigator.serviceWorker?.controller.postMessage({
 				type: 'TIMER_START'
 			});
 		};
@@ -97,7 +97,7 @@ export default class Pomodoro extends React.Component {
 		});
 
 		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.controller.postMessage({
+			navigator.serviceWorker?.controller.postMessage({
 				type: 'TIMER_PAUSE'
 			});
 		};
@@ -112,7 +112,7 @@ export default class Pomodoro extends React.Component {
 		});
 
 		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.controller.postMessage({
+			navigator.serviceWorker?.controller.postMessage({
 				type: 'TIMER_RESUME'
 			});
 		};
@@ -127,7 +127,7 @@ export default class Pomodoro extends React.Component {
 		});
 
 		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.controller.postMessage({
+			navigator.serviceWorker?.controller.postMessage({
 				type: 'TIMER_RESET'
 			});
 		};
@@ -139,7 +139,7 @@ export default class Pomodoro extends React.Component {
 		});
 
 		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.controller.postMessage({
+			navigator.serviceWorker?.controller.postMessage({
 				type: 'TIMER_RESET',
 				minutes: this.state[mode].minutes,
 				seconds: this.state[mode].seconds

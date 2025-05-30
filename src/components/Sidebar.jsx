@@ -32,7 +32,7 @@ const Sidebar = ({
 			});
 	}, []);
 
-	navigator.serviceWorker.addEventListener('message', async (event) => {
+	navigator.serviceWorker?.addEventListener('message', async (event) => {
 		if (event.data.type === 'SIGN_OUT') {
 			const authentication = JSON.parse(localStorage.getItem('authentication'));
 			const response = await fetch(`${globals.API_URL}/users/`, {
@@ -86,10 +86,10 @@ const Sidebar = ({
 							</svg>
 						}
 						onClick={() => {
-							navigator.serviceWorker.controller.postMessage({
+							navigator.serviceWorker?.controller.postMessage({
 								type: 'SIGN_OUT'
 							});
-							navigator.serviceWorker.controller.postMessage({
+							navigator.serviceWorker?.controller.postMessage({
 								type: 'TIMER_STOP'
 							});
 						}}

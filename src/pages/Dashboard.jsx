@@ -83,7 +83,7 @@ export default class Dashboard extends React.Component {
 		};
 
 		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.addEventListener('message', (event) => {
+			navigator.serviceWorker?.addEventListener('message', (event) => {
 				if (event.data) {
 					if (event.data.type === 'TIMER_UPDATE') {
 						document.title = `${event.data.minutes.toString().padStart(2, '0')}:${event.data.seconds.toString().padStart(2, '0')} - Pomodoro - Pocrast In Hate`;
@@ -120,7 +120,7 @@ export default class Dashboard extends React.Component {
 			});
 			try {
 				console.log('Updating service worker authentication...');
-				navigator.serviceWorker.controller.postMessage({
+				navigator.serviceWorker?.controller.postMessage({
 					type: 'UPDATE_AUTHENTICATION',
 					authentication: JSON.parse(localStorage.getItem('authentication') || '{}')
 				});
