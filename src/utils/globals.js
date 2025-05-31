@@ -1,7 +1,7 @@
 
 const globals = {
-	API_URL: 'http://18.141.58.57:5050',
-	WEBSOCKET_URL: 'ws://18.141.58.57:5050',
+	API_URL: 'https://18.140.164.168',
+	WEBSOCKET_URL: 'wss://18.140.164.168',
 	socket: null
 };
 
