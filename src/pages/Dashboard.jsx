@@ -261,6 +261,8 @@ export default class Dashboard extends React.Component {
 					>
 						Grant Permission
 					</button>
+					<p style={{ fontSize: '0.8rem', color: 'red' }}><i>If this screen persists, please reload the page.</i></p>
+					<p style={{ fontSize: '0.8rem', color: 'red' }}><i>Note: You can always change this permission in your browser settings.</i></p>
 				</div>
 			);
 		};
