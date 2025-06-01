@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-lone-blocks */
 
-const WEBSOCKET_URL = 'wss://18.140.164.168/api/';
+const WEBSOCKET_URL = 'wss://procrastinhate.is-local.org/api/';
 
 let authentication = { token: '', _id: '' }; // Global variable to store the authentication
 
