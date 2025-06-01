@@ -1,7 +1,7 @@
 
 const globals = {
-	API_URL: 'https://18.140.164.168/api/',
-	WEBSOCKET_URL: 'wss://18.140.164.168/api/',
+	API_URL: 'https://procrastinhate.is-local.org/api/',
+	WEBSOCKET_URL: 'wss://procrastinhate.is-local.org/api/',
 	socket: null
 };
 
